@@ -527,16 +527,26 @@
   const segByKey = (k) => (state.bundle.segments || []).find((s) => s.key === k);
   const segDrill = (s, title = s.segment) => drillAttr(title, { segment: s.key, attempts_only: true });
 
-  const OPP_NEXTLEAP_RANK = {
-    multi_clue_combination: { rank: 1, label: "#1", badge: "Rank #1 · NextLeap Lead", rationale: "HIGH evidence strength, 269 records (7 sources), 95.5% vague-memory cases, 81.4% failure, 28.3% abandonment. Addresses root cause of intersecting multiple partial clues." },
-    recovery_after_failed_search: { rank: 2, label: "#2", badge: "Rank #2 · Severity Lead", rationale: "MEDIUM evidence strength, 466 records (7 sources), 95.1% vague-memory cases, 85.0% failure, 40.1% abandonment. Highest total failure volume." },
-    text_in_image_recall: { rank: 3, label: "#3", badge: "Rank #3 · Vague Memory Purity", rationale: "MEDIUM evidence strength, 118 records (7 sources), 96.6% vague-memory cases, 80.5% failure, 19.5% abandonment. High precision text-in-scene recall." },
-    candidate_recognition: { rank: 4, label: "#4", badge: "Rank #4 · Recognition Friction", rationale: "MEDIUM evidence strength, 153 records (7 sources), 94.8% vague-memory cases, 88.2% failure, 30.1% abandonment. High friction at candidate evaluation." },
-    context_to_query_translation: { rank: 5, label: "#5", badge: "Rank #5 · Mental Model Gap", rationale: "MEDIUM evidence strength, 169 records (7 sources), 95.3% vague-memory cases, 78.7% failure, 17.2% abandonment. Gap between natural memory & system query." },
-    trust_in_search_completeness: { rank: 6, label: "#6", badge: "Rank #6 · Search Uncertainty", rationale: "MEDIUM evidence strength, 51 records (7 sources), 94.1% vague-memory cases, 100.0% failure, 49.0% abandonment. Severe trust erosion." },
-    index_coverage_gaps: { rank: 7, label: "#7", badge: "Rank #7 · Infrastructure Gap", rationale: "HIGH evidence strength, 228 records (7 sources), 68.9% vague-memory cases, 57.5% failure, 16.7% abandonment. Less specific to vague memory." },
-    approximate_time_anchoring: { rank: 8, label: "#8", badge: "Rank #8 · Directional Clue", rationale: "LOW evidence strength, 146 records (7 sources), 100.0% vague-memory cases, 75.3% failure, 19.9% abandonment." },
-  };
+  // Opportunity rank, live: built from b.leading.table, the same evidence-strength-gate ->
+  // vague-memory-share -> unsuccessful-share -> source-count rule select_leading() already prints
+  // (see the notice at the foot of the Opportunities view). Never hardcode numbers here - they
+  // must be able to move when the corpus, analyzer or an override changes and Rebuild runs.
+  function oppRankInfo() {
+    const b = state.bundle;
+    const table = b.leading?.table || [];
+    const info = {};
+    table.forEach((row, i) => { info[row.opportunity] = { rank: i + 1, eligible: true, ...row }; });
+    // Opportunities below the evidence-strength gate aren't in b.leading.table at all; rank them
+    // after the eligible set, by the same tiebreakers, so every row still gets a number and none
+    // is silently dropped from the table.
+    const rest = (b.opportunities || []).filter((o) => !(o.opportunity in info))
+      .sort((a, c) => (c.vague_memory_cases.pct || 0) - (a.vague_memory_cases.pct || 0)
+        || (c.unsuccessful.pct || 0) - (a.unsuccessful.pct || 0) || c.unique_sources - a.unique_sources);
+    rest.forEach((o, i) => { info[o.opportunity] = { rank: table.length + i + 1, eligible: false, opportunity: o.opportunity,
+      strength: o.evidence_strength.level, vague_memory_pct: o.vague_memory_cases.pct, unsuccessful_pct: o.unsuccessful.pct,
+      sources: o.unique_sources, records: o.records }; });
+    return info;
+  }
 
   views.segments = () => {
     const b = state.bundle, so = b.segment_overview, segs = b.segments || [];
@@ -718,25 +728,25 @@
     const b = state.bundle;
     const refute = (o) => sum(o.contradictions.filter((c) => c.type === "explicit_counter_evidence").map((c) => c.records));
     const targetOpp = b.target_opportunity || b.leading?.leading;
+    const rankInfo = oppRankInfo();
 
     const banner = b.target_opportunity
       ? `<div class="notice" style="margin-bottom:16px">${icon("check", 16)}<div><b>Target opportunity for discovery focus:</b> ${esc(nice(b.target_opportunity))}. Prioritized for deep primary research hypotheses and problem definition. <button class="link" data-clear-opportunity="1">Clear</button></div></div>`
       : "";
 
-    const oppRankSummary = `<div class="card" style="margin-top:16px;background:var(--surface-1);border-left:4px solid var(--accent)">
-      <div class="row" style="gap:8px;margin-bottom:6px"><span class="chip accent" style="font-weight:700">NextLeap PM Framework</span><b>Opportunity Ranking & Prioritization</b></div>
-      <p class="secondary small" style="margin:0 0 10px">Ranked across 4 NextLeap criteria: <b>Evidence Strength Gate</b> (HIGH/MEDIUM empirical grounding across 7 independent sources), <b>Strategic Relevance</b> (% vague-memory cases), <b>Customer Severity</b> (failure & abandonment rates), and <b>Volume</b>.</p>
+    // Built from b.leading.table (the printed evidence-strength-gate -> vague-memory-share ->
+    // unsuccessful-share -> source-count rule), never fixed numbers, so it can't drift from the
+    // "Target Lead" pill in the table below or from a Rebuild after new evidence or an override.
+    const oppRankSummary = b.leading ? `<div class="card" style="margin-top:16px;background:var(--surface-1);border-left:4px solid var(--accent)">
+      <div class="row" style="gap:8px;margin-bottom:6px"><span class="chip accent" style="font-weight:700">NextLeap-style ranking</span><b>How opportunities are prioritized</b></div>
+      <p class="secondary small" style="margin:0 0 10px">${esc(b.leading.rule)}</p>
       <div class="row small" style="gap:10px;flex-wrap:wrap">
-        <span class="chip accent"><b>Rank #1: Multi-Clue Combination</b> (Lead Focus · HIGH evidence, 269 records)</span>
-        <span class="chip"><b>Rank #2: Recovery After Failed Search</b> (MEDIUM evidence, 466 records, 40.1% abandon)</span>
-        <span class="chip"><b>Rank #3: Text-In-Image Recall</b> (MEDIUM evidence, 118 records)</span>
-        <span class="chip"><b>Rank #4: Candidate Recognition</b> (MEDIUM evidence, 153 records, 88.2% fail)</span>
-        <span class="chip"><b>Rank #5: Context To Query Translation</b> (MEDIUM evidence, 169 records)</span>
+        ${b.leading.table.slice(0, 5).map((o, i) => `<span class="chip ${i === 0 ? "accent" : ""}"><b>Rank #${i + 1}: ${esc(nice(o.opportunity))}</b> (${esc(o.strength)} evidence, ${o.records} records${i === 0 ? " · lead" : o.unsuccessful_pct != null ? `, ${o.unsuccessful_pct}% unsuccessful` : ""})</span>`).join("")}
       </div>
-    </div>`;
+    </div>` : "";
 
     const table = sortableTable("opps", b.opportunities, [
-      { key: "rank", h: "Rank", num: 1, v: (r) => `<span class="chip ${OPP_NEXTLEAP_RANK[r.opportunity]?.rank === 1 ? "accent" : ""}" style="font-weight:700">#${OPP_NEXTLEAP_RANK[r.opportunity]?.rank || 9}</span>`, sort: (r) => OPP_NEXTLEAP_RANK[r.opportunity]?.rank || 99 },
+      { key: "rank", h: "Rank", num: 1, v: (r) => `<span class="chip ${rankInfo[r.opportunity]?.rank === 1 ? "accent" : ""}" style="font-weight:700">#${rankInfo[r.opportunity]?.rank ?? "—"}</span>`, sort: (r) => rankInfo[r.opportunity]?.rank ?? 99 },
       { key: "name", h: "Opportunity area", v: (r) => {
           const isTgt = r.opportunity === targetOpp;
           const isRun = !isTgt && r.opportunity === b.leading?.runner_up;
@@ -770,7 +780,7 @@
     const chainNames = { symptom: "Symptom", behavior: "Behaviour", barrier: "Barrier", potential_root_cause: "Potential root cause" };
     const hyp = b.hypotheses.find((h) => h.opportunity === id);
     const isTarget = b.target_opportunity === id || (!b.target_opportunity && b.leading?.leading === id);
-    const rk = OPP_NEXTLEAP_RANK[id];
+    const rk = oppRankInfo()[id];
     return `${provenanceNotice()}
       <div class="page-head fade-in"><div style="max-width:820px">
         <div class="eyebrow">${rk ? `<span class="chip ${rk.rank === 1 ? "accent" : ""}" style="margin-right:6px">Rank #${rk.rank}</span> ` : ""}Opportunity area${isTarget ? " · Target Lead" : b.leading?.runner_up === id ? " · Runner-up" : ""}${o.proposed ? " · Proposed by analyzer" : ""}</div>
