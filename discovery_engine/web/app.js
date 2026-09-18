@@ -328,6 +328,39 @@
   }
   const unsuccessfulOf = (outcomes) => sum(UNSUCCESSFUL.map((k) => outcomes?.[k]?.numerator ?? outcomes?.[k] ?? 0));
 
+  // The North Star: the one business outcome this engine exists to move, stated as the very first
+  // thing on Overview. Reuses the same decomposition numbers as Opportunities so the two pages can
+  // never disagree; this view just leads with them instead of burying them under Decide.
+  function northStarCard() {
+    const d = state.bundle.decomposition;
+    if (!d) return "";
+    const stages = d.stages.filter((x) => x.in_journey || x.breaks_here.numerator > 0);
+    const chips = stages.map((x) => `<button class="lever-chip" data-nav="#/opportunities" data-tip="${esc(`<b>${esc(STAGE_NAME[x.stage])}</b><br>${esc(x.product_outcome)}`)}">
+        <span class="lever-name">${esc(STAGE_NAME[x.stage])}</span>
+        <span class="lever-pts">+${x.max_headroom_pts} pts</span>
+      </button>`).join("");
+    return `<section class="card hero-goal fade-in">
+      <div class="row" style="align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px">
+        <div style="flex:1;min-width:280px">
+          <div class="eyebrow">The business goal this engine exists to move</div>
+          <p class="hero-goal-statement">${esc(d.business_metric)}</p>
+          <p class="small secondary" style="margin:6px 0 0;max-width:620px">${esc(d.definition)}</p>
+        </div>
+        <div class="hero-goal-stat" data-tip="${esc(rateTip("Attempts ending in a confirmed find", d.baseline))}">
+          <div class="v">${pct(d.baseline)}</div>
+          <div class="l">succeed today</div>
+          <div class="d">${frac(d.baseline)} · current baseline</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px;gap:12px">
+        <b class="small">Where the other ${pct(d.unresolved)} could still be won, stage by stage</b>
+        <button class="btn subtle sm" data-nav="#/opportunities">Full breakdown ${icon("arrow", 13)}</button>
+      </div>
+      <div class="lever-row">${chips}</div>
+    </section>`;
+  }
+
   // ---------------------------------------------------------------- views
   const views = {};
 
@@ -353,6 +386,7 @@
     return `${provenanceNotice()}
       ${pageHead("Discovery overview", "What happens when people try to find a photo they can't precisely describe",
         `${esc(b.scope.label)}. Every number links to the quotes behind it.`)}
+      ${northStarCard()}
       <div class="grid g4 fade-in">
         ${kpi(o.unique_records.toLocaleString(), "Unique records", `${o.total_records.toLocaleString()} ingested · ${o.duplicates_excluded} duplicates set aside`,
           `<b>Unique records</b><br>${o.total_records} rows ingested, ${o.duplicates_excluded} duplicates set aside`)}

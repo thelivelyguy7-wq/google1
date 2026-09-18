@@ -437,6 +437,22 @@ ul.plain li { margin: 4px 0; }
 table.decomp td:last-child { max-width: 260px; }
 table.decomp td:last-child .chip { white-space: normal; }
 
+/* North-star goal banner: the business outcome this engine exists to move, at the top of Overview. */
+.hero-goal { border: 1px solid var(--border); border-left: 4px solid var(--accent); margin-bottom: 20px; }
+.hero-goal-statement { font-size: 17px; font-weight: 650; letter-spacing: -.01em; line-height: 1.35; margin: 4px 0 0; max-width: 640px; }
+.hero-goal-stat { flex: none; text-align: right; padding-left: 20px; border-left: 1px solid var(--border); min-width: 168px; cursor: help; }
+.hero-goal-stat .v { font-size: 40px; font-weight: 750; letter-spacing: -.02em; line-height: 1.05; font-variant-numeric: tabular-nums; color: var(--accent); }
+.hero-goal-stat .l { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-top: 2px; }
+.hero-goal-stat .d { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; margin-top: 1px; }
+.lever-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.lever-chip { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface-1); cursor: pointer; text-align: left; min-width: 108px; }
+.lever-chip:hover { border-color: var(--accent); background: var(--accent-soft); }
+.lever-chip .lever-name { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+.lever-chip .lever-pts { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-primary); }
+@media (max-width: 640px) {
+  .hero-goal-stat { border-left: 0; padding-left: 0; text-align: left; border-top: 1px solid var(--border); padding-top: 12px; width: 100%; }
+}
+
 .drawer-h2 { font-size: 15px; font-weight: 650; margin: 22px 0 10px; padding-top: 16px; border-top: 1px solid var(--border-strong); }
 
 /* Behavioural segments */
