@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discovery Engine</title>
+<style>
+:root {
+  color-scheme: light;
+  --surface-0: #f4f4f2; --surface-1: #fcfcfb; --surface-2: #efeee9; --border: #dcdbd5;
+  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #77766f;
+  --accent: #2a78d6; --bar: #2a78d6; --bar-track: #e8e7e1;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s6: #008300; --s7: #4a3aa7; --s8: #e34948;
+  --warn-bg: #fff4d6; --warn-ink: #6b4a00; --crit-bg: #fde8e7; --crit-ink: #8a1f1d;
+  --lvl-high: #008300; --lvl-medium: #2a78d6; --lvl-low: #c98500; --lvl-dir: #77766f;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --surface-0: #121211; --surface-1: #1a1a19; --surface-2: #242422; --border: #36352f;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #94938a;
+    --accent: #3987e5; --bar: #3987e5; --bar-track: #2c2c29;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
+    --warn-bg: #3a2e0c; --warn-ink: #f5d27a; --crit-bg: #3d1716; --crit-ink: #f5a5a3;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-0: #121211; --surface-1: #1a1a19; --surface-2: #242422; --border: #36352f;
+  --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #94938a;
+  --accent: #3987e5; --bar: #3987e5; --bar-track: #2c2c29;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
+  --warn-bg: #3a2e0c; --warn-ink: #f5d27a; --crit-bg: #3d1716; --crit-ink: #f5a5a3;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--surface-0); color: var(--text-primary); }
+header { padding: 16px 24px 0; background: var(--surface-1); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 5; }
+h1 { font-size: 18px; margin: 0 0 2px; }
+.sub { color: var(--text-secondary); font-size: 13px; margin-bottom: 10px; }
+nav { display: flex; gap: 2px; overflow-x: auto; }
+nav button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 8px 12px; color: var(--text-secondary); font: inherit; cursor: pointer; white-space: nowrap; }
+nav button.on { color: var(--text-primary); border-bottom-color: var(--accent); font-weight: 600; }
+main { padding: 20px 24px 60px; max-width: 1280px; margin: 0 auto; }
+.banner { background: var(--crit-bg); color: var(--crit-ink); padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-weight: 500; }
+.note { background: var(--warn-bg); color: var(--warn-ink); padding: 8px 12px; border-radius: 6px; font-size: 13px; margin: 8px 0; }
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 16px; min-width: 0; }
+.card h2 { font-size: 15px; margin: 0 0 4px; }
+.card .def { color: var(--text-muted); font-size: 12px; margin-bottom: 10px; }
+.tiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin-bottom: 16px; }
+.tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+.tile .v { font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.tile .l { color: var(--text-secondary); font-size: 12px; }
+.bars { display: grid; gap: 6px; }
+.bar { display: grid; grid-template-columns: minmax(120px, 34%) 1fr 118px; gap: 8px; align-items: center; cursor: pointer; padding: 2px 4px; border-radius: 4px; }
+.bar:hover { background: var(--surface-2); }
+.bar .name { color: var(--text-primary); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar .track { height: 12px; background: var(--bar-track); border-radius: 0 4px 4px 0; overflow: hidden; }
+.bar .fill { height: 100%; background: var(--bar); border-radius: 0 4px 4px 0; }
+.bar .num { color: var(--text-secondary); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+.stack { display: flex; height: 14px; gap: 2px; border-radius: 4px; overflow: hidden; margin: 6px 0; }
+.stack span { display: block; height: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 12px; color: var(--text-secondary); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { color: var(--text-secondary); font-weight: 600; cursor: pointer; user-select: none; white-space: nowrap; }
+td.n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.scroll { overflow-x: auto; }
+.pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; border: 1px solid currentColor; }
+.HIGH { color: var(--lvl-high); } .MEDIUM { color: var(--lvl-medium); } .LOW { color: var(--lvl-low); } .DIRECTIONAL { color: var(--lvl-dir); }
+.lvl { font-size: 11px; font-weight: 700; letter-spacing: .04em; color: var(--text-secondary); margin-right: 6px; }
+.ev { border-left: 3px solid var(--border); padding: 6px 10px; margin: 6px 0; background: var(--surface-2); border-radius: 0 6px 6px 0; font-size: 13px; }
+.ev .meta { color: var(--text-muted); font-size: 11px; margin-top: 2px; }
+.ev a { color: var(--accent); cursor: pointer; text-decoration: underline; }
+.syn { color: var(--crit-ink); font-weight: 600; }
+details { margin: 8px 0; } summary { cursor: pointer; font-weight: 600; }
+input, select, textarea { font: inherit; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; }
+button.act { font: inherit; background: var(--accent); color: #fff; border: 0; border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+button.ghost { font: inherit; background: none; color: var(--text-primary); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
+.chips button { font-size: 12px; }
+#modal { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none; z-index: 20; padding: 24px; overflow: auto; }
+#modal .box { background: var(--surface-1); max-width: 1000px; margin: 0 auto; border-radius: 12px; padding: 20px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+pre { white-space: pre-wrap; word-break: break-word; font-size: 12px; background: var(--surface-2); padding: 10px; border-radius: 6px; max-height: 420px; overflow: auto; }
+.tip { position: fixed; pointer-events: none; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; font-size: 12px; box-shadow: 0 4px 14px rgba(0,0,0,.15); display: none; z-index: 30; max-width: 320px; }
+.bad { color: var(--crit-ink); }
+@media (max-width: 760px) { main { padding: 16px; } header { padding: 12px 16px 0; } .two { grid-template-columns: 1fr; } .bar { grid-template-columns: 38% 1fr auto; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Discovery Engine: vaguely remembered photo retrieval</h1>
+  <div class="sub" id="scope">Loading…</div>
+  <nav id="nav"></nav>
+</header>
+<main id="main"></main>
+<div id="modal"><div class="box" id="modalBox"></div></div>
+<div class="tip" id="tip"></div>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const nice = s => String(s ?? "—").replace(/^remembered_/, "").replace(/_unknown$/, "").replace(/^proposed:/, "proposed: ").replace(/_/g, " ");
+const r = x => x ? `${x.numerator}/${x.denominator}${x.pct != null ? ` (${x.pct}%)` : ""}${x.directional ? " †" : ""}` : "—";
+let B = null, tab = location.hash.slice(1) || "overview";
+const TABS = [["overview","Overview"],["scenarios","Scenarios"],["memory","Remembered"],["forgotten","Forgotten"],["search","Search formulation"],
+  ["failures","Failures & journey"],["workarounds","Workarounds"],["segments","Segments"],["opps","Opportunities"],["hyp","Hypotheses & brief"],["explore","Explore & ask"]];
+
+const tip = $("#tip");
+document.addEventListener("mousemove", e => { if (tip.style.display === "block") { tip.style.left = Math.min(e.clientX + 12, innerWidth - 330) + "px"; tip.style.top = e.clientY + 12 + "px"; }});
+document.addEventListener("mouseover", e => { const t = e.target.closest("[data-tip]"); if (t) { tip.innerHTML = t.dataset.tip; tip.style.display = "block"; } });
+document.addEventListener("mouseout", e => { if (e.target.closest("[data-tip]")) tip.style.display = "none"; });
+
+async function api(path, body) {
+  const res = await fetch(path, body ? {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)} : {});
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+function evidence(items, k = 4) {
+  if (!items || !items.length) return `<div class="def">No validated evidence.</div>`;
+  return items.slice(0, k).map(e => `<div class="ev">“${esc((e.quote || "").slice(0, 300))}”
+    <div class="meta">${e.evidence_id ? esc(e.evidence_id) + " · " : ""}${esc(e.label ? nice(e.label) : "")} · ${esc(e.source)} ${e.is_synthetic ? '<span class="syn">SYNTHETIC</span>' : ""}
+    · <a data-rec="${esc(e.record_id)}">open source record</a></div></div>`).join("");
+}
+document.addEventListener("click", e => { const a = e.target.closest("[data-rec]"); if (a) openRecord(a.dataset.rec); });
+
+function bars(rows, {label = x => nice(x.label), onClick} = {}) {
+  const max = Math.max(1, ...rows.map(x => x.numerator));
+  return `<div class="bars">${rows.map((x, i) => `<div class="bar" data-i="${i}" data-tip="<b>${esc(label(x))}</b><br>${esc(r(x))} of ${esc(x.denominator_definition || "")}<br>${x.source_count ?? "?"} sources: ${esc(JSON.stringify(x.by_source || {}))}">
+     <div class="name">${esc(label(x))}</div><div class="track"><div class="fill" style="width:${100 * x.numerator / max}%"></div></div><div class="num">${r(x)}</div></div>`).join("")}</div>`;
+}
+function card(title, def, inner) { return `<div class="card"><h2>${title}</h2>${def ? `<div class="def">${def}</div>` : ""}${inner}</div>`; }
+
+const OUT_ORDER = ["found", "partially_found", "uncertain", "not_found", "abandoned", "not_stated"];
+function stack(counts) {
+  const tot = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+  return `<div class="stack">${OUT_ORDER.filter(k => counts[k]).map((k, i) => `<span style="width:${100 * counts[k] / tot}%;background:var(--s${OUT_ORDER.indexOf(k) + 1})" data-tip="${nice(k)}: ${counts[k]}"></span>`).join("")}</div>`;
+}
+const outLegend = () => `<div class="legend">${OUT_ORDER.map((k, i) => `<span><i style="background:var(--s${i + 1})"></i>${nice(k)}</span>`).join("")}</div>`;
+
+function sortable(id, rows, cols) {
+  const el = document.getElementById(id);
+  let key = null, dir = -1;
+  const draw = () => {
+    const data = key == null ? rows : [...rows].sort((a, b) => { const va = cols[key].sort(a), vb = cols[key].sort(b); return (va > vb ? 1 : va < vb ? -1 : 0) * dir; });
+    el.innerHTML = `<div class="scroll"><table><thead><tr>${cols.map((c, i) => `<th data-c="${i}">${c.h}${key === i ? (dir < 0 ? " ▾" : " ▴") : ""}</th>`).join("")}</tr></thead>
+      <tbody>${data.map((row, ri) => `<tr>${cols.map(c => `<td class="${c.n ? "n" : ""}">${c.v(row)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    el.querySelectorAll("th").forEach(th => th.onclick = () => { const c = +th.dataset.c; dir = key === c ? -dir : -1; key = c; draw(); });
+  };
+  draw();
+}
+
+const views = {
+  overview() {
+    const o = B.overview;
+    const tiles = [["Records ingested", o.total_records], ["Unique (dupes excluded)", o.unique_records], ["Relevant", r(o.relevant)],
+      ["Retrieval attempts", r(o.retrieval_attempts)], ["Invalid quotes excluded", `${o.quote_validation.quotes_invalid}/${o.quote_validation.quotes_total}`]];
+    const outcomes = Object.fromEntries(Object.entries(o.outcomes).map(([k, v]) => [k, v.numerator]));
+    return `<div class="tiles">${tiles.map(([l, v]) => `<div class="tile"><div class="v">${esc(v)}</div><div class="l">${l}</div></div>`).join("")}</div>
+    <div class="grid">
+      ${card("Outcomes of retrieval attempts", "Distinct records that describe a first-person attempt", stack(outcomes) + outLegend() +
+        `<table>${Object.entries(o.outcomes).map(([k, v]) => `<tr><td>${nice(k)}</td><td class="n">${r(v)}</td></tr>`).join("")}</table>`)}
+      ${card("Sources", B.scope.label, bars(Object.entries(B.scope.sources).map(([k, v]) => ({label: k, numerator: v, denominator: o.total_records, pct: +(100 * v / o.total_records).toFixed(1), denominator_definition: "records"})), {label: x => x.label}))}
+      ${card("Perspective of relevant records", "Only first-person experiences count as behavioural evidence", `<table>${Object.entries(o.perspectives).map(([k, v]) => `<tr><td>${nice(k)}</td><td class="n">${v}</td></tr>`).join("")}</table>`)}
+      ${card("Analyzer provenance", "Which analyzer produced the current interpretation", `<table>${Object.entries(B.scope.analyzers).map(([k, v]) => `<tr><td>${esc(k)}</td><td class="n">${v} chunks</td></tr>`).join("")}</table>
+        ${o.proposed_labels.length ? `<div class="note">Proposed labels awaiting PM review: ${o.proposed_labels.map(esc).join(", ")}</div>` : ""}`)}
+      ${card("Top failure stages", "Attempts by failure stage (excluding none observed / unclear)", bars(B.failures.filter(f => !["none_observed", "unclear"].includes(f.label)).slice(0, 7)))}
+      ${card("Leading opportunity (proposal)", "", B.leading ? `<p><b>${nice(B.leading.leading)}</b>; runner-up ${nice(B.leading.runner_up)}</p><div class="def">${esc(B.leading.rule)}</div>` : "—")}
+    </div>`;
+  },
+  scenarios() {
+    setTimeout(() => sortable("scTable", B.scenarios, [
+      {h: "Scenario", v: x => nice(x.label), sort: x => x.label},
+      {h: "Attempts", v: x => r(x), sort: x => x.numerator, n: 1},
+      {h: "Sources", v: x => x.source_count, sort: x => x.source_count, n: 1},
+      {h: "Outcomes", v: x => stack(Object.fromEntries(Object.entries(x.outcomes).map(([k, v]) => [k, v.numerator]))), sort: x => (x.outcomes.found || {}).pct || 0},
+      {h: "Unsuccessful %", v: x => { const u = ["not_found","abandoned","partially_found","uncertain"].reduce((a, k) => a + ((x.outcomes[k] || {}).numerator || 0), 0); return `${u}/${x.numerator}`; },
+       sort: x => ["not_found","abandoned","partially_found","uncertain"].reduce((a, k) => a + ((x.outcomes[k] || {}).numerator || 0), 0) / x.numerator, n: 1},
+      {h: "Top failure", v: x => nice(Object.keys(x.failure_stages).find(k => !["none_observed","unclear"].includes(k))), sort: x => Object.keys(x.failure_stages)[0]},
+      {h: "Top remembered", v: x => x.top_remembered.slice(0, 3).map(([l, n]) => `${nice(l)} (${n})`).join(", "), sort: x => 0},
+      {h: "Top forgotten", v: x => x.top_forgotten.slice(0, 3).map(([l, n]) => `${nice(l)} (${n})`).join(", "), sort: x => 0},
+    ]));
+    const ct = B.crosstab_scenario_forgotten;
+    return card("What are users trying to retrieve?", "Retrieval scenario of first-person attempts. Click a column to sort.", `<div id="scTable"></div>${outLegend()}`) + "<br>" +
+      card("Scenario × forgotten information", `Cell = ${ct.unit}. Darker = more.`, heat(ct)) + "<br>" +
+      card("Scenario × failure stage", `Cell = ${B.crosstab_scenario_failure.unit}`, heat(B.crosstab_scenario_failure));
+  },
+  memory() {
+    return `<div class="grid">${card("What do users remember?", "Share of attempt records containing each remembered clue (validated quotes only). Hover for sources.", bars(B.memory))}
+      ${card("Exact vs approximate", "How precisely the remembered clue is stated (signal-level)", `<table><tr><th>Clue</th><th>Exact</th><th>Approx.</th></tr>${B.memory.map(m => `<tr><td>${nice(m.label)}</td><td class="n">${m.precision.exact || 0}</td><td class="n">${m.precision.approximate || 0}</td></tr>`).join("")}</table>`)}</div><br>
+      ${B.memory.slice(0, 6).map(m => `<details><summary>${nice(m.label)}: ${r(m)}</summary>${evidence(m.examples)}</details>`).join("")}`;
+  },
+  forgotten() {
+    return card("What have users forgotten, and does it matter?", "Rates compare unsuccessful outcomes with and without each gap. These are associations; 'text links gap' counts only authors who connect the gap to the failure.",
+      bars(B.forgotten) + `<br><div class="scroll"><table><tr><th>Forgotten</th><th>Attempts</th><th>Unsuccessful when forgotten</th><th>Unsuccessful otherwise</th><th>Text links gap to failure</th></tr>
+      ${B.forgotten.map(f => `<tr><td>${nice(f.label)}</td><td class="n">${r(f)}</td><td class="n">${r(f.unsuccessful_when_forgotten)}</td><td class="n">${r(f.unsuccessful_when_not_forgotten)}</td><td class="n">${r(f.explicitly_blocks_retrieval)}</td></tr>`).join("")}</table></div>`) +
+      B.forgotten.slice(0, 6).map(m => `<details><summary>${nice(m.label)} evidence</summary>${evidence(m.examples)}</details>`).join("");
+  },
+  search() {
+    const s = B.search;
+    const toRows = obj => Object.entries(obj).map(([k, v]) => ({label: k, ...v}));
+    return `<div class="tiles"><div class="tile"><div class="v">${s.queries_extracted}</div><div class="l">Queries quoted by users</div></div>
+      <div class="tile"><div class="v">${r(s.attempts_with_quoted_query)}</div><div class="l">Attempts quoting a query</div></div>
+      <div class="tile"><div class="v">${r(s.multiple_attempts)}</div><div class="l">Attempts with 2+ queries</div></div>
+      <div class="tile"><div class="v">${s.median_query_words ?? "—"}</div><div class="l">Median words per query</div></div></div>
+      <div class="grid">${card("Query type", "Share of extracted queries", bars(toRows(s.query_types)))}
+      ${card("What the query is oriented around", "Multi-label share of queries", bars(toRows(s.orientation)))}
+      ${card("Search strategies", "Share of attempts", bars(s.strategies))}
+      ${card("Outcome by query type", "Counts of queries", `<table><tr><th>Type</th>${["found","not_found","wrong_results","too_many_results","unclear"].map(k => `<th>${nice(k)}</th>`).join("")}</tr>
+        ${Object.entries(s.outcome_by_query_type).map(([t, o]) => `<tr><td>${nice(t)}</td>${["found","not_found","wrong_results","too_many_results","unclear"].map(k => `<td class="n">${o[k] || 0}</td>`).join("")}</tr>`).join("")}</table>`)}
+      </div><br>${card("Example queries", "Verbatim, source-diverse", evidence(s.examples, 8))}`;
+  },
+  failures() {
+    return `<div class="grid">${card("Where does retrieval fail?", "Failure stage of attempts (taxonomy A–G)", bars(B.failures))}
+      ${card("Journey: stages with difficulty", "Share of attempts with a difficult step at each stage", bars(B.journey.map(j => ({label: j.stage, ...j.records_with_difficulty}))))}</div><br>
+      ${B.failures.filter(f => f.examples.length).map(f => `<details><summary>${nice(f.label)}: ${esc(f.description)}</summary>${evidence(f.examples)}</details>`).join("")}
+      ${B.journey.map(j => `<details><summary>Journey stage: ${j.stage}</summary>${evidence(j.examples)}</details>`).join("")}`;
+  },
+  workarounds() {
+    return card("What do users do when search fails?", "Share of attempts mentioning each workaround", bars(B.workarounds)) +
+      B.workarounds.slice(0, 8).map(w => `<details><summary>${nice(w.label)}</summary>${evidence(w.examples)}</details>`).join("");
+  },
+  segments() {
+    setTimeout(() => sortable("segTable", B.segments, [
+      {h: "Segment", v: x => `${esc(x.segment)}<div class="def">${x.dimension}</div>`, sort: x => x.segment},
+      {h: "Records", v: x => x.records, sort: x => x.records, n: 1},
+      {h: "Sources", v: x => x.unique_sources, sort: x => x.unique_sources, n: 1},
+      {h: "Vague-memory", v: x => r(x.vague_memory_cases), sort: x => x.vague_memory_cases.pct, n: 1},
+      {h: "Unsuccessful", v: x => r(x.unsuccessful), sort: x => x.unsuccessful.pct, n: 1},
+      {h: "Abandonment", v: x => r(x.abandonment_signals), sort: x => x.abandonment_signals.pct, n: 1},
+      {h: "Dominant stage", v: x => `${nice(x.dominant_failure_stage)} <span class="def">(${x.failure_concentration ?? "—"})</span>`, sort: x => x.failure_concentration || 0},
+      {h: "Distinctiveness", v: x => x.distinctiveness_vs_all_attempts, sort: x => x.distinctiveness_vs_all_attempts, n: 1},
+      {h: "Top forgotten", v: x => x.top_forgotten.slice(0, 2).map(([l, n]) => `${nice(l)} (${n})`).join(", "), sort: x => 0},
+      {h: "Strength", v: x => `<span class="pill ${x.evidence_strength.level}" data-tip="${esc(x.evidence_strength.checks.join('<br>'))}">${x.evidence_strength.level}</span>`, sort: x => ["DIRECTIONAL","LOW","MEDIUM","HIGH"].indexOf(x.evidence_strength.level), n: 1},
+    ]));
+    return card("Which users and scenarios are most affected?", "No composite score. Sort by any dimension. Distinctiveness = total-variation distance of the failure-stage mix from all attempts. Research feasibility and intervention potential are PM judgement.", `<div id="segTable"></div>`);
+  },
+  opps() {
+    setTimeout(() => sortable("oppTable", B.opportunities, [
+      {h: "Opportunity area", v: x => `<a style="cursor:pointer;color:var(--accent)" onclick="document.getElementById('op-${x.opportunity}').open=true;document.getElementById('op-${x.opportunity}').scrollIntoView()">${nice(x.opportunity)}</a>`, sort: x => x.opportunity},
+      {h: "Records", v: x => x.records, sort: x => x.records, n: 1},
+      {h: "Signals", v: x => x.supporting_evidence_count, sort: x => x.supporting_evidence_count, n: 1},
+      {h: "Sources", v: x => x.unique_sources, sort: x => x.unique_sources, n: 1},
+      {h: "Vague-memory", v: x => r(x.vague_memory_cases), sort: x => x.vague_memory_cases.pct, n: 1},
+      {h: "Unsuccessful", v: x => r(x.unsuccessful), sort: x => x.unsuccessful.pct, n: 1},
+      {h: "Abandon", v: x => r(x.abandonment_signals), sort: x => x.abandonment_signals.pct, n: 1},
+      {h: "Repeated search", v: x => r(x.repeated_search_signals), sort: x => x.repeated_search_signals.pct, n: 1},
+      {h: "Refuting records", v: x => x.contradictions.filter(c => c.type === "explicit_counter_evidence").reduce((a, c) => a + c.records, 0), sort: x => x.contradictions.filter(c => c.type === "explicit_counter_evidence").reduce((a, c) => a + c.records, 0), n: 1},
+      {h: "Vague-memory successes", v: x => x.contradictions.filter(c => c.type === "vague_memory_success").reduce((a, c) => a + c.records, 0), sort: x => x.contradictions.filter(c => c.type === "vague_memory_success").reduce((a, c) => a + c.records, 0), n: 1},
+      {h: "Strength", v: x => `<span class="pill ${x.evidence_strength.level}" data-tip="${esc(x.evidence_strength.checks.concat(x.evidence_strength.caveats).join('<br>'))}">${x.evidence_strength.level}</span>`, sort: x => ["DIRECTIONAL","LOW","MEDIUM","HIGH"].indexOf(x.evidence_strength.level), n: 1},
+    ]));
+    return card("Opportunity comparison", "Problem spaces, not features. Drill down: opportunity → insight → pattern → source evidence.", `<div id="oppTable"></div>`) +
+      B.opportunities.map(o => `<details class="card" id="op-${o.opportunity}" style="margin-top:12px"><summary>${nice(o.opportunity)} <span class="pill ${o.evidence_strength.level}">${o.evidence_strength.level}</span></summary>
+      <p>${esc(o.description)}</p>
+      <h3>Insights</h3>${o.insights.map(i => `<details><summary><span class="lvl">${i.level}</span>${esc(i.text)}</summary><div class="def">Pattern</div><pre>${esc(JSON.stringify(i.pattern, null, 1))}</pre>${evidence(i.evidence, 3)}</details>`).join("")}
+      <h3>Evidence chain</h3>${Object.entries(o.root_cause_chain).map(([k, v]) => `<details><summary><span class="lvl">${v.level}</span>${nice(k)}: ${esc(v.text)}</summary>${evidence(v.evidence, 2)}</details>`).join("")}
+      <h3>Challenging evidence</h3>${o.contradictions.length ? o.contradictions.map(c => `<details><summary>${nice(c.type)} (${c.records} records)</summary><p>${esc(c.description)}</p>${evidence(c.evidence, 3)}</details>`).join("") : '<div class="def">None found. That is itself a reason to check whether the counter-evidence search is too narrow.</div>'}
+      <h3>Unresolved questions</h3><ul>${o.unresolved_questions.map(q => `<li>${esc(q)}</li>`).join("")}</ul>
+      <h3>Evidence-strength checks</h3><ul>${o.evidence_strength.checks.concat(o.evidence_strength.caveats).map(q => `<li>${esc(q)}</li>`).join("")}</ul>
+      <div class="def">Supporting records: ${o.record_ids.length}. Sources: ${esc(JSON.stringify(o.source_distribution))}</div></details>`).join("");
+  },
+  hyp() {
+    const rb = B.research_brief || {};
+    return `<div class="row"><a class="ghost" href="/api/report.md" target="_blank"><button class="ghost">Discovery report (.md)</button></a><a href="/api/brief.md" target="_blank"><button class="ghost">Research brief (.md)</button></a></div>
+    ${B.leading ? card("Leading opportunity (proposal)", esc(B.leading.rule), `<div class="scroll"><table><tr>${Object.keys(B.leading.table[0]).map(k => `<th>${nice(k)}</th>`).join("")}</tr>${B.leading.table.map(t => `<tr>${Object.values(t).map(v => `<td>${esc(v)}</td>`).join("")}</tr>`).join("")}</table></div>`) : ""}<br>
+    ${B.hypotheses.map(h => card(`${nice(h.opportunity)} <span class="pill ${h.evidence_strength}">${h.evidence_strength}</span>`, "HYPOTHESIS: to validate in primary research, not a finding",
+      `<p><b>${esc(h.we_believe)}</b></p><b>BECAUSE</b><ul>${h.because.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+       <b>WE EXPECT TO OBSERVE</b><ul>${h.we_expect_to_observe.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+       <b>WE NEED TO VALIDATE</b><ul>${h.we_need_to_validate.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+       <b>WOULD FALSIFY</b><ul>${h.falsification_signals.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+       <details><summary>Evidence</summary>${evidence(h.evidence, 5)}</details>`)).join("<br>")}<br>
+    ${card("JTBD candidates", "INTERPRETATION derived from supporting records", B.jtbd.map(j => `<p><b>${nice(j.opportunity)}</b>: ${esc(j.jtbd)}</p><div class="def">Stated goals in ${j.records_with_stated_goal}/${j.supporting_records} records</div>${evidence(j.goal_evidence, 2)}`).join(""))}<br>
+    ${rb.status ? card("Research brief (5–6 interviews)", esc(rb.status), `<p><b>Target segment:</b> ${esc(rb.target_segment)}. ${esc(rb.target_segment_rationale)}</p>
+       <b>Interview questions</b><ol>${rb.interview_questions.map(q => `<li>${esc(q)}</li>`).join("")}</ol>
+       <b>Behaviours to observe</b><ul>${rb.behaviors_to_observe.map(q => `<li>${esc(q)}</li>`).join("")}</ul>
+       <b>Falsification signals</b><ul>${rb.falsification_signals.map(q => `<li>${esc(q)}</li>`).join("")}</ul>`) : ""}`;
+  },
+  explore() {
+    setTimeout(() => {
+      $("#askBtn").onclick = runAsk; $("#askQ").onkeydown = e => { if (e.key === "Enter") runAsk(); };
+      document.querySelectorAll(".chips button").forEach(b => b.onclick = () => { $("#askQ").value = b.textContent; runAsk(); });
+      $("#searchBtn").onclick = runSearch;
+    });
+    const ex = ["Show me conversations where users remembered the place but not the date.", "Find examples of people trying to retrieve a photo using an event description.",
+      "What information do users remember most frequently?", "What information do users commonly forget?", "Show me retrieval attempts that ended in abandonment.",
+      "Compare travel-photo retrieval problems with document retrieval problems.", "What workarounds do users use after search failure?",
+      "Which retrieval failure points appear most frequently?", "Which opportunity areas have evidence across multiple sources?",
+      "Show evidence that contradicts the leading opportunity.", "Generate interview hypotheses for the leading opportunity."];
+    const opt = (id, arr) => `<select id="${id}"><option value="">any ${id.replace("f_", "")}</option>${arr.map(v => `<option value="${esc(v)}">${nice(v)}</option>`).join("")}</select>`;
+    return card("Ask the evidence base", "Answers are assembled from stored evidence. The question is only parsed into filters.",
+      `<div class="row"><input id="askQ" style="flex:1;min-width:240px" placeholder="Ask a discovery question…"><button class="act" id="askBtn">Ask</button></div>
+       <div class="row chips">${ex.map(q => `<button class="ghost">${esc(q)}</button>`).join("")}</div><div id="askOut"></div>`) + "<br>" +
+      card("Evidence search", "TF-IDF relevance + structured filters, re-ranked for source diversity",
+      `<div class="row"><input id="sq" style="flex:1;min-width:200px" placeholder="free text, e.g. wedding outside venue">
+        ${opt("f_scenario", B.scenarios.map(s => s.label))}${opt("f_stage", B.failures.map(s => s.label))}
+        ${opt("f_remembered", B.memory.map(s => s.label))}${opt("f_forgotten", B.forgotten.map(s => s.label))}
+        ${opt("f_status", ["found","not_found","abandoned","partially_found","uncertain","not_stated"])}${opt("f_source", Object.keys(B.scope.sources))}
+        <label><input type="checkbox" id="f_att"> attempts only</label><button class="act" id="searchBtn">Search</button></div><div id="searchOut"></div>`);
+  },
+};
+
+function heat(ct) {
+  const max = Math.max(1, ...ct.rows.flatMap(rw => ct.cols.map(c => ct.cells[rw][c] || 0)));
+  return `<div class="scroll"><table><tr><th></th>${ct.cols.map(c => `<th style="writing-mode:vertical-rl;transform:rotate(180deg);height:110px">${nice(c)}</th>`).join("")}</tr>
+  ${ct.rows.map(rw => `<tr><td>${nice(rw)}</td>${ct.cols.map(c => { const v = ct.cells[rw][c] || 0; const a = v / max;
+    return `<td class="n" data-tip="${nice(rw)} × ${nice(c)}: ${v}" style="background:color-mix(in oklab, var(--accent) ${Math.round(a * 85)}%, transparent);color:${a > .55 ? "#fff" : "var(--text-primary)"}">${v || ""}</td>`; }).join("")}</tr>`).join("")}</table></div>`;
+}
+
+function resultList(res) {
+  return `<div class="def">${res.total_matches} matching records · source mix of matches: ${esc(JSON.stringify(res.source_distribution))} · showing ${res.results.length}, diversified</div>` +
+    res.results.map(x => `<div class="ev"><b>${esc(x.title || "")}</b> ${esc(x.text.slice(0, 380))}${x.text.length > 380 ? "…" : ""}
+    <div class="meta">${esc(x.source)} · ${nice(x.scenario)} · ${nice(x.success_status)} · ${nice(x.failure_stage)} ${x.is_synthetic ? '<span class="syn">SYNTHETIC</span>' : ""} · <a data-rec="${esc(x.record_id)}">inspect evidence & AI interpretation</a></div></div>`).join("");
+}
+
+async function runSearch() {
+  const v = id => $("#" + id).value;
+  const filters = {scenarios: v("f_scenario") ? [v("f_scenario")] : [], failure_stages: v("f_stage") ? [v("f_stage")] : [],
+    remembered: v("f_remembered") ? [v("f_remembered")] : [], forgotten: v("f_forgotten") ? [v("f_forgotten")] : [],
+    success_status: v("f_status") ? [v("f_status")] : [], sources: v("f_source") ? [v("f_source")] : [], attempts_only: $("#f_att").checked};
+  $("#searchOut").innerHTML = "Searching…";
+  $("#searchOut").innerHTML = resultList(await api("/api/search", {query: v("sq"), filters, k: 12}));
+}
+
+async function runAsk() {
+  const q = $("#askQ").value.trim(); if (!q) return;
+  $("#askOut").innerHTML = "Working…";
+  const a = await api("/api/ask", {question: q});
+  let html = `<div class="def">Plan: intent <b>${esc(a.plan.intent)}</b>${["remembered","forgotten","scenarios","success_status","compare_scenarios"].filter(k => a.plan[k] && a.plan[k].length).map(k => ` · ${k}: ${a.plan[k].map(nice).join(", ")}`).join("")}${a.plan.opportunity ? " · opportunity: " + nice(a.plan.opportunity) : ""}. ${esc(a.note)}</div>`;
+  if (a.evidence) html += resultList(a.evidence);
+  if (Array.isArray(a.table)) html += a.table.length && a.table[0].numerator !== undefined ? bars(a.table) + a.table.slice(0, 4).map(t => t.examples ? `<details><summary>${nice(t.label)}</summary>${evidence(t.examples)}</details>` : "").join("")
+     : `<pre>${esc(JSON.stringify(a.table, null, 1))}</pre>`;
+  else if (a.table) html += `<pre>${esc(JSON.stringify(a.table, null, 1).slice(0, 6000))}</pre>`;
+  if (a.comparison) html += `<div class="scroll"><table><tr><th>Dimension</th>${Object.keys(a.comparison).map(k => `<th>${nice(k)}</th>`).join("")}</tr>
+     ${["records","unique_sources","vague_memory_cases","unsuccessful","abandonment_signals","dominant_failure_stage","top_remembered","top_forgotten","top_workarounds"].map(d =>
+       `<tr><td>${nice(d)}</td>${Object.values(a.comparison).map(p => { const v = p[d]; return `<td>${v && v.numerator !== undefined ? r(v) : Array.isArray(v) ? v.slice(0, 3).map(([l, n]) => `${nice(l)} (${n})`).join(", ") : esc(nice(v))}</td>`; }).join("")}</tr>`).join("")}</table></div>`;
+  if (a.contradictions) html += `<p>Challenging evidence for <b>${nice(a.opportunity)}</b></p>` + a.contradictions.map(c => `<details open><summary>${nice(c.type)} (${c.records})</summary><p>${esc(c.description)}</p>${evidence(c.evidence, 3)}</details>`).join("");
+  if (a.hypotheses) html += a.hypotheses.map(h => `<p><b>${esc(h.we_believe)}</b></p><ul>${h.because.map(x => `<li>${esc(x)}</li>`).join("")}</ul><b>Expect:</b><ul>${h.we_expect_to_observe.map(x => `<li>${esc(x)}</li>`).join("")}</ul>${evidence(h.evidence, 3)}`).join("");
+  $("#askOut").innerHTML = html;
+}
+
+async function openRecord(id) {
+  const d = await api("/api/record/" + encodeURIComponent(id));
+  const raw = d.raw_evidence, ai = d.ai_interpretation[0];
+  $("#modalBox").innerHTML = `<div class="row" style="justify-content:space-between"><h2 style="margin:0">${esc(raw.record_id)}</h2><button class="ghost" onclick="document.getElementById('modal').style.display='none'">Close</button></div>
+  ${raw.is_synthetic ? '<div class="banner">SYNTHETIC / SIMULATED record: not a real user statement.</div>' : ""}
+  <div class="two"><div><h3>Raw evidence</h3><div class="def">${esc(raw.source)} · ${esc(raw.platform)} · ${esc(raw.created_at || "no date")} · ${raw.source_url ? esc(raw.source_url) : "no URL"}${raw.thread_context ? " · " + esc(raw.thread_context) : ""}</div>
+    ${raw.title ? `<p><b>${esc(raw.title)}</b></p>` : ""}<p>${esc(raw.text)}</p>
+    ${raw.replies.length ? `<div class="def">Replies</div>${raw.replies.map(x => `<div class="ev">${esc(x)}</div>`).join("")}` : ""}
+    <div class="def">Engagement: ${esc(JSON.stringify(raw.engagement))}</div></div>
+   <div><h3>AI interpretation</h3>${ai ? `<div class="def">${esc(ai.analyzer)} ${esc(ai.model || "")} · ${esc(ai.prompt_version)} · confidence ${ai.confidence} · invalid quotes ${ai.quotes_invalid}/${ai.quotes_total}</div>
+    <table>${["relevant","perspective","retrieval_scenario","success_status","failure_stage","opportunity_areas"].map(f => `<tr><td>${nice(f)}</td><td>${esc(JSON.stringify(ai.payload[f]))}</td>
+      <td><button class="ghost" onclick="challenge('${ai.analysis_id}','${f}')">challenge</button></td></tr>`).join("")}</table>
+    <p class="def">Interpretation: ${esc(ai.payload.interpretation)}</p>
+    <h3>Extracted signals</h3>${d.signals.map(s => `<div class="ev ${s.quote_valid ? "" : "bad"}"><b>${esc(s.kind)}</b> · ${nice(s.label)}${s.quote_valid ? "" : " · QUOTE NOT FOUND, excluded"}<br>“${esc(s.quote)}”
+      <div class="meta">${esc(s.evidence_id)} · <a onclick="rejectSignal('${s.evidence_id}')">reject this signal</a></div></div>`).join("")}` : "Not analysed yet."}
+    ${d.overrides.length ? `<h3>PM overrides</h3><pre>${esc(JSON.stringify(d.overrides, null, 1))}</pre>` : ""}</div></div>`;
+  $("#modal").style.display = "block";
+}
+async function challenge(aid, field) {
+  const v = prompt(`New value for ${field} (JSON, e.g. "not_found", false, ["index_coverage_gaps"])`); if (v == null) return;
+  let val; try { val = JSON.parse(v); } catch { val = v; }
+  const note = prompt("Reason (kept for audit)") || "";
+  await api("/api/override", {target_type: "analysis", target_id: aid, field, new_value: val, note});
+  alert("Override stored. Use 'Rebuild' to refresh the aggregates.");
+}
+async function rejectSignal(eid) {
+  const note = prompt("Why reject this signal?"); if (note == null) return;
+  await api("/api/override", {target_type: "signal", target_id: eid, field: "rejected", new_value: true, note});
+  alert("Signal rejected. Rebuild to refresh the aggregates.");
+}
+$("#modal").onclick = e => { if (e.target.id === "modal") e.target.style.display = "none"; };
+
+function render() {
+  $("#nav").innerHTML = TABS.map(([k, l]) => `<button class="${k === tab ? "on" : ""}" data-k="${k}">${l}</button>`).join("") +
+    `<button data-rebuild="1" title="Recompute aggregates from current analyses + overrides">↻ Rebuild</button>`;
+  $("#nav").querySelectorAll("button[data-k]").forEach(b => b.onclick = () => { tab = b.dataset.k; history.replaceState(null, "", "#" + tab); render(); });
+  $("#nav").querySelector("[data-rebuild]").onclick = async () => { $("#main").innerHTML = "Rebuilding…"; B = await api("/api/rebuild", {}); render(); };
+  const syn = B.scope.synthetic_records;
+  $("#scope").textContent = `${B.scope.label} · generated ${B.generated_at} · † = directional (small denominator)`;
+  $("#main").innerHTML = (syn ? `<div class="banner">⚠ SYNTHETIC / SIMULATED DATA: ${syn} records are generated. The patterns show the pipeline working and say nothing about real users.</div>` : "") + views[tab]();
+}
+api("/api/bundle").then(b => { B = b; render(); }).catch(e => { $("#main").innerHTML = `<div class="banner">Could not load: ${esc(e.message)}. Run ingest + analyze first.</div>`; });
+</script>
+</body>
+</html>
