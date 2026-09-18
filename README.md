@@ -1,5 +1,6 @@
 # google-photos-ai-engine
 
+
 A research instrument for one discovery question: **what actually happens when people try to retrieve a photo they remember but cannot precisely describe?**
 It turns user conversations into traceable evidence you can compare across sources and scenarios, then stops at research hypotheses and an interview brief. It does **not** propose features.
 
