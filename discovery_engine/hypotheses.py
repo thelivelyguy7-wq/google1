@@ -199,24 +199,44 @@ def jtbd_candidates(c: Corpus, opps: list[dict], top_n: int = 3) -> list[dict]:
     return out
 
 
+VAGUE_MEMORY_GATE = 90  # minimum % vague-memory cases to count as "genuinely the business metric's population"
+
+
 def select_leading(opps: list[dict]) -> dict | None:
-    """Transparent selection: evidence strength gate, then business-metric relevance, then severity."""
+    """Transparent selection: evidence strength gate, then a vague-memory population gate, then size.
+
+    Vague-memory share is near-constant (93-100%) among opportunities that already select for it, since
+    an "opportunity area" is extracted from vague-memory records to begin with. Using it as a fine-grained
+    sort key mostly rewards whichever opportunity happens to be smallest and most homogeneous - a thin
+    fractional-point margin deciding the pick over an opportunity with several times the volume and a
+    much higher abandonment rate. It is used here as a minimum-population gate instead (VAGUE_MEMORY_GATE):
+    confirms an opportunity is genuinely the metric's target population, without letting differences inside
+    that already-qualifying range drive the ranking. The actual ranking key is opportunity *size* - the
+    number of unsuccessful attempts an intervention here could recover - then severity, then source count.
+    """
     rank = {"HIGH": 0, "MEDIUM": 1, "LOW": 2, "DIRECTIONAL": 3}
     if not opps:
         return None
     best_level = min(rank[o["evidence_strength"]["level"]] for o in opps)
-    eligible = [o for o in opps if rank[o["evidence_strength"]["level"]] <= max(best_level, 1)]
-    key = lambda o: (o["vague_memory_cases"]["pct"] or 0, o["unsuccessful"]["pct"] or 0, o["unique_sources"])
+    strength_eligible = [o for o in opps if rank[o["evidence_strength"]["level"]] <= max(best_level, 1)]
+    # Falls back to the full strength-eligible set if none clear the gate, so the rule never returns nothing.
+    gated = [o for o in strength_eligible if (o["vague_memory_cases"]["pct"] or 0) >= VAGUE_MEMORY_GATE]
+    eligible = gated or strength_eligible
+    key = lambda o: (o["unsuccessful"]["numerator"], o["unsuccessful"]["pct"] or 0, o["unique_sources"])
     ordered = sorted(eligible, key=key, reverse=True)
     return {
         "leading": ordered[0]["opportunity"],
         "runner_up": ordered[1]["opportunity"] if len(ordered) > 1 else None,
         "rule": ("1) keep opportunities at the best available evidence level (MEDIUM or better when any exist); "
-                 "2) order by share of vague-memory cases (the business metric's population); "
-                 "3) then by share of unsuccessful outcomes; 4) then by number of independent sources. "
-                 "This is a proposal for the PM to accept or override, not a decision."),
+                 f"2) keep only those where at least {VAGUE_MEMORY_GATE}% of supporting records are genuinely "
+                 "vague-memory cases (the business metric's population), falling back to the full evidence-eligible "
+                 "set if none clear that bar; 3) order by the number of unsuccessful attempts recoverable here "
+                 "(records x unsuccessful share) - the actual size of the opportunity; 4) then by share of "
+                 "unsuccessful outcomes; 5) then by number of independent sources. This is a proposal for the PM "
+                 "to accept or override, not a decision."),
         "table": [{"opportunity": o["opportunity"], "strength": o["evidence_strength"]["level"],
                    "vague_memory_pct": o["vague_memory_cases"]["pct"], "unsuccessful_pct": o["unsuccessful"]["pct"],
+                   "unsuccessful_records": o["unsuccessful"]["numerator"],
                    "sources": o["unique_sources"], "records": o["records"]} for o in ordered],
     }
 
