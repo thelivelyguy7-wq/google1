@@ -155,6 +155,80 @@ def research_fit(c: Corpus, segs: list[dict]) -> dict[str, dict]:
     return fit
 
 
+# Same shape, for the scenario-cluster axis (Part 3, extended): role/recruiting/observability/session/
+# qualifier per cluster, so a PM choosing this axis instead of Direct/Contextual gets the same kind of
+# guidance, grounded in why each cluster is or isn't a good primary research target.
+CLUSTER_ROLE = {
+    "time_place_experience": ("Core of the study",
+        "The largest cluster (38% of attempts) and the closest match to the strategic goal: real experiences "
+        "remembered, exact time or place lost. Breaks mostly at picking the right photo out of the results, "
+        "which a live session can observe directly."),
+    "object_document_text": ("Severity contrast",
+        "Smaller but the most severe cluster (highest unsuccessful rate of any group): the memory often can't "
+        "even become a query, because the missing piece is usually literal text on the item. A genuinely "
+        "different failure mechanism from Time/Place-Approximate, worth 1-2 seats as a deliberate contrast."),
+    "indexing_technical": ("Not recommended as primary",
+        "Real, well-evidenced, but the dominant breakdown is a data/index limitation outside the user's memory "
+        "journey. A session here mostly confirms 'it wasn't indexed' rather than revealing a memory-behaviour "
+        "gap; treat as its own infrastructure opportunity, not a segment to recruit against."),
+}
+CLUSTER_RECRUITING = {
+    "time_place_experience": ("Screen on a recent trip, meal or event photo",
+        "Ask for the last time they looked for a photo from a trip, meal, event or occasion. Qualifies when "
+        "they remember the experience but had to search, browse or scroll to find or confirm it."),
+    "object_document_text": ("Screen on a document, receipt or item photo",
+        "Ask for the last time they looked for a photo of a document, receipt, item or health-related image. "
+        "Qualifies when they remember roughly what it was and when, but not the exact text or name on it."),
+    "indexing_technical": ("Screen on a photo that turned out to be missing",
+        "Ask about a time a photo they expected to find wasn't there at all. Useful only as a boundary case, "
+        "not for the core study."),
+}
+CLUSTER_SESSION_EMPHASIS = {
+    "time_place_experience": "Weight the session to the results screen: once candidates appear, watch how they narrow to the intended one, and what the query missed on the first try.",
+    "object_document_text": "Weight the session to memory elicitation before any device is touched: the key question is whether the person can produce a searchable query at all from what they remember.",
+    "indexing_technical": "Short session, if run at all: confirm the item's absence and how they found out, rather than a full retrieval walkthrough.",
+}
+CLUSTER_QUALIFIER = {
+    "time_place_experience": "Think of the last time you looked for a photo from a trip, a meal out, or an event. What did you remember about it, and what did you search first?",
+    "object_document_text": "Think of the last time you looked for a photo of a document, receipt, or item you'd photographed. What did you remember about it, and what did you type to search?",
+    "indexing_technical": "Tell me about a time a photo you expected to find in your library just wasn't there.",
+}
+CLUSTER_OBSERVABLE = {"time_place_experience": "live", "object_document_text": "live", "indexing_technical": "mixed"}
+
+
+def research_fit_scenario_clusters(c: Corpus, clusters: list[dict]) -> dict[str, dict]:
+    """Per-scenario-cluster role, recruiting, observability, sensitivity, screener and session shape.
+
+    Same shape as research_fit() so the research brief can read either axis interchangeably.
+    """
+    fit = {}
+    for s in clusters:
+        key, name = s["key"], s["segment"]
+        ids = set(s["record_ids"])
+        sensitive = {a["record_id"] for a in c.attempts
+                     if a["record_id"] in ids and a["payload"].get("retrieval_scenario") in SENSITIVE_SCENARIOS}
+        sens_rate = rate(len(sensitive), len(ids), f"attempts in '{name}'", c.scope)
+        level = "high" if (sens_rate["pct"] or 0) >= 40 else "medium" if (sens_rate["pct"] or 0) >= 15 else "low"
+        obs = CLUSTER_OBSERVABLE[key]
+        role_head, role_why = CLUSTER_ROLE[key]
+        rec_head, rec_why = CLUSTER_RECRUITING[key]
+        obs_head, obs_why = OBSERVABILITY[obs]
+        fit[name] = {
+            "role": {"headline": role_head, "why": role_why},
+            "sensitivity": {"level": level, "rate": sens_rate, "rule": SENSITIVITY_RULE, "definitional": key == "object_document_text",
+                            "means": {"high": "Session runs without a screen share.",
+                                      "medium": "Screen share is opt-in, per episode.",
+                                      "low": "Screen share is usually fine; still ask each time."}[level]},
+            "observability": {"key": obs, "headline": obs_head, "why": obs_why},
+            "recruitability": {"headline": rec_head, "why": rec_why},
+            "screener": _screener(key, level, CLUSTER_QUALIFIER),
+            "session_shape": _session_shape(key, level, CLUSTER_SESSION_EMPHASIS),
+            "sample_note": ("Evidence base is small, so treat this cluster's rates as directional when you brief it."
+                            if s["records"] < 30 else ""),
+        }
+    return fit
+
+
 def research_fit_by_state(c: Corpus, states: list[dict]) -> dict[str, dict]:
     """Same shape as research_fit, one level deeper: per Retrieval State, for drilling into Contextual."""
     fit = {}

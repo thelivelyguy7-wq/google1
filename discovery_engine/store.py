@@ -159,6 +159,12 @@ class Store:
                       " ORDER BY override_id DESC LIMIT 1")
         return json.loads(rows[0]["new_value"]) if rows else None
 
+    def selected_target_scenario_cluster(self) -> str | None:
+        """The retrieval-scenario cluster the PM picked for primary research, if any (latest choice wins)."""
+        rows = self.q("SELECT new_value FROM overrides WHERE target_type = 'study' AND field = 'target_scenario_cluster'"
+                      " ORDER BY override_id DESC LIMIT 1")
+        return json.loads(rows[0]["new_value"]) if rows else None
+
     def selected_target_opportunity(self) -> str | None:
         """The opportunity the PM picked for discovery focus, if any (latest choice wins)."""
         rows = self.q("SELECT new_value FROM overrides WHERE target_type = 'study' AND field = 'target_opportunity'"

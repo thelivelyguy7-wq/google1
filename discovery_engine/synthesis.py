@@ -15,13 +15,41 @@ from .quant import ATTEMPT_DEF, Corpus, diverse_examples, rate
 
 UNSUCCESSFUL = ("not_found", "abandoned", "partially_found", "uncertain")
 
-SCENARIO_SEGMENTS = {
-    "Document, receipt & health-record retrievers": ["document", "receipt", "medical_or_health_image"],
-    "Screenshot & purchase-reference retrievers": ["screenshot", "purchase_related_image"],
-    "Experience-memory retrievers (travel, food, events, weddings)": ["travel_memory", "food_restaurant_memory", "event_memory", "wedding_memory"],
-    "People-memory retrievers (family, friends, school)": ["family_memory", "friend_memory", "school_or_college_memory", "personal_memory"],
-    "Place & object retrievers": ["location_memory", "object_memory", "work_memory"],
-    "Video retrievers": ["video"],
+# Retrieval-scenario clusters: a second, selectable primary-segmentation axis alongside the
+# behavioural Direct/Contextual cut. Grouped empirically by *failure mechanism* (dominant failure
+# stage and remembered/forgotten pattern), not by topic - "document" and "receipt" cluster with
+# "medical_or_health_image" because all three break at memory-expression (can't turn what's
+# remembered into a query at all), not because they are thematically similar. Built the same way
+# Direct/Contextual is: a printed rule, no hidden score, dimension-by-dimension comparison.
+# friend_memory and "other" (5% of attempts combined) are deliberately left unclustered: too small
+# and too mixed in failure signature to assign confidently, per the same "don't force a record into
+# a category that doesn't fit" rule the taxonomy applies everywhere else.
+SCENARIO_CLUSTERS = {
+    "time_place_experience": {
+        "name": "Time/Place-Approximate Experience Retrievers",
+        "scenarios": ["travel_memory", "food_restaurant_memory", "event_memory", "wedding_memory",
+                     "personal_memory", "location_memory"],
+        "definition": ("Remembers the experience - who was there, the trip, the occasion - but not exactly when or "
+                       "where. Dominant breakdown is picking the intended photo out of the results, or the system "
+                       "reading the clue differently, not forming the query in the first place."),
+        "rule": "Scenarios whose dominant failure stage is result evaluation or system understanding, and whose top remembered clues are trip/event/occasion/place rather than an exact identifier.",
+    },
+    "object_document_text": {
+        "name": "Object & Document-Text Retrievers",
+        "scenarios": ["document", "receipt", "medical_or_health_image", "object_memory", "purchase_related_image"],
+        "definition": ("Remembers the object or item and roughly when, but not the exact text, name or identifying "
+                       "detail on it. Dominant breakdown is turning the memory into a searchable query at all."),
+        "rule": "Scenarios whose dominant failure stage is memory expression (or whose forgotten-information pattern matches it: exact text/name unknown), where the missing piece is usually literal text on the item.",
+    },
+    "indexing_technical": {
+        "name": "Indexing/Technical-Limitation Retrievers",
+        "scenarios": ["screenshot", "video", "family_memory", "work_memory", "school_or_college_memory"],
+        "definition": ("Remembers real clues, but the dominant breakdown is that the item or its context is "
+                       "missing, unindexed or inaccessible - a data/index limitation rather than a memory-"
+                       "expression gap. Outside the user's memory journey by the engine's own decomposition; kept "
+                       "here for comparison, not recommended as the primary research segment."),
+        "rule": "Scenarios whose dominant failure stage is data/index limitation.",
+    },
 }
 
 
@@ -188,6 +216,58 @@ def _secondary_lenses(c: Corpus, cls: dict[str, dict], n: int) -> dict:
         lenses[lens] = {"name": meta["name"], "question": meta["question"], "rule": meta["rule"],
                         "order": meta["order"], "categories": cats, "by_segment": by_segment}
     return lenses
+
+
+# ---------------------------------------------------------------------------
+def scenario_clusters(c: Corpus) -> tuple[list[dict], dict]:
+    """The retrieval-scenario clusters: a second, selectable primary segmentation, built the same way
+    as Direct/Contextual (profile(), evidence_strength(), a printed rule) so the two axes can be
+    compared like-for-like. Unlike Direct/Contextual, this axis is not exhaustive: friend_memory and
+    "other" attempts are left unclustered rather than forced in (see SCENARIO_CLUSTERS above).
+    """
+    attempts = c.attempts
+    n = len(attempts)
+    scenario_to_cluster = {s: key for key, meta in SCENARIO_CLUSTERS.items() for s in meta["scenarios"]}
+    by_cluster: dict[str, list[dict]] = defaultdict(list)
+    unclustered = []
+    for a in attempts:
+        key = scenario_to_cluster.get(a["payload"].get("retrieval_scenario"))
+        (by_cluster[key] if key else unclustered).append(a)
+
+    out = []
+    for i, (key, meta) in enumerate(SCENARIO_CLUSTERS.items()):
+        pop = by_cluster.get(key, [])
+        if not pop:
+            continue
+        name = meta["name"]
+        definition = f"attempts in '{name}'"
+        prof = profile(c, pop, name)
+        prof["record_ids"] = sorted({a["record_id"] for a in pop})
+        contradicting = sum(1 for a in pop if _labels(c, a, "counter"))
+        prof.update({
+            "segment": name, "key": key, "dimension": "scenario_cluster", "number": i + 1,
+            "definition": meta["definition"], "rule": meta["rule"], "member_scenarios": meta["scenarios"],
+            "share_of_attempts": rate(prof["records"], n, ATTEMPT_DEF, c.scope),
+            "found": rate(sum(1 for a in pop if a["payload"].get("success_status") == "found"), prof["records"], definition, c.scope),
+            "evidence_strength": strength(prof["records"], prof["unique_sources"],
+                                          prof["first_person_attempts"] / prof["records"] if prof["records"] else 0,
+                                          contradicting, prof["synthetic_share"]),
+            "examples": diverse_examples([c.evidence(s) for a in pop for s in c.signals_by_analysis[a["analysis_id"]]
+                                          if s["kind"] in ("failure", "forgotten")], 4),
+        })
+        out.append(prof)
+
+    overview = {
+        "attempts": n,
+        "partition": [{"key": key, "name": meta["name"], "rate": rate(len(by_cluster.get(key, [])), n, ATTEMPT_DEF, c.scope)}
+                      for key, meta in SCENARIO_CLUSTERS.items()],
+        "unclustered": rate(len(unclustered), n, ATTEMPT_DEF, c.scope),
+        "note": ("Grouped by dominant failure mechanism, not topic, so the clusters actually separate who needs a "
+                 "different intervention (unlike Direct/Contextual, which is 95%/5% and cannot discriminate). "
+                 "Indexing/Technical-Limitation is included for comparison but its root cause sits outside the "
+                 "user's memory journey, so it is not recommended as the segment to recruit for."),
+    }
+    return out, overview
 
 
 def retrieval_state_profiles(c: Corpus) -> list[dict]:

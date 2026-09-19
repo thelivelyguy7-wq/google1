@@ -9,10 +9,10 @@ from .hypotheses import CORE_QUESTIONS, build_hypotheses, jtbd_candidates, non_l
 from .quant import Corpus
 from .store import Store, now_iso
 from .decomposition import metric_decomposition
-from .research import research_fit, research_fit_by_state
+from .research import research_fit, research_fit_by_state, research_fit_scenario_clusters
 from .labels import counts_phrase, prettify, readable, readable_list
 from .problem import METHODOLOGY, build_problem_definition
-from .synthesis import opportunities, retrieval_state_profiles, segments
+from .synthesis import opportunities, retrieval_state_profiles, scenario_clusters, segments
 
 
 def build_bundle(store: Store, include_synthetic: bool = True, sources: list[str] | None = None,
@@ -20,6 +20,7 @@ def build_bundle(store: Store, include_synthetic: bool = True, sources: list[str
     c = Corpus(store, include_synthetic, sources, dataset)
     opps = opportunities(c)
     segs, seg_overview = segments(c)
+    sclusters, scluster_overview = scenario_clusters(c)
     ret_states = retrieval_state_profiles(c)
     leading = select_leading(opps)
     chosen_opp = store.selected_target_opportunity()
@@ -38,6 +39,10 @@ def build_bundle(store: Store, include_synthetic: bool = True, sources: list[str
     stale = chosen if chosen and chosen not in {s["segment"] for s in segs} else None
     if stale:
         chosen = None
+    chosen_cluster = store.selected_target_scenario_cluster()
+    cluster_stale = chosen_cluster if chosen_cluster and chosen_cluster not in {s["segment"] for s in sclusters} else None
+    if cluster_stale:
+        chosen_cluster = None
     # The research brief tests the lead and runner-up, so they must be first in line for hypotheses/JTBD
     # (the strength ordering alone can push them out of the top N).
     focus = {leading["leading"], leading["runner_up"]} if leading else set()
@@ -61,8 +66,15 @@ def build_bundle(store: Store, include_synthetic: bool = True, sources: list[str
         # Behavioural retrieval segments: Direct, Contextual, Candidate-heavy, Recovery.
         "segments": segs,
         "segment_overview": seg_overview,
+        # A second, selectable primary-segmentation axis: retrieval-scenario clusters, grouped by
+        # dominant failure mechanism rather than behaviour. Direct/Contextual is 95%/5% and can't
+        # discriminate who needs what; this axis does. Independent choice from target_segment above -
+        # see research_brief() for how the two are reconciled when both, one, or neither is chosen.
+        "scenario_clusters": sclusters,
+        "scenario_cluster_overview": scluster_overview,
         # Part 3: how each segment would actually be researched, if it were chosen.
         "research_fit": research_fit(c, segs),
+        "research_fit_scenario_clusters": research_fit_scenario_clusters(c, sclusters),
         "retrieval_states": ret_states,
         "research_fit_by_state": research_fit_by_state(c, ret_states),
         "opportunities": opps,
@@ -73,6 +85,8 @@ def build_bundle(store: Store, include_synthetic: bool = True, sources: list[str
         "decomposition": metric_decomposition(c),
         "target_segment": chosen,
         "target_segment_stale": stale,
+        "target_scenario_cluster": chosen_cluster,
+        "target_scenario_cluster_stale": cluster_stale,
         "target_opportunity": chosen_opp,
     }
     syn = c.scope["synthetic_records"]
@@ -95,23 +109,28 @@ def build_bundle(store: Store, include_synthetic: bool = True, sources: list[str
     return bundle
 
 
-def recruitment_mix(b: dict, interviews: int = 6, coverage_goal: float = 0.6) -> dict:
-    """Which behavioural segments to recruit from, so the interviews cover the attempts behind BOTH tested opportunities.
+def recruitment_mix(b: dict, interviews: int = 6, coverage_goal: float = 0.6,
+                    groups: list[dict] | None = None, dimension: str = "behavioral") -> dict:
+    """Which segments to recruit from, so the interviews cover the attempts behind BOTH tested opportunities.
 
     A single "target segment" misleads when evidence is spread out, so segments are added in order of
-    coverage until they reach the goal, and interview slots are split in proportion.
+    coverage until they reach the goal, and interview slots are split in proportion. `groups` lets the
+    caller point this at either segmentation axis (b["segments"], the default, or
+    b["scenario_clusters"]) so the suggested mix never names a segment from the axis the PM didn't
+    choose - see research_brief(), which picks `groups` to match whichever axis is active.
     """
+    pool = groups if groups is not None else b["segments"]
     tested = [b["leading"]["leading"], b["leading"]["runner_up"]]
     records = set()
     for o in b["opportunities"]:
         if o["opportunity"] in tested:
             records |= set(o["record_ids"])
-    seg_of = {rid: s["segment"] for s in b["segments"] for rid in s["record_ids"] if rid in records}
+    seg_of = {rid: s["segment"] for s in pool for rid in s["record_ids"] if rid in records}
     total = len(seg_of) or 1
-    groups = [(s["segment"], sum(1 for v in seg_of.values() if v == s["segment"])) for s in b["segments"]]
-    groups.sort(key=lambda g: -g[1])
+    group_counts = [(s["segment"], sum(1 for v in seg_of.values() if v == s["segment"])) for s in pool]
+    group_counts.sort(key=lambda g: -g[1])
     chosen, covered = [], 0
-    for name, n in groups:
+    for name, n in group_counts:
         if n == 0 or (covered / total >= coverage_goal and len(chosen) >= 2) or len(chosen) >= 3:
             break
         chosen.append((name, n))
@@ -121,15 +140,20 @@ def recruitment_mix(b: dict, interviews: int = 6, coverage_goal: float = 0.6) ->
         slots[slots.index(max(slots))] -= 1
     while sum(slots) < interviews:
         slots[0] += 1
+    # Effortless finds (or, on the cluster axis, the other genuinely different failure mechanism) are
+    # rare in public posts, so they rarely win seats on coverage alone.
+    contrast = ("Consider swapping one seat for a Direct Retrieval participant as a contrast case: "
+               "they show what a strong identifier looks like when it works." if dimension == "behavioral" else
+               "Consider swapping one seat for an Object & Document-Text Retrievers participant as a contrast case: "
+               "a genuinely different failure mechanism (can't form a query at all, vs. can't pick the right result "
+               "among candidates).")
     return {
         "records_behind_tested_opportunities": len(seg_of),
         "coverage": {"numerator": covered, "denominator": len(seg_of), "pct": round(100 * covered / total, 1),
                      "denominator_definition": "retrieval attempts behind the two tested opportunities",
                      "directional": len(seg_of) < 30},
         "segments": [{"segment": name, "records": n, "interviews": s} for (name, n), s in zip(chosen, slots)],
-        # Effortless finds are rare in public posts, so they rarely win seats on coverage alone.
-        "contrast_note": ("Consider swapping one seat for a Direct Retrieval participant as a contrast case: "
-                          "they show what a strong identifier looks like when it works."),
+        "contrast_note": contrast,
     }
 
 
@@ -138,19 +162,40 @@ def research_brief(b: dict) -> dict:
         return {}
     lead = next(o for o in b["opportunities"] if o["opportunity"] == b["leading"]["leading"])
     top_hyps = [h for h in b["hypotheses"] if h["opportunity"] in (b["leading"]["leading"], b["leading"]["runner_up"])]
-    mix = recruitment_mix(b)
+    # Two independent, selectable axes: behavioural (Direct/Contextual) and scenario cluster
+    # (grouped by failure mechanism). Printed priority rule, not a silent merge: the scenario-cluster
+    # choice wins when set, because that axis is the one that actually discriminates (Direct/Contextual
+    # is 95%/5%, so it rarely gives a PM a real choice to make); otherwise the behavioural choice
+    # stands; otherwise the plan still defaults its suggested mix to the scenario-cluster axis
+    # (unchosen, so target_segment_chosen_by_pm stays false), because that is the recommended default,
+    # not the behavioural axis the earlier design fell back to.
+    chosen_seg, chosen_cluster = b.get("target_segment"), b.get("target_scenario_cluster")
+    if chosen_cluster:
+        chosen, dimension = chosen_cluster, "scenario_cluster"
+        fit = (b.get("research_fit_scenario_clusters") or {}).get(chosen, {})
+    elif chosen_seg:
+        chosen, dimension = chosen_seg, "behavioral"
+        fit = (b.get("research_fit") or {}).get(chosen, {})
+    else:
+        chosen, dimension, fit = None, None, {}
+    mix_dimension = dimension or "scenario_cluster"
+    mix_groups = b.get("scenario_clusters") if mix_dimension == "scenario_cluster" else b.get("segments")
+    mix = recruitment_mix(b, groups=mix_groups, dimension=mix_dimension)
     cov = mix["coverage"]
-    chosen = b.get("target_segment")
-    # When the PM has chosen a segment, the screener and session adapt to it; otherwise the generic ones stand.
-    fit = (b.get("research_fit") or {}).get(chosen or "", {})
     return {
         "status": "PLAN ONLY. No interview findings exist yet. Do not fill this section with assumed results.",
         "target_segment": chosen or (" + ".join(s["segment"] for s in mix["segments"]) or None),
         "target_segment_chosen_by_pm": bool(chosen),
+        "target_dimension": dimension,
+        "target_dimension_rule": ("A scenario-cluster choice takes priority over a behavioural-segment choice, because "
+                                  "it discriminates who needs what; Direct/Contextual does not (95%/5% split). With "
+                                  "neither chosen, the plan falls back to a coverage-based mix across behavioural "
+                                  "segments."),
         "methodology": {**METHODOLOGY, "segment_adaptation": fit.get("session_shape"),
                         "segment_recruitability": fit.get("recruitability"), "segment_sensitivity": fit.get("sensitivity"),
                         "segment_observability": fit.get("observability"), "adapted_for": chosen},
-        "target_segment_rationale": ((f"Selected by the PM. Suggested mix if you want full coverage: " if chosen else "")
+        "target_segment_rationale": ((f"Selected by the PM ({'scenario cluster' if dimension == 'scenario_cluster' else 'behavioural segment'}). "
+                                      f"Suggested mix if you want full coverage: " if chosen else "")
                                      + f"Together these cover {cov['numerator']} of {cov['denominator']} records ({cov['pct']}%) behind the two tested opportunities. "
                                      f"Suggested mix of {sum(s['interviews'] for s in mix['segments'])} interviews: "
                                      + "; ".join(f"{s['interviews']} × {s['segment']} ({s['records']} records)" for s in mix["segments"]) + "."),

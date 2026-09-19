@@ -523,6 +523,7 @@
   // Two primary segments (Direct, Contextual). Retrieval state (below) is a separate, five-way lens.
   const SEG_COLOR = { direct: "var(--s1)", contextual: "var(--s2)" };
   const STATE_COLOR = { direct_low_effort: "var(--s1)", candidate_heavy: "var(--s3)", recovery_dependent: "var(--s4)", unresolved: "var(--s2)", unavailable: "var(--border-strong)" };
+  const CLUSTER_COLOR = { time_place_experience: "var(--s3)", object_document_text: "var(--s4)", indexing_technical: "var(--border-strong)" };
   const STAGE_LABEL = { recall: "Recall", express: "Express", match: "Match", recognize: "Recognize", recover: "Recover" };
   const segByKey = (k) => (state.bundle.segments || []).find((s) => s.key === k);
   const segDrill = (s, title = s.segment) => drillAttr(title, { segment: s.key, attempts_only: true });
@@ -555,11 +556,72 @@
     const n = so.attempts;
     const fit = b.research_fit || {};
 
-    const banner = chosen
-      ? `<div class="notice" style="margin-bottom:16px">${icon("check", 16)}<div><b>Target segment for interviews:</b> ${esc(chosen)}. The research plan, screener and problem definition use this. <button class="link" data-clear-segment="1">Clear</button></div></div>`
-      : b.target_segment_stale
-        ? `<div class="notice warn" style="margin-bottom:16px">${icon("info", 16)}<div>Your earlier choice, <b>${esc(b.target_segment_stale)}</b>, is not one of these segments any more, so it has been set aside. Pick a behavioural segment below.</div></div>`
-        : `<div class="notice warn" style="margin-bottom:16px">${icon("info", 16)}<div>No target segment chosen yet. The research plan falls back to a mix covering the tested opportunities. Pick one below when you're ready.</div></div>`;
+    // Unified status: whichever axis is actually driving the research plan right now (scenario
+    // cluster takes priority when both are set - see research_brief's printed target_dimension_rule).
+    const rb = b.research_brief || {};
+    const activeDimension = rb.target_dimension;
+    const statusBanner = activeDimension
+      ? `<div class="notice" style="margin-bottom:16px">${icon("check", 16)}<div><b>Primary research target:</b> ${esc(rb.target_segment)} `
+        + `<span class="chip">${activeDimension === "scenario_cluster" ? "scenario cluster" : "behavioural segment"}</span>. `
+        + `The research plan, screener and problem definition use this.</div></div>`
+      : `<div class="notice warn" style="margin-bottom:16px">${icon("info", 16)}<div>No primary research target chosen yet. `
+        + `The research plan falls back to a coverage-based mix. Retrieval-scenario clusters (below) are the recommended axis to choose from - `
+        + `Direct/Contextual rarely gives you a real choice, since 95% of attempts are Contextual.</div></div>`;
+
+    // Retrieval-scenario clusters: a second, selectable primary segmentation, grouped by dominant
+    // failure mechanism rather than behaviour. This is the axis to prefer when picking a research
+    // target, because Direct/Contextual is a 95%/5% split and cannot discriminate who needs what.
+    const clusters = b.scenario_clusters || [];
+    const clusterOverview = b.scenario_cluster_overview;
+    const chosenCluster = b.target_scenario_cluster;
+    const clusterFit = b.research_fit_scenario_clusters || {};
+
+    const clusterStaleNotice = b.target_scenario_cluster_stale
+      ? `<div class="notice warn" style="margin-bottom:12px">${icon("info", 16)}<div>Your earlier choice, <b>${esc(b.target_scenario_cluster_stale)}</b>, is not one of these clusters any more, so it has been set aside.</div></div>`
+      : "";
+
+    const clusterCard = (s) => {
+      const f = clusterFit[s.segment];
+      const isTarget = s.segment === chosenCluster;
+      return `<article class="card seg-card ${isTarget ? "is-target" : ""}" style="--seg:${CLUSTER_COLOR[s.key]}">
+        <div class="row" style="margin-bottom:8px">
+          <span class="seg-num">${s.number}</span>
+          <b class="seg-name" style="font-size:15px">${esc(s.segment)}</b>
+        </div>
+        <p class="small secondary seg-def">${esc(s.definition)}</p>
+        <button class="seg-share" ${drillAttr(s.segment, { scenarios: s.member_scenarios, attempts_only: true })} data-tip="${esc(rateTip("Share of all attempts", s.share_of_attempts))}">
+          <span class="v">${pct(s.share_of_attempts)}</span><span class="small muted">${frac(s.share_of_attempts)} attempts</span></button>
+        <div class="seg-stats">
+          <div data-tip="${esc(rateTip("Found the photo", s.found))}"><span class="muted small">Found</span><b>${pct(s.found)}${dirMark(s.found)}</b></div>
+          <div data-tip="${esc(rateTip("Unsuccessful", s.unsuccessful))}"><span class="muted small">Unsuccessful</span><b>${pct(s.unsuccessful)}${dirMark(s.unsuccessful)}</b></div>
+          <div><span class="muted small">Evidence</span>${strength(s.evidence_strength)}</div>
+        </div>
+        <div class="row small" style="gap:6px;margin:10px 0">${s.member_scenarios.map((sc) => `<span class="chip">${esc(nice(sc))}</span>`).join("")}</div>
+        ${f ? `<div class="small" style="margin-bottom:12px"><span class="chip ${s.key === "indexing_technical" ? "" : "accent"}">${esc(f.role.headline)}</span></div>` : ""}
+        <div class="row" style="margin-top:auto">
+          <span class="spacer"></span>
+          ${isTarget ? `<span class="chip accent">Target</span>` : `<button class="btn ghost sm" data-pick-cluster="${esc(s.segment)}" data-tip="Set as the target for primary research">Select</button>`}
+        </div></article>`;
+    };
+
+    const clusterTable = sortableTable("clusters", clusters, [
+      { key: "seg", h: "Cluster", v: (r) => `<span class="row" style="gap:8px;flex-wrap:nowrap"><i class="dot" style="background:${CLUSTER_COLOR[r.key]}"></i><b>${esc(r.segment)}</b></span>`, sort: (r) => r.number },
+      { key: "share", h: "Share of attempts", num: 1, v: (r) => mini(r.share_of_attempts, "Share of attempts"), sort: (r) => r.share_of_attempts.pct },
+      { key: "found", h: "Found", num: 1, v: (r) => mini(r.found, "Found"), sort: (r) => r.found.pct },
+      { key: "uns", h: "Unsuccessful", num: 1, v: (r) => mini(r.unsuccessful, "Unsuccessful"), sort: (r) => r.unsuccessful.pct },
+      { key: "dom", h: "Dominant breakdown", v: (r) => esc(nice(r.dominant_failure_stage || "none_observed")), sort: (r) => r.dominant_failure_stage || "" },
+      { key: "src", h: "Sources", num: 1, v: (r) => r.unique_sources, sort: (r) => r.unique_sources },
+      { key: "str", h: "Strength", v: (r) => strength(r.evidence_strength), sort: (r) => LEVELS[r.evidence_strength.level] },
+      { key: "target", h: "Target", v: (r) => r.segment === chosenCluster ? `<span class="chip accent">Target</span>` : `<button class="btn ghost sm" data-pick-cluster="${esc(r.segment)}" data-tip="Set as target">Select</button>`, sort: (r) => r.segment === chosenCluster ? 0 : 1 },
+    ], { rowAttrs: (r) => `class="clickable" data-nav="#/segments"`, defaultSort: { key: "share", dir: -1 } });
+
+    const clusterCounts = Object.fromEntries((clusterOverview?.partition || []).map((p) => [p.key, p.rate.numerator]));
+    const clusterOrder = (clusterOverview?.partition || []).map((p) => p.key);
+    const clusterPartition = clusterOverview ? card(`Where the ${clusterOverview.attempts} retrieval attempts sit, by failure mechanism`,
+      `${segbar(clusterCounts, clusterOrder, (k) => CLUSTER_COLOR[k], (k) => clusterOverview.partition.find((p) => p.key === k).name, { tall: true })}
+       ${legend(clusterOrder, (k) => CLUSTER_COLOR[k], (k) => clusterOverview.partition.find((p) => p.key === k).name)}
+       <p class="small muted" style="margin:10px 0 0">${esc(clusterOverview.note)} ${pct(clusterOverview.unclustered)} of attempts (${frac(clusterOverview.unclustered)}) don't fit any cluster confidently and are left unclustered rather than forced in.</p>`,
+      { sub: "Grouped by dominant failure mechanism (why the attempt breaks down), not by topic" }) : "";
 
     // 1. Where the attempts sit: one bar across all of them. Binary and exhaustive, so this always sums to 100%.
     const counts = Object.fromEntries(so.partition.map((p) => [p.key, p.rate.numerator]));
@@ -678,8 +740,17 @@
       <div class="notice small mt">${icon("info", 15)}<div><b>Target segment hypothesis (to validate, not a conclusion):</b> ${esc(so.target_segment_hypothesis)}</div></div>`;
 
     return `${provenanceNotice()}
-      ${pageHead("Decide", "How people retrieve", "Direct vs Contextual retrieval. Every attempt is placed in exactly one; retrieval state, memory state and complexity characterize what happens inside each.")}
-      ${banner}
+      ${pageHead("Decide", "How people retrieve", "Two selectable primary-segmentation axes: retrieval-scenario clusters (recommended - grouped by why attempts break down) and behavioural Direct/Contextual. Pick the one to take into research; retrieval state, memory state and complexity characterize what happens inside the behavioural cut.")}
+      ${statusBanner}
+      <h3 style="margin-top:28px">Retrieval-scenario clusters <span class="chip accent">Recommended axis</span></h3>
+      <p class="small secondary" style="margin:-6px 0 14px;max-width:760px">Grouped by dominant failure mechanism - why attempts actually break down - rather than topic, so these clusters separate who needs a different intervention. Unlike Direct/Contextual (95%/5%, below), each cluster carries real volume and a distinct evidence signature.</p>
+      ${clusterStaleNotice}
+      ${clusterPartition}
+      <div class="grid g3 mt-lg seg-grid">${clusters.map(clusterCard).join("")}</div>
+      <div class="mt-lg">${card("Compare clusters", clusterTable, { cls: "pad-0", sub: "Click any column header to re-sort; click a row to read its evidence." })}</div>
+
+      <h3 style="margin-top:36px">Behavioural segmentation (Direct / Contextual)</h3>
+      <p class="small secondary" style="margin:-6px 0 14px;max-width:760px">Every attempt is Direct or Contextual by construction, so this cut is exhaustive but rarely discriminating: 95.3% of attempts fall in Contextual. Kept for its secondary lenses (memory state, complexity, retrieval state) below, which characterize what happens inside it.</p>
       ${partition}
       <div class="grid g4 mt-lg seg-grid">${segs.map(segCard).join("")}</div>
       <div class="mt-lg">${card("Side by side", table, { cls: "pad-0", sub: "Click any column header to re-sort; click a row for the full profile." })}</div>
@@ -1359,6 +1430,15 @@
     } catch (e) { toast(`Couldn't save: ${e.message}`); }
   }
 
+  async function pickScenarioCluster(cluster) {
+    try {
+      await api("/api/override", { target_type: "study", target_id: "research", field: "target_scenario_cluster",
+        new_value: cluster, note: cluster ? "Target scenario cluster for primary research" : "Cleared target scenario cluster" });
+      closeDrawer();
+      toast(cluster ? `Target scenario cluster set: ${cluster}` : "Target scenario cluster cleared", { label: "Rebuild plan", fn: rebuild });
+    } catch (e) { toast(`Couldn't save: ${e.message}`); }
+  }
+
   async function pickOpportunity(opp) {
     try {
       await api("/api/override", { target_type: "study", target_id: "research", field: "target_opportunity",
@@ -1413,6 +1493,8 @@
     }
     if ((x = el("[data-pick-segment]"))) return pickSegment(x.dataset.pickSegment);
     if ((x = el("[data-clear-segment]"))) return pickSegment(null);
+    if ((x = el("[data-pick-cluster]"))) return pickScenarioCluster(x.dataset.pickCluster);
+    if ((x = el("[data-clear-cluster]"))) return pickScenarioCluster(null);
     if ((x = el("[data-segment]"))) return openSegment(x.dataset.segment);
     if ((x = el("[data-stage]"))) return openStage(+x.dataset.stage);
     if ((x = el("[data-reviewtab]"))) { state.reviewTab = x.dataset.reviewtab; return render({ keepScroll: true }); }

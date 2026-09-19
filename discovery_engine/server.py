@@ -175,7 +175,7 @@ class OverrideBody(BaseModel):
 EDITABLE = {"analysis": {"relevant", "retrieval_scenario", "failure_stage", "success_status", "perspective",
                          "describes_retrieval_attempt", "opportunity_areas"},
             "signal": {"rejected"},
-            "study": {"target_segment", "target_opportunity"}}  # the PM's choice of segment and opportunity
+            "study": {"target_segment", "target_scenario_cluster", "target_opportunity"}}  # the PM's choice of segment(s) and opportunity
 
 
 @app.post("/api/override")
@@ -188,6 +188,9 @@ def override(body: OverrideBody):
         if body.field == "target_segment":
             old = store.selected_target_segment()
             note_msg = "Target segment recorded. Rebuild to refresh the research plan and problem definition."
+        elif body.field == "target_scenario_cluster":
+            old = store.selected_target_scenario_cluster()
+            note_msg = "Target scenario cluster recorded. Rebuild to refresh the research plan and problem definition."
         elif body.field == "target_opportunity":
             old = store.selected_target_opportunity()
             note_msg = "Target opportunity recorded. Rebuild to refresh discovery focus, hypotheses, and brief."
