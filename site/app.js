@@ -308,7 +308,7 @@ page("segments", "Segments", "Stage 4", () => {
   <div class="card" style="margin-top: 1rem;">
     <h3>Observation :</h3>
     <p><strong>Captures the Real Struggle:</strong> SEG-T is defined as a combination of users who either had to change their strategy/make repeated attempts (SEG-2) or had to manually inspect a large candidate set (SEG-3). It explicitly targets users who expect a photo to exist and lack a precise identifier, but are actively putting in effort to find it.</p>
-    <p><strong>Definitional Severity:</strong> Every single record in this segment (503 out of 800, or ~63%) carries at least one severity signal (like manual browsing, large candidate sets, or strategy switching).</p>
+    <p><strong>Definitional Severity:</strong> Every single record in this segment (${D.target.n} out of ${REL}, or ~${D.target.pct}%) carries at least one severity signal (like manual browsing, large candidate sets, or strategy switching).</p>
     <p><strong>Research Fit:</strong> By targeting users who are in the middle of a difficult retrieval path (rather than those who immediately failed and left, or those just making their first attempt), we can directly observe the breakdown in the retrieval journey and test how to help them recover.</p>
   </div>
   <div class="card" style="margin-top: 1rem;">
@@ -559,11 +559,7 @@ document.getElementById("themeToggle").addEventListener("click", () => {
   try { localStorage.setItem("theme", next); } catch { /* private mode */ }
 });
 
-const evaluatorToggleBtn = document.getElementById("evaluatorToggle");
-evaluatorToggleBtn.addEventListener("click", () => {
-  const isEvaluator = document.body.classList.toggle("evaluator-mode");
-  evaluatorToggleBtn.textContent = isEvaluator ? "Deep Dive" : "Evaluator Mode";
-});
+
 
 async function askAI(question) {
   if (!question) return;
