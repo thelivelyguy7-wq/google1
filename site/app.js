@@ -11,8 +11,8 @@ const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<
 const pct = (n, of) => (of ? ((100 * n) / of).toFixed(1) + "%" : "—");
 const titleCase = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const human = (s) => titleCase(String(s).replace(/_/g, " "));
-const label = (t, cls) => `<span class="chip ${cls || ""}">${esc(t)}</span>`;
-const OBS = label("OBS-SYN", "obs");
+const label = (t, cls) => t === "OPP-HYP" ? "" : `<span class="chip ${cls || ""}">${esc(t)}</span>`;
+const OBS = "";
 const INTERP = label("INTERP");
 const UNKNOWN = label("UNKNOWN", "warn");
 
@@ -118,6 +118,49 @@ page("overview", "Overview", "Stage 0", () => {
   </div>`;
 });
 
+page("journey", "Journey", "Stage 2", () => {
+  const J = D.journey, SQ = D.stage_questions;
+  const DC = D.decomposition, NODES = D.narrative.decomposition_nodes, rules = D.narrative.attribution_rules;
+  const stages = Object.keys(J.touched);
+  const maxT = Math.max(...Object.values(J.touched));
+  const answer = {
+    RECALL: SQ.RECALL.top_remembered.map(([a, b]) => `${human(a)} ${b}`).join(", "),
+    EXPRESS: `First-attempt inputs ${SQ.EXPRESS.first_attempt}; date-based ${SQ.EXPRESS.date}; reformulation ${SQ.EXPRESS.reformulation}; explicit barrier ${SQ.EXPRESS.barrier}`,
+    MATCH: `Candidates surfaced in ${SQ.MATCH.candidates_surfaced}; too many results ${SQ.MATCH.too_many_results}; records stating the product misread the clues: ${SQ.MATCH.product_misread_stated}`,
+    RECOGNIZE: `Would recognise on sight ${SQ.RECOGNIZE.can_on_sight}; cannot tell which is right ${SQ.RECOGNIZE.cannot_tell}; heavy inspection ${SQ.RECOGNIZE.heavy_inspection}`,
+    RECOVER: `Reformulate, switch or browse ${SQ.RECOVER.effort}; success after several attempts ${SQ.RECOVER.success_after_effort}; exits ${SQ.RECOVER.exits}`,
+  };
+  
+  const rows = Object.entries(DC).map(([k, v]) => [
+    `<strong>${esc(k)} ${esc(v.name)}</strong>`,
+    v.breakdown ? ev(`node:${k}:breakdown`, v.breakdown) : `<strong>${v.breakdown}</strong>`,
+    v.indirect ? ev(`node:${k}:indirect`, v.indirect) : v.indirect,
+    v.effort ? ev(`node:${k}:effort`, v.effort) : v.effort,
+    v.intact ? ev(`node:${k}:intact`, v.intact) : v.intact,
+    `${v.no_evidence} of ${REL}`,
+  ]);
+
+  return `<h1>Retrieval Journey</h1>
+  
+  <h2 style="font-size: 1.8em; margin: 1.5em 0;">North Star : Incremental Successful retrieval of vaguely remembered photos</h2>
+
+  <h2>Decomposition of Successful Retrieval</h2>
+  <p class="lede">${INTERP} Success needs every node to hold: usable partial memory (D1), expression (D2), the product
+  bringing the photo into the candidates (D3), recognition (D4), refinement when the first try fails (D5), and the
+  photo being in the library (D6). A retrieval fails at the first node that does not hold.</p>
+  
+  ${table(["Node", "Case question", "User behaviour", "Product outcome"],
+    Object.entries(NODES).map(([k, v]) =>
+      [`<strong>${esc(k)} ${esc(v.name)}</strong>`, esc(v.brief_question), esc(v.user_behavior),
+        esc(v.product_outcome)]))}
+        
+  
+  
+  <h2>Observed stage paths</h2>
+  <p class="muted">${Object.keys(J.top_paths).length} shown of ${J.n_paths} distinct paths.</p>
+  ${table(["Path", "Records"], Object.entries(J.top_paths).map(([k, v]) => [`<span class="mono">${esc(k)}</span>`, v]))}`;
+});
+
 page("insights", "Insights", "Stages 1–3", () => {
   const s1 = D.stage1, bg = D.behavior_groups, N = D.needs, NT = D.narrative.needs;
   const remembered = sortedEntries(s1.remembered), lacking = sortedEntries(s1.forgotten_family);
@@ -162,49 +205,6 @@ page("insights", "Insights", "Stages 1–3", () => {
   ${table(["Behaviour group", "Records", "Members"], Object.entries(bg).map(([k, v]) =>
     [esc(k), `${v.n} <span class="muted">(${pct(v.n, REL)})</span>`,
       Object.entries(v.members).map(([c, n]) => `${esc(human(D.behavior_labels[c] || c))} ${n}`).join("; ")]))}`;
-});
-
-page("journey", "Journey", "Stage 2", () => {
-  const J = D.journey, SQ = D.stage_questions;
-  const DC = D.decomposition, NODES = D.narrative.decomposition_nodes, rules = D.narrative.attribution_rules;
-  const stages = Object.keys(J.touched);
-  const maxT = Math.max(...Object.values(J.touched));
-  const answer = {
-    RECALL: SQ.RECALL.top_remembered.map(([a, b]) => `${human(a)} ${b}`).join(", "),
-    EXPRESS: `First-attempt inputs ${SQ.EXPRESS.first_attempt}; date-based ${SQ.EXPRESS.date}; reformulation ${SQ.EXPRESS.reformulation}; explicit barrier ${SQ.EXPRESS.barrier}`,
-    MATCH: `Candidates surfaced in ${SQ.MATCH.candidates_surfaced}; too many results ${SQ.MATCH.too_many_results}; records stating the product misread the clues: ${SQ.MATCH.product_misread_stated}`,
-    RECOGNIZE: `Would recognise on sight ${SQ.RECOGNIZE.can_on_sight}; cannot tell which is right ${SQ.RECOGNIZE.cannot_tell}; heavy inspection ${SQ.RECOGNIZE.heavy_inspection}`,
-    RECOVER: `Reformulate, switch or browse ${SQ.RECOVER.effort}; success after several attempts ${SQ.RECOVER.success_after_effort}; exits ${SQ.RECOVER.exits}`,
-  };
-  
-  const rows = Object.entries(DC).map(([k, v]) => [
-    `<strong>${esc(k)} ${esc(v.name)}</strong>`,
-    v.breakdown ? ev(`node:${k}:breakdown`, v.breakdown) : `<strong>${v.breakdown}</strong>`,
-    v.indirect ? ev(`node:${k}:indirect`, v.indirect) : v.indirect,
-    v.effort ? ev(`node:${k}:effort`, v.effort) : v.effort,
-    v.intact ? ev(`node:${k}:intact`, v.intact) : v.intact,
-    `${v.no_evidence} of ${REL}`,
-  ]);
-
-  return `<h1>Retrieval Journey</h1>
-  
-  <h2 style="font-size: 1.8em; margin: 1.5em 0;">North Star : Incremental Successful retrieval of vaguely remembered photos</h2>
-
-  <h2>Decomposition of Successful Retrieval</h2>
-  <p class="lede">${INTERP} Success needs every node to hold: usable partial memory (D1), expression (D2), the product
-  bringing the photo into the candidates (D3), recognition (D4), refinement when the first try fails (D5), and the
-  photo being in the library (D6). A retrieval fails at the first node that does not hold.</p>
-  
-  ${table(["Node", "Case question", "User behaviour", "Product outcome"],
-    Object.entries(NODES).map(([k, v]) =>
-      [`<strong>${esc(k)} ${esc(v.name)}</strong>`, esc(v.brief_question), esc(v.user_behavior),
-        esc(v.product_outcome)]))}
-        
-  
-  
-  <h2>Observed stage paths</h2>
-  <p class="muted">${Object.keys(J.top_paths).length} shown of ${J.n_paths} distinct paths.</p>
-  ${table(["Path", "Records"], Object.entries(J.top_paths).map(([k, v]) => [`<span class="mono">${esc(k)}</span>`, v]))}`;
 });
 
 /*
@@ -264,16 +264,10 @@ page("opportunities", "Opportunities", "Stages 5–6", () => {
     return [esc(k), ev("opp:" + code, v.n, REL), pct(v.n, REL),
       `${v.profile.with_severity_signal} with ≥1, ${v.profile.with_2plus_signals} with ≥2`, esc(outs)];
   }))}
-  <div class="card"><h3>Opportunity Hypothesis ${label("OPP-HYP")}</h3>
-  <p><strong>O5 Retrieval recovery</strong>, examined with O3 and O1 as competing explanations of why the first attempt
-  does not resolve, and with O4 tested directly rather than ranked last by default. O5 is the largest area with
-  explicit behaviour evidence and contains every terminal outcome; O1 alone would over-weight self-report that shows no
-  outcome difference; O3 alone omits the exits. No solution is chosen.</p></div>
-  <div class="card" style="margin-top: 2rem;">
-    <h3>Jobs-to-be-Done (JTBD)</h3>
-    <p><strong>When I</strong> am trying to find a specific old photo but can't recall the exact date, location, or words to search...</p>
-    <p><strong>But</strong> the initial search returns hundreds of results or doesn't understand my vague visual clues...</p>
-    <p><strong>Help me</strong> easily express my fuzzy memory, recognize the right candidates, and refine my search so I can find the photo without giving up.</p>
+  <div class="card">
+    <h3>Observation :</h3>
+    <p><strong>Contains All Terminal Outcomes:</strong> O5 is the only opportunity area that contains every terminal outcome (e.g., failed searches, abandonment, or users switching to another app), as well as all effortful successes.</p>
+    <p><strong>Strongest Behavioural Evidence:</strong> Compared to competing explanations (like O1 Memory Expression or O3 Candidate Recognition), O5 has the largest body of explicit behavioral evidence (46.4% of relevant records). Focusing here allows us to investigate tangible user actions rather than relying solely on self-reported memory barriers.</p>
   </div>`;
 });
 
@@ -310,14 +304,15 @@ page("segments", "Segments", "Stage 4", () => {
   <p class="muted">${INTERP} Retrieval state is defined by the sentence that carries these signals, so "every member
   shows a signal" is definitional inside the first three segments, not a finding. The informative contrast is that
   first-attempt records carry almost none, and that expression barriers are spread evenly across all four.</p>
-  <div class="card" style="margin-top: 2rem;">
-    <h3>Jobs-to-be-Done (JTBD)</h3>
-    <p><strong>When I</strong> realize my initial search failed to retrieve a specific photo I know I took...</p>
-    <p><strong>But</strong> I can only remember vague visual details (like people or objects) rather than exact dates or locations...</p>
-    <p><strong>Help me</strong> easily pivot my search strategy and evaluate similar results, so I can successfully recover the photo without resorting to endless manual scrolling.</p>
+
+  <div class="card" style="margin-top: 1rem;">
+    <h3>Observation :</h3>
+    <p><strong>Captures the Real Struggle:</strong> SEG-T is defined as a combination of users who either had to change their strategy/make repeated attempts (SEG-2) or had to manually inspect a large candidate set (SEG-3). It explicitly targets users who expect a photo to exist and lack a precise identifier, but are actively putting in effort to find it.</p>
+    <p><strong>Definitional Severity:</strong> Every single record in this segment (503 out of 800, or ~63%) carries at least one severity signal (like manual browsing, large candidate sets, or strategy switching).</p>
+    <p><strong>Research Fit:</strong> By targeting users who are in the middle of a difficult retrieval path (rather than those who immediately failed and left, or those just making their first attempt), we can directly observe the breakdown in the retrieval journey and test how to help them recover.</p>
   </div>
   <div class="card" style="margin-top: 1rem;">
-    <h3>${label("OPP-HYP")} TARGET SEGMENT HYPOTHESIS</h3>
+    <h3>${label("OPP-HYP")} RESEARCH HYPOTHESIS</h3>
     <p>Investigate <strong>users who attempted to retrieve a specific photo they expected to exist, lacked a precise
     identifier, and either changed strategy or made several attempts, or manually inspected a candidate set</strong>:
     ${ev("seg:SEG-T", D.target.n, REL)} records (${D.target.pct}%). Every member states
