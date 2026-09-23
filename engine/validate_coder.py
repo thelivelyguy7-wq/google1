@@ -50,8 +50,9 @@ def micro_f1(truth: list[set], pred: list[set]) -> float:
 
 
 def truth_from_lexicon(df: pd.DataFrame) -> list[Coding]:
-    lex = LexiconCoder()
-    return [lex.code(t) for t in df["text"]]
+    from .rule_coder import RuleCoder
+    coder = RuleCoder()
+    return [coder.code(t) for t in df["text"]]
 
 
 def compare(texts: list[str], truth: list[Coding], preds: list[Coding | None]) -> dict:

@@ -101,18 +101,54 @@ def code_relevant(sents: list[str]) -> dict:
 def build() -> pd.DataFrame:
     raw = pd.read_csv(config.INPUT)
     rows = []
+    from .rule_coder import RuleCoder
+    coder = RuleCoder()
     for r in raw.itertuples(index=False):
-        sents = split_sentences(r.text)
+        c = coder.code(r.text)
         base = dict(record_id=r.record_id, source=r.source, 
                     date_posted=getattr(r, 'date_posted', ''), 
                     author_id=getattr(r, 'author_id', ''),
                     raw_text=r.text)
-        if len(sents) == 1 and sents[0] in L.OFFTOPIC:
-            topic = L.OFFTOPIC[sents[0]]
-            rel = "possibly_relevant" if topic in L.POSSIBLY_RELEVANT_TOPICS else "not_retrieval_related"
-            rows.append({**base, "relevance": rel, "offtopic_topic": topic})
+        if not c:
+            rows.append({**base, "relevance": "insufficient_evidence"})
+            continue
+        if c.relevance != "retrieval_related":
+            # get the off topic from the first sentence
+            sents = split_sentences(r.text)
+            topic = L.OFFTOPIC.get(sents[0], "unknown") if sents else "unknown"
+            rows.append({**base, "relevance": c.relevance, "offtopic_topic": topic})
         else:
-            rows.append({**base, "relevance": "retrieval_related", **code_relevant(sents)})
+            stages = {"RECALL"}
+            if c.express_barrier: stages.add("EXPRESS")
+            if c.retrieval_state == "candidate_inspection":
+                stages.add("RECOGNIZE")
+                stages.add("MATCH")
+            if c.outcome in ["abandoned", "external_workaround", "failed"] or c.retrieval_state in ["exit_path", "recovery_dependent"]:
+                stages.add("RECOVER")
+            if any(s in c.severity_signals for s in ["reformulation", "browsing", "strategy_switch"]):
+                stages.add("RECOVER")
+                stages.add("EXPRESS")
+                
+            object_text = next((q.text for q in c.quotes if q.field == "object"), "").rstrip(".")
+            out_dict = dict(
+                opener_text="", opener_code="",
+                object_text=object_text,
+                object_class=c.object_class,
+                object_class_basis="judgement" if (object_text + ".") in L.OBJECT_JUDGEMENT else "stated",
+                object_class_alt=L.OBJECT_JUDGEMENT[object_text + "."][0] if (object_text + ".") in L.OBJECT_JUDGEMENT else "",
+                memory_text="", memory_code="",
+                remembered="|".join(c.remembered), forgotten="|".join(c.forgotten),
+                forgotten_family="|".join(sorted({FORGOTTEN_FAMILY[f] for f in c.forgotten})) if c.forgotten else "",
+                express_barrier=c.express_barrier,
+                scenario=scenario(c.object_class, c.remembered, c.forgotten),
+                behavior_text="", behavior_code="", retrieval_state=c.retrieval_state,
+                outcome=c.outcome, outcome_stated=c.outcome != "unknown",
+                closer_text="", closer_code="", closer_flag="",
+                journey_stages="|".join(s for s in ["RECALL", "EXPRESS", "MATCH", "RECOGNIZE", "RECOVER"] if s in stages),
+                severity_signals="|".join(c.severity_signals),
+                n_severity_signals=len(c.severity_signals),
+            )
+            rows.append({**base, "relevance": "retrieval_related", **out_dict})
     df = pd.DataFrame(rows)
 
     # duplicates: exact text; near-duplicates = identical object+memory+behavior+closer (opener is only framing)
@@ -122,7 +158,7 @@ def build() -> pd.DataFrame:
         if t in first: df.at[i, "exact_duplicate_of"] = df.at[first[t], "record_id"]
         else: first[t] = i
     rel = df["relevance"] == "retrieval_related"
-    sig = df.loc[rel, ["object_text", "memory_code", "behavior_code", "closer_code"]].astype(str).agg("|".join, axis=1)
+    sig = df.loc[rel, ["object_class", "remembered", "forgotten", "retrieval_state", "outcome", "severity_signals"]].astype(str).agg("|".join, axis=1)
     df["core_signature"] = ""
     df.loc[rel, "core_signature"] = sig
     df["near_duplicate_group_size"] = 0

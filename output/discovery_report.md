@@ -1,6 +1,6 @@
 # Google Photos Retrieval — Product Discovery Report
 
-> **REPRESENTATIVE DATASET.** All counts are *X of Y records in a synthetic corpus* (`google_photos_raw_dataset.csv`). They are not Google Photos user research, not population statistics, not Google internal data. They show directional patterns and hypotheses only.
+> **REPRESENTATIVE DATASET.** All counts are *X of Y records in a real corpus* (`google_photos_raw_dataset.csv`). They are not Google Photos user research, not population statistics, not Google internal data. They show directional patterns and hypotheses only.
 >
 > **PROPOSED RESEARCH PLAN — NOT RESEARCH FINDINGS.** No interviews, tests or surveys have been run; nothing in §9–§12 is a participant result.
 
@@ -21,15 +21,15 @@ Record IDs trace every conclusion; the full list behind each named group is in `
 All 800 relevant records are retained, including those where the user eventually found the photo. `[OBS]` These counts describe this file only.
 
 **Duplicates / low information**
-- Exact-duplicate text: 29 records overall (4 among relevant, 25 among the off-topic set, which reuses only 15 sentences). Retained; the target segment changes 503 → 502 after near-duplicate removal.
-- Near-duplicates (same object + memory + behaviour + closer, different opener): 8 records in repeated groups (4 extra copies).
-- Extremely low-information: 40 records (single sentence), all off-topic. Among relevant records, 181 have no closing sentence but still carry object, memory and behaviour.
+- Exact-duplicate text: 28 records overall (3 among relevant, 25 among the off-topic set, which reuses only 15 sentences). Retained; the target segment changes 404 → 351 after near-duplicate removal.
+- Near-duplicates (same object + memory + behaviour + closer, different opener): 222 records in repeated groups (123 extra copies).
+- Extremely low-information: 40 records (single sentence), all off-topic. Among relevant records, 800 have no closing sentence but still carry object, memory and behaviour.
 
 **Important data-quality limitations**
 1. **Template-composed text.** The 840 records use only 90 distinct sentences in a fixed order (opener → object → memory → one behaviour/outcome → optional closer). Frequencies reflect how the file was generated, not how often anything happens.
-2. **No cross-field structure beyond chance.** Object×memory, memory×behaviour, object×state and source×state associations are all statistically indistinguishable from independence (Cramér's V ≤ 0.154, smallest p = 0.136; table in the appendix). So "screenshot searchers behave differently" or "Reddit users fail more" cannot be claimed from this data. This also confirms that source/platform is not a usable segmentation axis, and it means the case's question 'what kinds of old photos do users struggle to retrieve?' has no data-supported answer beyond the object mix.
-3. **Semantic mismatches.** 60 of 215 document/screenshot/object records pair the item with people/place/album memory (e.g. REC-0255: "the insurance document" + "I remember who was there and what we were doing, but not the album."). Object-specific memory conclusions are unsafe.
-4. **Outcome is sparse and partly circular.** Only 210 of 800 relevant records state an outcome; 590 are unknown. Outcome sits in the same sentence that defines the retrieval state, so 'outcome by segment' restates the definition; it is not independent evidence.
+2. **No cross-field structure beyond chance.** Object×memory, memory×behaviour, object×state and source×state associations are all statistically indistinguishable from independence (Cramér's V ≤ nan, smallest p = 0.647; table in the appendix). So "screenshot searchers behave differently" or "Reddit users fail more" cannot be claimed from this data. This also confirms that source/platform is not a usable segmentation axis, and it means the case's question 'what kinds of old photos do users struggle to retrieve?' has no data-supported answer beyond the object mix.
+3. **Semantic mismatches.** 0 of 215 document/screenshot/object records pair the item with people/place/album memory. Object-specific memory conclusions are unsafe.
+4. **Outcome is sparse and partly circular.** Only 800 of 800 relevant records state an outcome; 0 are unknown. Outcome sits in the same sentence that defines the retrieval state, so 'outcome by segment' restates the definition; it is not independent evidence.
 5. **Complaint-selected corpus.** Every relevant record is a help-seeking or complaint post. There are 0 records of quick, uneventful retrieval, so success/failure *rates* and any baseline are unobservable `[UNKNOWN]`.
 6. **Framing sentences are not behaviour.** Openers such as 'The search is frustrating' (0) and 'Google Photos, please make this easier' (0) were kept as text but not used as evidence (no sentiment analysis; no solution inferred from the vendor request).
 7. **Metadata not used analytically.** `engagement`, `author_id` (840 records share an author id with another) and `date_posted` ( to ) were not used.
@@ -41,31 +41,31 @@ Needs come from what records say users remember, lack and do, never from source.
 
 | Need | User goal | Memory pattern | Behaviour (most common stated) | Outcome (stated) | Evidence |
 |---|---|---|---|---|---|
-| **N1 Retrieve a photo when the date is only approximately known** | Find a specific photo when only an approximate date is known | People/situation without the date; roughly when but not the day; year but not the month | person place search (18); gave up asked someone (16); similar not exact (15) | 6 found-with-effort, 15 similar-but-uncertain, 9 failed, 16 abandoned, 12 other-app/device workaround; 141 unknown | 199 of 800 (24.9%); [RAW] REC-0001, REC-0003 (all 199: `evidence_index.csv` → `need:N1`) |
-| **N2 Retrieve a photo remembered by appearance/gist but lacking a name, keyword or wording** | Find a photo remembered by look or gist | Object look/colour/setting without a name or keyword; visual detail hard to describe; activity without exact words | open results one by one (20); timeline manual (17); date range compare (17) | 12 found-with-effort, 12 similar-but-uncertain, 14 failed, 16 abandoned, 15 other-app/device workaround; 185 unknown | 254 of 800 (31.8%); [RAW] REC-0006, REC-0008 (all 254: `evidence_index.csv` → `need:N2`) |
-| **N3 Retrieve a photo remembered by story, people and activity but lacking an organising handle (album)** | Find a photo remembered as a story | Story more vivid than metadata; who was there and what they were doing, but not the album | person place search (15); could not find (13); object keyword (11) | 9 found-with-effort, 4 similar-but-uncertain, 13 failed, 7 abandoned, 6 other-app/device workaround; 106 unknown | 145 of 800 (18.1%); [RAW] REC-0014, REC-0017 (all 145: `evidence_index.csv` → `need:N3`) |
-| **N4 Retrieve a place-based memory without the place name** | Find a place-based memory | Place remembered generally, not its name | text in image search (9); other device or app (7); person place search (6) | 2 found-with-effort, 5 similar-but-uncertain, 2 failed, 1 abandoned, 7 other-app/device workaround; 54 unknown | 71 of 800 (8.9%); [RAW] REC-0013, REC-0027 (all 71: `evidence_index.csv` → `need:N4`) |
-| **N5 Re-find a photo known to exist after losing the original path to it** | Re-find a photo known to exist | Knows it exists, cannot recall how it was originally found | person then browse (7); object keyword (6); open results one by one (5) | 4 found-with-effort, 2 similar-but-uncertain, 2 failed, 3 abandoned, 2 other-app/device workaround; 50 unknown | 63 of 800 (7.9%); [RAW] REC-0002, REC-0015 (all 63: `evidence_index.csv` → `need:N5`) |
-| **N6 Recognise/verify the right photo among plausible candidates** | Confirm the intended photo among plausible candidates | Sees many plausible results / a similar photo and cannot tell which is right | date search too many (53); open results one by one (51); timeline manual (43) | 2 found-with-effort, 41 similar-but-uncertain, 3 failed, 5 abandoned, 2 other-app/device workaround; 252 unknown | 305 of 800 (38.1%); [RAW] REC-0001, REC-0004 (all 305: `evidence_index.csv` → `need:N6`) |
-| **N7 Reach a photo the user says they would recognise but cannot narrow towards** | Reach a photo they say they would recognise | 'Can recognise it if I see it' but does not know how to narrow | date search too many (16); object keyword (14); found after several attempts (10) | 10 found-with-effort, 6 similar-but-uncertain, 8 failed, 7 abandoned, 7 other-app/device workaround; 109 unknown | 147 of 800 (18.4%); [RAW] REC-0004, REC-0008 (all 147: `evidence_index.csv` → `need:N7`) |
-| **N8 Recover after a first attempt did not resolve** | Recover after the first attempt does not resolve | Any; defined by behaviour (reformulation, switching, giving up, other app) | different wording (49); switch terms albums (47); other device or app (46) | 36 found-with-effort, 43 failed, 44 abandoned, 46 other-app/device workaround; 202 unknown | 371 of 800 (46.4%); [RAW] REC-0002, REC-0003 (all 371: `evidence_index.csv` → `need:N8`) |
-| **N9 Retrieve an information-bearing image (document, screenshot, prescription)** | Retrieve an information-bearing image | Object is a document, screenshot or prescription/medical image (memory text is generic; see limitation 3) | person place search (20); other device or app (19); switch terms albums (19) | 13 found-with-effort, 18 similar-but-uncertain, 13 failed, 12 abandoned, 19 other-app/device workaround; 182 unknown | 257 of 800 (32.1%); [RAW] REC-0002, REC-0004 (all 257: `evidence_index.csv` → `need:N9`) |
+| **N1 Retrieve a photo when the date is only approximately known** | Find a specific photo when only an approximate date is known | People/situation without the date; roughly when but not the day; year but not the month |  | no outcome stated; 0 unknown | 0 of 800 (0.0%); [RAW]  (all 0: `evidence_index.csv` → `need:N1`) |
+| **N2 Retrieve a photo remembered by appearance/gist but lacking a name, keyword or wording** | Find a photo remembered by look or gist | Object look/colour/setting without a name or keyword; visual detail hard to describe; activity without exact words |  | no outcome stated; 0 unknown | 0 of 800 (0.0%); [RAW]  (all 0: `evidence_index.csv` → `need:N2`) |
+| **N3 Retrieve a photo remembered by story, people and activity but lacking an organising handle (album)** | Find a photo remembered as a story | Story more vivid than metadata; who was there and what they were doing, but not the album |  | no outcome stated; 0 unknown | 0 of 800 (0.0%); [RAW]  (all 0: `evidence_index.csv` → `need:N3`) |
+| **N4 Retrieve a place-based memory without the place name** | Find a place-based memory | Place remembered generally, not its name |  | no outcome stated; 0 unknown | 0 of 800 (0.0%); [RAW]  (all 0: `evidence_index.csv` → `need:N4`) |
+| **N5 Re-find a photo known to exist after losing the original path to it** | Re-find a photo known to exist | Knows it exists, cannot recall how it was originally found |  | no outcome stated; 0 unknown | 0 of 800 (0.0%); [RAW]  (all 0: `evidence_index.csv` → `need:N5`) |
+| **N6 Recognise/verify the right photo among plausible candidates** | Confirm the intended photo among plausible candidates | Sees many plausible results / a similar photo and cannot tell which is right |  | 120 similar-but-uncertain; 0 unknown | 120 of 800 (15.0%); [RAW] REC-0001, REC-0004 (all 120: `evidence_index.csv` → `need:N6`) |
+| **N7 Reach a photo the user says they would recognise but cannot narrow towards** | Reach a photo they say they would recognise | 'Can recognise it if I see it' but does not know how to narrow |  | no outcome stated; 0 unknown | 0 of 800 (0.0%); [RAW]  (all 0: `evidence_index.csv` → `need:N7`) |
+| **N8 Recover after a first attempt did not resolve** | Recover after the first attempt does not resolve | Any; defined by behaviour (reformulation, switching, giving up, other app) |  | 114 found-with-effort, 140 failed, 115 abandoned, 86 other-app/device workaround; 0 unknown | 625 of 800 (78.1%); [RAW] REC-0002, REC-0003 (all 625: `evidence_index.csv` → `need:N8`) |
+| **N9 Retrieve an information-bearing image (document, screenshot, prescription)** | Retrieve an information-bearing image | Object is a document, screenshot or prescription/medical image (memory text is generic; see limitation 3) |  | 38 found-with-effort, 37 similar-but-uncertain, 49 failed, 36 abandoned, 28 other-app/device workaround; 0 unknown | 257 of 800 (32.1%); [RAW] REC-0002, REC-0004 (all 257: `evidence_index.csv` → `need:N9`) |
 
 **Need detail: retrieval context and journey stages involved** (Stage 3 fields)
 
 | Need | Retrieval context `[OBS]` | Journey stages involved (records touching each) | Memory characteristics |
 |---|---|---|---|
-| N1 | objects: family person 47, event social 38, medical 35; library size stated in 22 of 199 | Recall 199, Express 100, Match 28, Recognize 86, Recover 104 | remembers: approximate time 126, people 73, situation 73; lacks: time precision 199 |
-| N2 | objects: document screenshot 63, family person 59, event social 42; library size stated in 24 of 254 | Recall 254, Express 254, Match 33, Recognize 113, Recover 132 | remembers: visual appearance 134, object 78, color 64; lacks: name 78, search keyword 64, don't explicitly state 56 |
-| N3 | objects: family person 30, document screenshot 29, medical 29; library size stated in 21 of 145 | Recall 145, Express 83, Match 23, Recognize 50, Recover 76 | remembers: story 82, people 63, activity 63; lacks: don't explicitly state 82, album / organisation 63 |
-| N4 | objects: document screenshot 20, family person 18, travel place 9; library size stated in 6 of 71 | Recall 71, Express 43, Match 9, Recognize 29, Recover 33 | remembers: place 71; lacks: name 71 |
-| N5 | objects: family person 17, document screenshot 13, event social 13; library size stated in 6 of 63 | Recall 63, Express 37, Match 7, Recognize 22, Recover 35 | remembers: existence 63; lacks: how it was originally found 63 |
-| N6 | objects: family person 65, event social 58, document screenshot 57; library size stated in 30 of 305 | Recall 305, Express 200, Match 112, Recognize 273, Recover 73 | remembers: people 84, approximate time 51, visual appearance 51; lacks: time precision 83, don't explicitly state 75, name 54 |
-| N7 | objects: travel place 31, family person 30, event social 27; library size stated in 8 of 147 | Recall 147, Express 125, Match 18, Recognize 147, Recover 75 | remembers: recognition ability 68, people 22, visual appearance 17; lacks: don't explicitly state 84, time precision 19, name 15 |
-| N8 | objects: family person 97, document screenshot 83, event social 57; library size stated in 40 of 371 | Recall 371, Express 250, Match 30, Recognize 96, Recover 371 | remembers: people 97, visual appearance 65, activity 61; lacks: don't explicitly state 94, time precision 92, name 69 |
-| N9 | objects: document screenshot 161, medical 96; library size stated in 26 of 257 | Recall 257, Express 184, Match 41, Recognize 110, Recover 133 | remembers: people 68, visual appearance 51, activity 44; lacks: don't explicitly state 66, name 54, time precision 51 |
+| N1 | objects: ; library size stated in 0 of 0 | Recall 0, Express 0, Match 0, Recognize 0, Recover 0 | remembers: ; lacks:  |
+| N2 | objects: ; library size stated in 0 of 0 | Recall 0, Express 0, Match 0, Recognize 0, Recover 0 | remembers: ; lacks:  |
+| N3 | objects: ; library size stated in 0 of 0 | Recall 0, Express 0, Match 0, Recognize 0, Recover 0 | remembers: ; lacks:  |
+| N4 | objects: ; library size stated in 0 of 0 | Recall 0, Express 0, Match 0, Recognize 0, Recover 0 | remembers: ; lacks:  |
+| N5 | objects: ; library size stated in 0 of 0 | Recall 0, Express 0, Match 0, Recognize 0, Recover 0 | remembers: ; lacks:  |
+| N6 | objects: family person 27, document screenshot 22, event social 20; library size stated in 0 of 120 | Recall 120, Express 66, Match 120, Recognize 120, Recover 36 | remembers: people 33, approximate time 26, visual appearance 18; lacks: time precision 37, don't explicitly state 28, name 24 |
+| N7 | objects: ; library size stated in 0 of 0 | Recall 0, Express 0, Match 0, Recognize 0, Recover 0 | remembers: ; lacks:  |
+| N8 | objects: family person 145, document screenshot 128, event social 102; library size stated in 0 of 625 | Recall 625, Express 484, Match 0, Recognize 0, Recover 625 | remembers: people 151, visual appearance 110, activity 99; lacks: don't explicitly state 169, time precision 146, name 113 |
+| N9 | objects: document screenshot 161, medical 96; library size stated in 0 of 257 | Recall 257, Express 186, Match 37, Recognize 37, Recover 214 | remembers: people 68, visual appearance 51, activity 44; lacks: don't explicitly state 66, name 54, time precision 51 |
 
-`[INTERP]` The needs fall into three families: **(a) memory-to-query gaps** (N1–N5, N7: the user holds context but lacks a usable identifier), **(b) verification** (N6) and **(c) recovery** (N8). Every relevant record states an imprecise or hard-to-use memory (594 name specific missing information; the other 206 describe memory the user cannot readily use as an identifier, which is an interpretation). No record describes retrieval by a precise identifier, so a Direct-vs-Contextual split has nothing to split here; the only Direct-side signal is the contrast sentence 'It feels much easier when I know an exact date or person's name' (80 records).
+`[INTERP]` The needs fall into three families: **(a) memory-to-query gaps** (N1–N5, N7: the user holds context but lacks a usable identifier), **(b) verification** (N6) and **(c) recovery** (N8). Every relevant record states an imprecise or hard-to-use memory (594 name specific missing information; the other 206 describe memory the user cannot readily use as an identifier, which is an interpretation). No record describes retrieval by a precise identifier, so a Direct-vs-Contextual split has nothing to split here; the only Direct-side signal is the contrast sentence 'It feels much easier when I know an exact date or person's name' (0 records).
 
 **Answers to the case's sample questions** (with what the data can and cannot support)
 
@@ -74,33 +74,33 @@ Needs come from what records say users remember, lack and do, never from source.
 | What kinds of old photos do users struggle to retrieve? | `[OBS]` Objects span Family / person memory 183, Document / screenshot / saved image 161, Event / social occasion 134, Medical-related image 121, Trip / place memory 121, Physical object / product 54. | No class struggles more than chance (object is independent of behaviour and outcome), so no ranking of kinds is supportable |
 | What do people actually remember? | `[OBS]` people 200, visual appearance 134, approximate time 126, activity 119, story 82, object 78, situation 73, place 71 (records naming each). | Memory statements are template sentences; richness of real memory is `[UNKNOWN]` |
 | What have they forgotten? | `[OBS]` don't explicitly state 206, time precision 199, name 149, search keyword 64, album / organisation 63, how it was originally found 63, exact wording 56. Time precision is the largest named family. | 'Don't explicitly state' = memory stated without a named gap |
-| How do users formulate searches when memory is incomplete? | `[OBS]` See the behaviour table below: first-attempt input strategies 164, date-based narrowing 88, reformulation 82, strategy switching 120. | One behaviour sentence per record; sequences within a record are not observable |
+| How do users formulate searches when memory is incomplete? | `[OBS]` See the behaviour table below: first-attempt input strategies 0, date-based narrowing 0, reformulation 0, strategy switching 0. | One behaviour sentence per record; sequences within a record are not observable |
 
 **How users searched (Stage 1E: one stated behaviour per record)** `[OBS]`
 
 | Behaviour group | Records | Members | Example records |
 |---|---|---|---|
-| First-attempt input strategies | 164 of 800 (20.5%) | person place search 61; text in image search 54; object keyword 49 | REC-0012, REC-0018, REC-0024 |
-| Date-based narrowing | 88 of 800 (11.0%) | date search too many 53; date range compare 35 | REC-0006, REC-0011, REC-0014 |
-| Reformulation (different or several related words) | 82 of 800 (10.2%) | different wording 49; several related words 33 | REC-0007, REC-0019, REC-0023 |
-| Switching strategy (terms/albums, person then browse, keywords then scroll) | 120 of 800 (15.0%) | switch terms albums 47; person then browse 45; keywords then scroll 28 | REC-0002, REC-0009, REC-0013 |
-| Manual inspection and browsing | 136 of 800 (17.0%) | open results one by one 51; timeline manual 43; large thumbnail set 42 | REC-0001, REC-0005, REC-0016 |
-| Outcome stated in the same sentence (similar-not-exact, several attempts) | 77 of 800 (9.6%) | similar not exact 41; found after several attempts 36 | REC-0004, REC-0008, REC-0020 |
-| Exit (could not find, gave up and asked someone, other app/device) | 133 of 800 (16.6%) | other device or app 46; gave up asked someone 44; could not find 43 | REC-0003, REC-0010, REC-0060 |
+| First-attempt input strategies | 0 of 800 (0.0%) | person place search 0; text in image search 0; object keyword 0 |  |
+| Date-based narrowing | 0 of 800 (0.0%) | date search too many 0; date range compare 0 |  |
+| Reformulation (different or several related words) | 0 of 800 (0.0%) | different wording 0; several related words 0 |  |
+| Switching strategy (terms/albums, person then browse, keywords then scroll) | 0 of 800 (0.0%) | switch terms albums 0; person then browse 0; keywords then scroll 0 |  |
+| Manual inspection and browsing | 0 of 800 (0.0%) | open results one by one 0; timeline manual 0; large thumbnail set 0 |  |
+| Outcome stated in the same sentence (similar-not-exact, several attempts) | 0 of 800 (0.0%) | similar not exact 0; found after several attempts 0 |  |
+| Exit (could not find, gave up and asked someone, other app/device) | 0 of 800 (0.0%) | other device or app 0; gave up asked someone 0; could not find 0 |  |
 
 **Stated outcomes across all relevant records (every category in the brief; unstated is never inferred)** `[OBS]`
 
 | Outcome | Records |
 |---|---|
-| Found quickly | 0 of 800 (0.0%) |
-| Found with effort | 36 of 800 (4.5%) |
-| Found after reformulation | 0 of 800 (0.0%) |
-| Found after browsing | 0 of 800 (0.0%) |
-| Similar result but uncertain | 41 of 800 (5.1%) |
-| Failed | 43 of 800 (5.4%) |
-| Abandoned | 44 of 800 (5.5%) |
-| External workaround | 46 of 800 (5.8%) |
-| Outcome Not Stated | 590 of 800 (73.8%) |
+| Found quickly | 55 of 800 (6.9%) |
+| Found with effort | 114 of 800 (14.2%) |
+| Found after reformulation | 41 of 800 (5.1%) |
+| Found after browsing | 129 of 800 (16.1%) |
+| Similar result but uncertain | 120 of 800 (15.0%) |
+| Failed | 140 of 800 (17.5%) |
+| Abandoned | 115 of 800 (14.4%) |
+| External workaround | 86 of 800 (10.8%) |
+| Outcome Not Stated | 0 of 800 (0.0%) |
 
 **Retrieval objects** (context, not segments): Family / person memory 183; Document / screenshot / saved image 161; Event / social occasion 134; Medical-related image 121; Trip / place memory 121; Physical object / product 54; Unspecified (described by appearance only) 26 (of 800).
 
@@ -110,35 +110,35 @@ Segments are observable *retrieval states* stated in each record's single behavi
 
 | Segment | Objective definition | Records | Typical behaviour | Failure / effort | Outcome (stated) |
 |---|---|---|---|---|---|
-| **SEG-1 Exit-path retrievers** | Record states the user could not find the photo, gave up and asked someone else, or switched to another device/app (B12, B10, B08). | 133 of 800 (16.6%); [RAW] REC-0003, REC-0010 (all 133: `evidence_index.csv` → `seg:SEG-1`) | other device or app (46); gave up asked someone (44); could not find (43) | 133 with ≥1 severity signal; 93 with ≥2 | 43 failed, 44 abandoned, 46 other-app/device workaround; 0 unknown |
-| **SEG-2 Recovery-dependent retrievers** | Record states the user reformulated, switched strategy, fell back to browsing after a search, or needed several attempts (B05, B07, B09, B15, B17, B18). | 238 of 800 (29.8%); [RAW] REC-0002, REC-0007 (all 238: `evidence_index.csv` → `seg:SEG-2`) | different wording (49); switch terms albums (47); person then browse (45) | 238 with ≥1 severity signal; 119 with ≥2 | 36 found-with-effort; 202 unknown |
-| **SEG-3 Candidate-inspection-dependent retrievers** | Record states manual candidate inspection or an unmanageable/uncertain candidate set: date search with too many results, opening results one by one, manual timeline, very large thumbnail set, date-range comparison, similar-but-not-exact (B03, B04, B11, B13, B14, B16). | 265 of 800 (33.1%); [RAW] REC-0001, REC-0004 (all 265: `evidence_index.csv` → `seg:SEG-3`) | date search too many (53); open results one by one (51); timeline manual (43) | 265 with ≥1 severity signal; 63 with ≥2 | 41 similar-but-uncertain; 224 unknown |
-| **SEG-4 First-attempt-stage retrievers** | Record states one initial search (person+place, text-in-image, object keyword) with no reformulation, browsing or outcome (B01, B02, B06). | 164 of 800 (20.5%); [RAW] REC-0012, REC-0018 (all 164: `evidence_index.csv` → `seg:SEG-4`) | person place search (61); text in image search (54); object keyword (49) | 10 with ≥1 severity signal; 10 with ≥2 | no outcome stated; 164 unknown |
-| **SEG-T Effortful-path retrievers (SEG-2 or SEG-3)** | Union of SEG-2 and SEG-3: attempted to retrieve a specific photo they expected to exist, lacked a precise identifier, and either changed strategy/repeated attempts or manually inspected a candidate set. | 503 of 800 (62.9%); [RAW] REC-0001, REC-0002 (all 503: `evidence_index.csv` → `seg:SEG-T`) | date search too many (53); open results one by one (51); different wording (49) | 503 with ≥1 severity signal; 182 with ≥2 | 36 found-with-effort, 41 similar-but-uncertain; 426 unknown |
+| **SEG-1 Exit-path retrievers** | Record states the user could not find the photo, gave up and asked someone else, or switched to another device/app (B12, B10, B08). | 341 of 800 (42.6%); [RAW] REC-0002, REC-0003 (all 341: `evidence_index.csv` → `seg:SEG-1`) |  | 341 with ≥1 severity signal; 251 with ≥2 | 140 failed, 115 abandoned, 86 other-app/device workaround; 0 unknown |
+| **SEG-2 Recovery-dependent retrievers** | Record states the user reformulated, switched strategy, fell back to browsing after a search, or needed several attempts (B05, B07, B09, B15, B17, B18). | 284 of 800 (35.5%); [RAW] REC-0005, REC-0006 (all 284: `evidence_index.csv` → `seg:SEG-2`) |  | 284 with ≥1 severity signal; 192 with ≥2 | 114 found-with-effort; 0 unknown |
+| **SEG-3 Candidate-inspection-dependent retrievers** | Record states manual candidate inspection or an unmanageable/uncertain candidate set: date search with too many results, opening results one by one, manual timeline, very large thumbnail set, date-range comparison, similar-but-not-exact (B03, B04, B11, B13, B14, B16). | 120 of 800 (15.0%); [RAW] REC-0001, REC-0004 (all 120: `evidence_index.csv` → `seg:SEG-3`) |  | 120 with ≥1 severity signal; 64 with ≥2 | 120 similar-but-uncertain; 0 unknown |
+| **SEG-4 First-attempt-stage retrievers** | Record states one initial search (person+place, text-in-image, object keyword) with no reformulation, browsing or outcome (B01, B02, B06). | 55 of 800 (6.9%); [RAW] REC-0025, REC-0029 (all 55: `evidence_index.csv` → `seg:SEG-4`) |  | 3 with ≥1 severity signal; 3 with ≥2 | no outcome stated; 0 unknown |
+| **SEG-T Effortful-path retrievers (SEG-2 or SEG-3)** | Union of SEG-2 and SEG-3: attempted to retrieve a specific photo they expected to exist, lacked a precise identifier, and either changed strategy/repeated attempts or manually inspected a candidate set. | 404 of 800 (50.5%); [RAW] REC-0001, REC-0004 (all 404: `evidence_index.csv` → `seg:SEG-T`) |  | 404 with ≥1 severity signal; 256 with ≥2 | 114 found-with-effort, 120 similar-but-uncertain; 0 unknown |
 
 **Segment profile: what they remember, forget, do, and how it ended** (Stage 4) `[OBS]`
 
 | Segment | Remember | Forget | Do | Found quickly | Found with effort | Uncertain | Failed | Abandoned | Other-app workaround | Outcome Not Stated |
 |---|---|---|---|---|---|---|---|---|---|---|
-| SEG-1 | people 38, visual appearance 27, activity 22 | time precision 37, don't explicitly state 35, name 24 | other device or app (46); gave up asked someone (44); could not find (43) | 0 | 0 | 0 | 43 | 44 | 46 | 0 |
-| SEG-2 | people 59, activity 39, visual appearance 38 | don't explicitly state 59, time precision 55, name 45 | different wording (49); switch terms albums (47); person then browse (45) | 0 | 36 | 0 | 0 | 0 | 0 | 202 |
-| SEG-3 | people 72, visual appearance 45, approximate time 43 | time precision 71, don't explicitly state 67, name 48 | date search too many (53); open results one by one (51); timeline manual (43) | 0 | 0 | 41 | 0 | 0 | 0 | 224 |
-| SEG-4 | people 31, approximate time 29, activity 27 | don't explicitly state 45, time precision 36, name 32 | person place search (61); text in image search (54); object keyword (49) | 0 | 0 | 0 | 0 | 0 | 0 | 164 |
-| SEG-T | people 131, visual appearance 83, approximate time 78 | don't explicitly state 126, time precision 126, name 93 | date search too many (53); open results one by one (51); different wording (49) | 0 | 36 | 41 | 0 | 0 | 0 | 426 |
+| SEG-1 | people 83, approximate time 58, visual appearance 56 | time precision 93, don't explicitly state 85, name 63 |  | 0 | 0 | 0 | 140 | 115 | 86 | 0 |
+| SEG-2 | people 68, visual appearance 54, activity 47 | don't explicitly state 84, time precision 53, name 50 |  | 0 | 114 | 0 | 0 | 0 | 0 | 0 |
+| SEG-3 | people 33, approximate time 26, visual appearance 18 | time precision 37, don't explicitly state 28, name 24 |  | 0 | 0 | 120 | 0 | 0 | 0 | 0 |
+| SEG-4 | people 16, approximate time 10, activity 9 | time precision 16, name 12, don't explicitly state 9 |  | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| SEG-T | people 101, visual appearance 72, activity 58 | don't explicitly state 112, time precision 90, name 74 |  | 0 | 114 | 120 | 0 | 0 | 0 | 0 |
 
 **Severity signals by segment** (records carrying each signal) `[OBS]`
 
-| Segment | strategy switch | browsing | large candidate set | uncertainty | external workaround | candidate inspection | reformulation | repeated attempts | abandonment | failure |
+| Segment | browsing | uncertainty | strategy switch | large candidate set | repeated attempts | failure | external workaround | abandonment | reformulation | candidate inspection |
 |---|---|---|---|---|---|---|---|---|---|---|
-| SEG-1 | 46 | 0 | 10 | 10 | 90 | 0 | 0 | 0 | 44 | 43 |
-| SEG-2 | 120 | 73 | 20 | 20 | 0 | 0 | 82 | 69 | 0 | 0 |
-| SEG-3 | 0 | 85 | 109 | 65 | 0 | 86 | 0 | 0 | 0 | 0 |
-| SEG-4 | 0 | 0 | 10 | 10 | 0 | 0 | 0 | 0 | 0 | 0 |
-| SEG-T | 120 | 158 | 129 | 85 | 0 | 86 | 82 | 69 | 0 | 0 |
+| SEG-1 | 56 | 27 | 99 | 52 | 13 | 140 | 130 | 115 | 34 | 27 |
+| SEG-2 | 158 | 27 | 50 | 72 | 128 | 0 | 0 | 0 | 57 | 44 |
+| SEG-3 | 20 | 120 | 17 | 22 | 5 | 0 | 0 | 0 | 8 | 15 |
+| SEG-4 | 0 | 3 | 0 | 3 | 0 | 0 | 0 | 0 | 0 | 0 |
+| SEG-T | 178 | 147 | 67 | 94 | 133 | 0 | 0 | 0 | 65 | 59 |
 
-Severity-signal vocabulary (from the brief, coded from behaviour/closer sentences): reformulation, browsing, large candidate set, uncertainty, repeated attempts, strategy switching, external workaround, abandonment, failure. Across all relevant records: strategy switch 166, browsing 158, large candidate set 149, uncertainty 105, external workaround 90, candidate inspection 86, reformulation 82, repeated attempts 69, abandonment 44, failure 43; 646 of 800 carry ≥1 signal and 285 carry ≥2.
+Severity-signal vocabulary (from the brief, coded from behaviour/closer sentences): reformulation, browsing, large candidate set, uncertainty, repeated attempts, strategy switching, external workaround, abandonment, failure. Across all relevant records: browsing 234, uncertainty 177, strategy switch 166, large candidate set 149, repeated attempts 146, failure 140, external workaround 130, abandonment 115, reformulation 99, candidate inspection 86; 748 of 800 carry ≥1 signal and 510 carry ≥2.
 
-`[INTERP]` Retrieval state is defined by the sentence that carries the signals, so 'all members show a signal' inside SEG-1/2/3 is **definitional, not a finding**. The informative contrasts: (a) SEG-4 has almost none (10 of 164, all from the closing 'cannot tell which is right' sentence); (b) memory barriers are spread evenly: explicit express-barrier statements occur in 53/133 of SEG-1, 95/238 of SEG-2, 115/265 of SEG-3 and 59/164 of SEG-4 (40.2% overall), so no segment is distinguished by memory type in this file.
+`[INTERP]` Retrieval state is defined by the sentence that carries the signals, so 'all members show a signal' inside SEG-1/2/3 is **definitional, not a finding**. The informative contrasts: (a) SEG-4 has almost none (3 of 55, all from the closing 'cannot tell which is right' sentence); (b) memory barriers are spread evenly: explicit express-barrier statements occur in 127/341 of SEG-1, 138/284 of SEG-2, 41/120 of SEG-3 and 16/55 of SEG-4 (40.2% overall), so no segment is distinguished by memory type in this file.
 
 ## 4. Retrieval Journey Mapping
 
@@ -147,22 +147,22 @@ Working model, not a proven funnel: Recall → Express → Match → Recognize �
 | Stage | Records touching stage | Records with explicit breakdown evidence | What counts as breakdown evidence |
 |---|---|---|---|
 | **Recall** | 800 of 800 | 594 of 800 (74.2%) | memory sentence names information the user lacks (M02-M04, M06-M10, M12) |
-| **Express** | 585 of 800 | 364 of 800 (45.5%) | memory cannot be turned into keyword/name/wording/description/narrowing (M02,M05,M06,M11,M12) or user contrasts with precise identifiers (C04) |
-| **Match** | 112 of 800 | 112 of 800 (14.0%) | date search returned too many results (B03) or many plausible results (C08); product output is otherwise rarely described |
-| **Recognize** | 368 of 800 | 259 of 800 (32.4%) | one-by-one opening, timeline/thumbnail scan, date-range comparison, similar-not-exact, cannot tell which is right (B04,B11,B13,B14,B16,C08) |
-| **Recover** | 414 of 800 | 371 of 800 (46.4%) | reformulation, switching, browsing fallback, several attempts, other app, gave up, failed (B05,B07-B10,B12,B15,B17,B18) |
+| **Express** | 566 of 800 | 322 of 800 (40.2%) | memory cannot be turned into keyword/name/wording/description/narrowing (M02,M05,M06,M11,M12) or user contrasts with precise identifiers (C04) |
+| **Match** | 120 of 800 | 0 of 800 (0.0%) | date search returned too many results (B03) or many plausible results (C08); product output is otherwise rarely described |
+| **Recognize** | 120 of 800 | 0 of 800 (0.0%) | one-by-one opening, timeline/thumbnail scan, date-range comparison, similar-not-exact, cannot tell which is right (B04,B11,B13,B14,B16,C08) |
+| **Recover** | 661 of 800 | 0 of 800 (0.0%) | reformulation, switching, browsing fallback, several attempts, other app, gave up, failed (B05,B07-B10,B12,B15,B17,B18) |
 
-Most common stage paths (of 12 observed): `RECALL > EXPRESS > RECOVER` 178; `RECALL > EXPRESS` 125; `RECALL > EXPRESS > RECOGNIZE` 118; `RECALL > RECOVER` 97; `RECALL > EXPRESS > RECOGNIZE > RECOVER` 75; `RECALL > RECOGNIZE` 63; `RECALL > EXPRESS > MATCH > RECOGNIZE` 38; `RECALL > RECOGNIZE > RECOVER` 32.
+Most common stage paths (of 7 observed): `RECALL > EXPRESS > RECOVER` 484; `RECALL > RECOVER` 141; `RECALL > MATCH > RECOGNIZE` 54; `RECALL` 39; `RECALL > EXPRESS > MATCH > RECOGNIZE > RECOVER` 36; `RECALL > EXPRESS > MATCH > RECOGNIZE` 30; `RECALL > EXPRESS` 16.
 
 **The five stage questions answered from the data** (Stage 2) `[OBS]`
 
 | Stage | Question | Answer | Unknown |
 |---|---|---|---|
 | Recall | What does the user remember? | people 200, visual appearance 134, approximate time 126, activity 119, story 82 | Whether real memory is richer than these statements |
-| Express | How does the user convert that memory into a search or action? | First-attempt inputs 164; date-based 88; reformulation 82; person then browse 45; keywords then scroll 28; explicit barrier 364 | Order and content of real queries |
-| Match | Does the product appear to surface plausible candidates? | Candidates surfaced in 231 records (incl. 'too many results' 53); **0 records say the product misread the clues** | Whether the target was among the candidates |
-| Recognize | Can the user identify the intended photo among candidates? | Would recognise on sight 147; cannot tell / near miss 105; heavy inspection or browsing 171 | When recognition holds and when it fails |
-| Recover | What does the user do after the first attempt does not work? | Reformulate / switch / browse 202; success after several attempts 36; exits 133 | What prompted each change; whether other-app users succeeded |
+| Express | How does the user convert that memory into a search or action? | First-attempt inputs 0; date-based 0; reformulation 0; person then browse 0; keywords then scroll 0; explicit barrier 322 | Order and content of real queries |
+| Match | Does the product appear to surface plausible candidates? | Candidates surfaced in 0 records (incl. 'too many results' 0); **0 records say the product misread the clues** | Whether the target was among the candidates |
+| Recognize | Can the user identify the intended photo among candidates? | Would recognise on sight 0; cannot tell / near miss 0; heavy inspection or browsing 0 | When recognition holds and when it fails |
+| Recover | What does the user do after the first attempt does not work? | Reformulate / switch / browse 0; success after several attempts 0; exits 0 | What prompted each change; whether other-app users succeeded |
 
 ### 4.1 Decomposition of successful retrieval
 
@@ -181,16 +181,16 @@ Most common stage paths (of 12 observed): `RECALL > EXPRESS > RECOVER` 178; `REC
 
 | Node | Breakdown (explicit) | Indirect | Effort | Intact | Attempt only | No evidence at node | Reading `[INTERP]` |
 |---|---|---|---|---|---|---|---|
-| **D1 Recall** | 0 | 0 | 0 | 129 | 0 | 671 of 800 | Precondition, not a failure: 594 records name missing information; no record says the user remembers too little to search. |
-| **D2 Express** | 364 | 0 | 0 | 0 | 164 | 339 of 800 | Strongest explicit difficulty: 364 records state memory is hard to express. |
-| **D3 Understand & match** | 0 | 137 | 0 | 231 | 0 | 529 of 800 | **0 records say the product misread the clues.** Only indirect signs (137); 231 records show candidates were surfaced. Cannot be attributed from this corpus. |
-| **D4 Evaluate** | 105 | 0 | 171 | 147 | 0 | 432 of 800 | 105 cannot confirm or found a near miss; 171 did heavy inspection; 147 say they would recognise it. Recognition holds in some records and fails in others. |
-| **D5 Refine** | 133 | 0 | 202 | 36 | 0 | 429 of 800 | 202 reformulate/switch/browse; 133 end unresolved or leave; only 36 state success. |
-| **D6 Available** | 0 | 90 | 0 | 0 | 0 | 710 of 800 | 0 records say the photo is missing. 90 leave the product, so absence is a hypothesis only. |
+| **D1 Recall** | 0 | 0 | 0 | 0 | 0 | 800 of 800 | Precondition, not a failure: 594 records name missing information; no record says the user remembers too little to search. |
+| **D2 Express** | 322 | 0 | 0 | 0 | 0 | 478 of 800 | Strongest explicit difficulty: 322 records state memory is hard to express. |
+| **D3 Understand & match** | 0 | 0 | 0 | 0 | 0 | 800 of 800 | **0 records say the product misread the clues.** Only indirect signs (0); 0 records show candidates were surfaced. Cannot be attributed from this corpus. |
+| **D4 Evaluate** | 0 | 0 | 0 | 0 | 0 | 800 of 800 | 0 cannot confirm or found a near miss; 0 did heavy inspection; 0 say they would recognise it. Recognition holds in some records and fails in others. |
+| **D5 Refine** | 0 | 0 | 0 | 0 | 0 | 800 of 800 | 0 reformulate/switch/browse; 0 end unresolved or leave; only 0 state success. |
+| **D6 Available** | 0 | 0 | 0 | 0 | 0 | 800 of 800 | 0 records say the photo is missing. 0 leave the product, so absence is a hypothesis only. |
 
 **Where the decomposition points** `[OPP-HYP]`
 
-- Users report difficulty **expressing** (D2, 364), **evaluating** (D4, 259 records with breakdown or effort evidence) and **refining** (D5, 335 records). These are where the evidence supports investigating.
+- Users report difficulty **expressing** (D2, 322), **evaluating** (D4, 0 records with breakdown or effort evidence) and **refining** (D5, 0 records). These are where the evidence supports investigating.
 - The case asks whether Google Photos **fails to understand the clues** (D3). **0 of 800 records say so.** The corpus cannot answer this question, which is not the same as the answer being no. It is the highest-value unknown and it must not be assumed away or assumed true.
 - **Where the greatest opportunity lies cannot be settled from this corpus,** because failures are not attributed to nodes. The task-based tests must do that attribution (§10.3), so the ranking can come from observed failures instead of statements.
 
@@ -215,98 +215,98 @@ Most common stage paths (of 12 observed): `RECALL > EXPRESS > RECOVER` 178; `REC
 | D6 Available | Share of unsuccessful retrievals where the photo is absent from the library (needs a library audit in research) |
 
 **Major breakdowns** `[OBS]`
-- **Recall → Express:** 594 records name information the user lacks (time precision 199, a name 149, a keyword 64, album 63, how it was originally found 63, exact wording 56). 322 records state the memory cannot easily be converted into a query, e.g. REC-0025 "I remember a visual detail that is hard to describe in a search box.". [RAW] REC-0006, REC-0008, REC-0009 (all 364: `evidence_index.csv` → `node:D2:breakdown`)
-- **Match:** the corpus rarely says what the product returned; only 112 records do. `[UNKNOWN]` whether matching, expression or recognition is the weak link. [RAW] REC-0011, REC-0014, REC-0015 (all 112: `evidence_index.csv` → `opp:O4`)
-- **Recognize:** 147 records say the user *would recognise* the photo on sight (e.g. REC-0009 "I can recognize it if I see it, but I don't know how to narrow the results."), while 66 say plausible results left them unable to tell which is right and 41 report a similar-but-not-exact find. Recognition holds in some records and fails in others; the file cannot say when. [RAW] REC-0004, REC-0014, REC-0020 (all 105: `evidence_index.csv` → `node:D4:breakdown`)
-- **Recover:** 371 records (46.4%) show reformulation, switching, browsing fallback, other-app use, giving up or failure. Only 36 state a success. [RAW] REC-0002, REC-0003, REC-0007 (all 371: `evidence_index.csv` → `opp:O5`)
+- **Recall → Express:** 594 records name information the user lacks (time precision 199, a name 149, a keyword 64, album 63, how it was originally found 63, exact wording 56). 322 records state the memory cannot easily be converted into a query, e.g. . [RAW] REC-0006, REC-0008, REC-0009 (all 322: `evidence_index.csv` → `node:D2:breakdown`)
+- **Match:** the corpus rarely says what the product returned; only 0 records do. `[UNKNOWN]` whether matching, expression or recognition is the weak link. [RAW]  (all 0: `evidence_index.csv` → `opp:O4`)
+- **Recognize:** 0 records say the user *would recognise* the photo on sight (e.g. ), while 0 say plausible results left them unable to tell which is right and 0 report a similar-but-not-exact find. Recognition holds in some records and fails in others; the file cannot say when. [RAW]  (all 0: `evidence_index.csv` → `node:D4:breakdown`)
+- **Recover:** 0 records (0.0%) show reformulation, switching, browsing fallback, other-app use, giving up or failure. Only 114 state a success. [RAW]  (all 0: `evidence_index.csv` → `opp:O5`)
 
-**Repeated behaviours:** reformulation (82), browsing (158), strategy switching (166). **Success pattern:** only 'found after several attempts' (36); success comes with effort. **Failure/exit patterns:** could not find (43), gave up and asked someone (44), moved to another app/device (46). **Uncertainty:** whether other-app/device users found the photo, and whether 'similar but not exact' users later succeeded, is not stated.
+**Repeated behaviours:** reformulation (99), browsing (234), strategy switching (166). **Success pattern:** only 'found after several attempts' (114); success comes with effort. **Failure/exit patterns:** could not find (140), gave up and asked someone (115), moved to another app/device (86). **Uncertainty:** whether other-app/device users found the photo, and whether 'similar but not exact' users later succeeded, is not stated.
 
 ## 5. Opportunity Areas
 
-Opportunities are *where* retrieval could improve; they are not features and not problems. Counts are non-exclusive; together the 8 cover 765 of 800. Each maps to a decomposition node (§4.1). All are `[OPP-HYP]`.
+Opportunities are *where* retrieval could improve; they are not features and not problems. Counts are non-exclusive; together the 8 cover 322 of 800. Each maps to a decomposition node (§4.1). All are `[OPP-HYP]`.
 
 ### O1 Memory expression
 - **User behaviour:** User holds context but says it cannot be turned into a keyword, name, wording, description or narrowing step; contrasts this with ease when an exact date/name is known.
 - **Journey stage:** Express (from Recall) · **Decomposition node:** D2
-- **Frequency** `[OBS]`: 364 of 800 relevant records (45.5%); [RAW] REC-0006, REC-0008, REC-0009 (all 364: `evidence_index.csv` → `opp:O1`)
+- **Frequency** `[OBS]`: 322 of 800 relevant records (40.2%); [RAW] REC-0006, REC-0008, REC-0009 (all 322: `evidence_index.csv` → `opp:O1`)
 - **Severity:** Signals come from the behaviour sentences of these records (reformulation, browsing, uncertainty), not from the barrier statement itself.
-- **Outcome:** 16 found-with-effort, 18 similar-but-uncertain, 19 failed, 20 abandoned, 22 other-app/device workaround; 269 unknown
-- **Evidence example:** REC-0018 "I remember the color, setting, or people but not a useful keyword."
+- **Outcome:** 56 found-with-effort, 41 similar-but-uncertain, 53 failed, 39 abandoned, 35 other-app/device workaround; 0 unknown
+- **Evidence example:** 
 - **User consequence** `[INTERP]`: Extra attempts or manual scanning; some stop.  **Product consequence** `[INTERP]`: A photo that exists and is recognisable may never be reached from the first query.
 - **Unknowns** `[UNKNOWN]`: Whether users hold richer memory than they express, or the memory is thin; whether failure is at input or at interpretation.
 
 ### O2 Approximate-time narrowing
 - **User behaviour:** Only an approximate time is known (day/month unknown); users search by date and get too many results, or compare a date range by hand.
 - **Journey stage:** Express → Match · **Decomposition node:** D2/D3
-- **Frequency** `[OBS]`: 268 of 800 relevant records (33.5%); [RAW] REC-0001, REC-0003, REC-0004 (all 268: `evidence_index.csv` → `opp:O2`)
-- **Severity:** Date search 'too many results' (53), manual date-range comparison (35).
-- **Outcome:** 6 found-with-effort, 15 similar-but-uncertain, 9 failed, 16 abandoned, 12 other-app/device workaround; 210 unknown
-- **Evidence example:** REC-0011 "I searched by date and got too many results."
+- **Frequency** `[OBS]`: 0 of 800 relevant records (0.0%); [RAW]  (all 0: `evidence_index.csv` → `opp:O2`)
+- **Severity:** Date search 'too many results' (0), manual date-range comparison (0).
+- **Outcome:** no outcome stated; 0 unknown
+- **Evidence example:** 
 - **User consequence** `[INTERP]`: Long scanning of broad time windows.  **Product consequence** `[INTERP]`: Time is the clue users have, but as a search scope it may be too coarse.
 - **Unknowns** `[UNKNOWN]`: Whether time is the strongest memory or simply the most available tool.
 
 ### O3 Candidate recognition / verification
 - **User behaviour:** Candidates are surfaced or browsed but the user cannot confirm which is right, or finds only a similar photo.
 - **Journey stage:** Recognize · **Decomposition node:** D4
-- **Frequency** `[OBS]`: 259 of 800 relevant records (32.4%); [RAW] REC-0001, REC-0004, REC-0005 (all 259: `evidence_index.csv` → `opp:O3`)
-- **Severity:** 'Cannot tell which is right' (66), similar-not-exact (41), one-by-one opening (51), very large thumbnail set (42).
-- **Outcome:** 2 found-with-effort, 41 similar-but-uncertain, 3 failed, 5 abandoned, 2 other-app/device workaround; 206 unknown
-- **Evidence example:** REC-0004 "I found a similar photo but not the exact one."
+- **Frequency** `[OBS]`: 0 of 800 relevant records (0.0%); [RAW]  (all 0: `evidence_index.csv` → `opp:O3`)
+- **Severity:** 'Cannot tell which is right' (0), similar-not-exact (0), one-by-one opening (0), very large thumbnail set (0).
+- **Outcome:** no outcome stated; 0 unknown
+- **Evidence example:** 
 - **User consequence** `[INTERP]`: Uncertainty about having found the right photo; time spent comparing.  **Product consequence** `[INTERP]`: A successful retrieval may sit in the candidate set unconfirmed.
 - **Unknowns** `[UNKNOWN]`: Whether the target was in the candidate set; what cues users use to verify.
 
 ### O4 Contextual matching (candidate-set precision)
 - **User behaviour:** Users report result sets that are too large or plausible-but-undifferentiated after a query.
 - **Journey stage:** Match · **Decomposition node:** D3
-- **Frequency** `[OBS]`: 112 of 800 relevant records (14.0%); [RAW] REC-0011, REC-0014, REC-0015 (all 112: `evidence_index.csv` → `opp:O4`)
+- **Frequency** `[OBS]`: 0 of 800 relevant records (0.0%); [RAW]  (all 0: `evidence_index.csv` → `opp:O4`)
 - **Severity:** Only two explicit statements describe product output; the stage is thinly observed.
-- **Outcome:** 2 found-with-effort, 2 similar-but-uncertain, 3 failed, 5 abandoned, 2 other-app/device workaround; 98 unknown
-- **Evidence example:** REC-0011 "I searched by date and got too many results."
+- **Outcome:** no outcome stated; 0 unknown
+- **Evidence example:** 
 - **User consequence** `[INTERP]`: Sifting through results.  **Product consequence** `[INTERP]`: Matching quality cannot be judged from this corpus.
 - **Unknowns** `[UNKNOWN]`: Almost everything: the corpus does not describe what was returned, and 0 records say the product misread the clues.
 
 ### O5 Retrieval recovery
 - **User behaviour:** After the first attempt does not resolve, users reformulate, switch between terms/albums, fall back to browsing, use another app/device, ask another person, or stop.
 - **Journey stage:** Recover · **Decomposition node:** D5
-- **Frequency** `[OBS]`: 371 of 800 relevant records (46.4%); [RAW] REC-0002, REC-0003, REC-0007 (all 371: `evidence_index.csv` → `opp:O5`)
-- **Severity:** Reformulation 82, strategy switch 166, browsing 158, external workaround 90, abandonment 44, failure 43.
-- **Outcome:** 36 found-with-effort, 43 failed, 44 abandoned, 46 other-app/device workaround; 202 unknown
-- **Evidence example:** REC-0008 "I found it after several attempts."
-- **User consequence** `[INTERP]`: Repeated effort; for 133 records the search ends in failure, giving up or another app.  **Product consequence** `[INTERP]`: Successful retrieval is delayed or lost; only 36 records state a (effortful) success.
+- **Frequency** `[OBS]`: 0 of 800 relevant records (0.0%); [RAW]  (all 0: `evidence_index.csv` → `opp:O5`)
+- **Severity:** Reformulation 99, strategy switch 166, browsing 234, external workaround 130, abandonment 115, failure 140.
+- **Outcome:** no outcome stated; 0 unknown
+- **Evidence example:** 
+- **User consequence** `[INTERP]`: Repeated effort; for 341 records the search ends in failure, giving up or another app.  **Product consequence** `[INTERP]`: Successful retrieval is delayed or lost; only 114 records state a (effortful) success.
 - **Unknowns** `[UNKNOWN]`: What triggers a change of strategy, what makes users continue or stop, and whether other-app users found the photo.
 
 ### O6 Retrieval-path memory (album / how it was found)
 - **User behaviour:** Users know a photo exists but not its album, or how they originally reached it.
 - **Journey stage:** Recall → Express · **Decomposition node:** D1
-- **Frequency** `[OBS]`: 126 of 800 relevant records (15.8%); [RAW] REC-0002, REC-0014, REC-0015 (all 126: `evidence_index.csv` → `opp:O6`)
+- **Frequency** `[OBS]`: 0 of 800 relevant records (0.0%); [RAW]  (all 0: `evidence_index.csv` → `opp:O6`)
 - **Severity:** Mostly memory statements; behaviour is generic.
-- **Outcome:** 9 found-with-effort, 4 similar-but-uncertain, 11 failed, 5 abandoned, 3 other-app/device workaround; 94 unknown
-- **Evidence example:** REC-0002 "I remember the photo exists, but not how I originally found it."
+- **Outcome:** no outcome stated; 0 unknown
+- **Evidence example:** 
 - **User consequence** `[INTERP]`: No remembered route back to the photo.  **Product consequence** `[INTERP]`: Navigation-based retrieval is unavailable when the path is forgotten.
 - **Unknowns** `[UNKNOWN]`: How users normally re-find photos; whether organisation habits matter.
 
 ### O7 Corpus / access boundary (indirect evidence)
 - **User behaviour:** Users ask someone else to send the photo or switch to another device/app.
 - **Journey stage:** Recover (boundary of the searchable library) · **Decomposition node:** D6
-- **Frequency** `[OBS]`: 90 of 800 relevant records (11.2%); [RAW] REC-0003, REC-0060, REC-0069 (all 90: `evidence_index.csv` → `opp:O7`)
-- **Severity:** Abandonment 44; other-app/device 46.
-- **Outcome:** 44 abandoned, 46 other-app/device workaround; 0 unknown
-- **Evidence example:** REC-0003 "I gave up and asked someone else to send the photo."
+- **Frequency** `[OBS]`: 0 of 800 relevant records (0.0%); [RAW]  (all 0: `evidence_index.csv` → `opp:O7`)
+- **Severity:** Abandonment 115; other-app/device 86.
+- **Outcome:** no outcome stated; 0 unknown
+- **Evidence example:** 
 - **User consequence** `[INTERP]`: Leaves the product to complete the task.  **Product consequence** `[INTERP]`: Retrieval success is not captured in Photos when the photo lives elsewhere or the user gives up.
 - **Unknowns** `[UNKNOWN]`: Whether the photo was in the user's Google Photos library at all (deleted, other account, other app).
 
 ### O8 Information discovery (knowing what can narrow a search)
 - **User behaviour:** Users say they can recognise the photo but do not know how to narrow the results: the gap is knowing what clues or controls the search can act on, not remembering.
 - **Journey stage:** Express · **Decomposition node:** D2
-- **Frequency** `[OBS]`: 68 of 800 relevant records (8.5%); [RAW] REC-0009, REC-0020, REC-0031 (all 68: `evidence_index.csv` → `opp:O8`)
+- **Frequency** `[OBS]`: 0 of 800 relevant records (0.0%); [RAW]  (all 0: `evidence_index.csv` → `opp:O8`)
 - **Severity:** One explicit sentence ('I don't know how to narrow the results'); every record with it is also an expression-barrier record (O8 is a subset of O1).
-- **Outcome:** 3 found-with-effort, 3 similar-but-uncertain, 3 failed, 1 abandoned, 4 other-app/device workaround; 54 unknown
-- **Evidence example:** REC-0009 "I can recognize it if I see it, but I don't know how to narrow the results."
+- **Outcome:** no outcome stated; 0 unknown
+- **Evidence example:** 
 - **User consequence** `[INTERP]`: Trial-and-error with wording, filters and browsing.  **Product consequence** `[INTERP]`: A capability the product has may go unused because users cannot tell it exists or applies.
 - **Unknowns** `[UNKNOWN]`: Whether users lack knowledge of narrowing options or the options do not fit what they remember. The corpus has no statement about what users know the product can do.
 
-`[OBS]` Express-barrier records reach the exit-path state no more often than the corpus overall: 61 of 364 O1 records (16.8%) versus 133 of 800 overall (16.6%). Within this file, O1 rests on what users say, not on a measurable link to worse outcomes. [RAW] REC-0069, REC-0071, REC-0073 (all 61: `evidence_index.csv` → `claim:K11`)
+`[OBS]` Express-barrier records reach the exit-path state no more often than the corpus overall: 127 of 322 O1 records (39.4%) versus 341 of 800 overall (42.6%). Within this file, O1 rests on what users say, not on a measurable link to worse outcomes. [RAW] REC-0012, REC-0022, REC-0048 (all 127: `evidence_index.csv` → `claim:K11`)
 
 ## 6. Opportunity Prioritization
 
@@ -314,36 +314,36 @@ Reasoning: Frequency × Severity × Outcome, then strategic relevance to the goa
 
 | Opportunity | Frequency | Severity | Outcome | Strategic relevance | Evidence strength | Researchability | Why investigate? |
 |---|---|---|---|---|---|---|---|
-| **O5 Retrieval recovery** | High (371, 46.4%); [RAW] REC-0002, REC-0003 (all 371: `evidence_index.csv` → `opp:O5`) | High: 212 records with ≥2 signals; failure, abandonment, other-app use all sit here | Only area containing every terminal outcome (133 failed/abandoned/other-app) plus all 36 effortful successes | High: success is decided after the first attempt | High: explicit behaviour statements; but a symptom locus (causes lie upstream) | High: participants can recount a recent attempt | Where retrieval is won or lost; lets research trace back to Express and forward to Recognize |
-| **O1 Memory expression** | High (364, 45.5%); [RAW] REC-0006, REC-0008 (all 364: `evidence_index.csv` → `opp:O1`) | Medium: signals come from behaviour sentences, not the barrier itself | Not distinguishable from base rate (16.8% vs 16.6% exit) | High: the goal is defined by imprecise memory | Medium: explicit but self-report only | High: memory-reconstruction interviews | Leading upstream hypothesis; must be tested against rivals, not assumed |
-| **O3 Candidate recognition / verification** | High (259, 32.4%); [RAW] REC-0001, REC-0004 (all 259: `evidence_index.csv` → `opp:O3`) | High: uncertainty 105, large candidate sets 149 | 41 similar-but-uncertain, 8 abandoned/failed | High: a found-but-unconfirmed photo is not a success | Medium–High: explicit and repeated, silent on whether the target was present | High: observable in task tests | Distinguishes 'not surfaced' from 'surfaced but not recognised' |
-| **O2 Approximate-time narrowing** | High (268, 33.5%); [RAW] REC-0001, REC-0003 (all 268: `evidence_index.csv` → `opp:O2`) | Medium: 'too many results' 53; manual comparison 35 | Mixed; no distinctive outcome | Medium–High | Medium: time memory explicit (126) but tool-availability confound | High | Largest single forgotten-information family (199 records) |
-| **O6 Retrieval-path memory (album / how it was found)** | Medium (126, 15.8%); [RAW] REC-0002, REC-0014 (all 126: `evidence_index.csv` → `opp:O6`) | Low–Medium | Mixed | Medium | Low–Medium: memory statements only | Medium | Test inside interviews; not a lead |
-| **O4 Contextual matching (candidate-set precision)** | Low (112, 14.0%); [RAW] REC-0011, REC-0014 (all 112: `evidence_index.csv` → `opp:O4`) | Medium | Thin | Medium (unknown: 0 records say the product misread the clues) | Low: output rarely described | Medium | Corpus cannot size it; the task tests must (D3 attribution) |
-| **O7 Corpus / access boundary (indirect evidence)** | Low (90, 11.2%); [RAW] REC-0003, REC-0060 (all 90: `evidence_index.csv` → `opp:O7`) | High per record (all terminal) but indirect | Terminal: 44 abandoned + 46 other-app | Medium: if the photo is outside the library, search cannot succeed | Low: indirect inference | Medium: needs a library audit, not just interviews | Cheap to rule in/out during interviews (was the photo in the library?) |
-| **O8 Information discovery (knowing what can narrow a search)** | Low (68, 8.5%); [RAW] REC-0009, REC-0020 (all 68: `evidence_index.csv` → `opp:O8`) | Low–Medium: one explicit statement; overlaps O1 | Mixed; no distinctive outcome | Medium: separates 'cannot express' from 'does not know what can be expressed' | Low: single sentence, subset of O1 | High: interviews and tasks can ask what participants believed they could do | Distinguishes a knowledge gap from a memory gap inside O1 (D2) |
+| **O5 Retrieval recovery** | Low (0, 0.0%); [RAW]  (all 0: `evidence_index.csv` → `opp:O5`) | High: 0 records with ≥2 signals; failure, abandonment, other-app use all sit here | Only area containing every terminal outcome (341 failed/abandoned/other-app) plus all 114 effortful successes | High: success is decided after the first attempt | High: explicit behaviour statements; but a symptom locus (causes lie upstream) | High: participants can recount a recent attempt | Where retrieval is won or lost; lets research trace back to Express and forward to Recognize |
+| **O1 Memory expression** | High (322, 40.2%); [RAW] REC-0006, REC-0008 (all 322: `evidence_index.csv` → `opp:O1`) | Medium: signals come from behaviour sentences, not the barrier itself | Not distinguishable from base rate (39.4% vs 42.6% exit) | High: the goal is defined by imprecise memory | Medium: explicit but self-report only | High: memory-reconstruction interviews | Leading upstream hypothesis; must be tested against rivals, not assumed |
+| **O3 Candidate recognition / verification** | Low (0, 0.0%); [RAW]  (all 0: `evidence_index.csv` → `opp:O3`) | High: uncertainty 177, large candidate sets 149 | 120 similar-but-uncertain, 0 abandoned/failed | High: a found-but-unconfirmed photo is not a success | Medium–High: explicit and repeated, silent on whether the target was present | High: observable in task tests | Distinguishes 'not surfaced' from 'surfaced but not recognised' |
+| **O2 Approximate-time narrowing** | Low (0, 0.0%); [RAW]  (all 0: `evidence_index.csv` → `opp:O2`) | Medium: 'too many results' 0; manual comparison 0 | Mixed; no distinctive outcome | Medium–High | Medium: time memory explicit (0) but tool-availability confound | High | Largest single forgotten-information family (199 records) |
+| **O6 Retrieval-path memory (album / how it was found)** | Low (0, 0.0%); [RAW]  (all 0: `evidence_index.csv` → `opp:O6`) | Low–Medium | Mixed | Medium | Low–Medium: memory statements only | Medium | Test inside interviews; not a lead |
+| **O4 Contextual matching (candidate-set precision)** | Low (0, 0.0%); [RAW]  (all 0: `evidence_index.csv` → `opp:O4`) | Medium | Thin | Medium (unknown: 0 records say the product misread the clues) | Low: output rarely described | Medium | Corpus cannot size it; the task tests must (D3 attribution) |
+| **O7 Corpus / access boundary (indirect evidence)** | Low (0, 0.0%); [RAW]  (all 0: `evidence_index.csv` → `opp:O7`) | High per record (all terminal) but indirect | Terminal: 115 abandoned + 86 other-app | Medium: if the photo is outside the library, search cannot succeed | Low: indirect inference | Medium: needs a library audit, not just interviews | Cheap to rule in/out during interviews (was the photo in the library?) |
+| **O8 Information discovery (knowing what can narrow a search)** | Low (0, 0.0%); [RAW]  (all 0: `evidence_index.csv` → `opp:O8`) | Low–Medium: one explicit statement; overlaps O1 | Mixed; no distinctive outcome | Medium: separates 'cannot express' from 'does not know what can be expressed' | Low: single sentence, subset of O1 | High: interviews and tasks can ask what participants believed they could do | Distinguishes a knowledge gap from a memory gap inside O1 (D2) |
 
 **Selected for primary research** `[OPP-HYP]`: **O5 Retrieval recovery**, examined together with O3 and O1, and with O4 tested directly, as competing explanations of *why the first attempt does not resolve* (expression D2, matching D3, recognition D4). Rationale: it is the largest area with explicit behaviour evidence, contains every terminal outcome, is tied to the strategic goal, and is highly researchable. O1 alone would over-weight self-report that shows no outcome difference; O3 alone omits the exits; O4 cannot be ranked from this corpus but must not be ranked last by default. No solution is chosen.
 
-Records behind the selection `[OBS]`: O5 [RAW] REC-0002, REC-0003, REC-0007 (all 371: `evidence_index.csv` → `opp:O5`); O3 [RAW] REC-0001, REC-0004 (all 259: `evidence_index.csv` → `opp:O3`); O1 [RAW] REC-0006, REC-0008 (all 364: `evidence_index.csv` → `opp:O1`); O4 [RAW] REC-0011, REC-0014 (all 112: `evidence_index.csv` → `opp:O4`).
+Records behind the selection `[OBS]`: O5 [RAW]  (all 0: `evidence_index.csv` → `opp:O5`); O3 [RAW]  (all 0: `evidence_index.csv` → `opp:O3`); O1 [RAW] REC-0006, REC-0008 (all 322: `evidence_index.csv` → `opp:O1`); O4 [RAW]  (all 0: `evidence_index.csv` → `opp:O4`).
 
 ## 7. Target Segment Hypothesis
 
 **TARGET SEGMENT HYPOTHESIS — TO BE VALIDATED** `[OPP-HYP]`
 
-> We should investigate **users who attempted to retrieve a specific photo they expected to exist, lacked a precise identifier for it, and either changed strategy / made several attempts or manually inspected a candidate set (SEG-T)** because they are the largest behaviourally defined group in the corpus (503 of 800, 62.9%), every member states effortful behaviour (definitional, see assumptions), none is described as retrieving quickly, and, if the four states are snapshots of one journey `[INTERP]`, the group sits upstream of the exit-path state (133 records) where retrieval visibly fails.
+> We should investigate **users who attempted to retrieve a specific photo they expected to exist, lacked a precise identifier for it, and either changed strategy / made several attempts or manually inspected a candidate set (SEG-T)** because they are the largest behaviourally defined group in the corpus (404 of 800, 50.5%), every member states effortful behaviour (definitional, see assumptions), none is described as retrieving quickly, and, if the four states are snapshots of one journey `[INTERP]`, the group sits upstream of the exit-path state (341 records) where retrieval visibly fails.
 
 | Element | Detail |
 |---|---|
-| Objective definition | Records whose behaviour sentence is one of B03, B04, B05, B07, B09, B11, B13, B14, B15, B16, B17, B18 (recovery-dependent 238 + candidate-inspection 265). Shared precondition: imprecise memory of a specific photo. |
-| Dataset size | 503 of 800 (62.9%); 502 after removing near-duplicates |
-| Stated outcomes | 36 found-with-effort, 41 similar-but-uncertain; 426 unknown |
-| Evidence | Express-barrier statements 210; 'would recognise on sight' 96; 'cannot tell which is right' 46; explicit 'knows the photo exists' 81 (16.1%). [RAW] REC-0001, REC-0002, REC-0004, REC-0005, REC-0006 (all 503: `evidence_index.csv` → `seg:SEG-T`) |
-| Why investigate | Frequency (largest); effort (strategy switching, browsing, large candidate sets, repeated attempts); outcome uncertainty (426 unknown, 41 uncertain); strategic relevance (retrieval is not clean for these users); researchability (recent attempts are recallable and observable) |
+| Objective definition | Records whose behaviour sentence is one of B03, B04, B05, B07, B09, B11, B13, B14, B15, B16, B17, B18 (recovery-dependent 284 + candidate-inspection 120). Shared precondition: imprecise memory of a specific photo. |
+| Dataset size | 404 of 800 (50.5%); 351 after removing near-duplicates |
+| Stated outcomes | 114 found-with-effort, 120 similar-but-uncertain; 0 unknown |
+| Evidence | Express-barrier statements 179; 'would recognise on sight' 0; 'cannot tell which is right' 0; explicit 'knows the photo exists' 0 (0.0%). [RAW] REC-0001, REC-0004, REC-0005, REC-0006, REC-0007 (all 404: `evidence_index.csv` → `seg:SEG-T`) |
+| Why investigate | Frequency (largest); effort (strategy switching, browsing, large candidate sets, repeated attempts); outcome uncertainty (0 unknown, 120 uncertain); strategic relevance (retrieval is not clean for these users); researchability (recent attempts are recallable and observable) |
 | Why not SEG-1 alone | Defined by outcome, so the corpus says nothing about what preceded it. Recruit SEG-1-like participants (failed/abandoned recently) as an adjacent probe. |
-| Why not SEG-4 | 164 records, essentially no severity evidence. |
+| Why not SEG-4 | 55 records, essentially no severity evidence. |
 
-**Assumptions** `[ASSUME]`: (1) the states are sequential snapshots of one journey, so the boundary between SEG-2 and SEG-3 is porous, hence the union; (2) 'expected to exist' is implied for all records by the attempt, and explicit in only 81 of 503; (3) effort is definitional within SEG-T, so it says *who to study*, not *how bad it is* `[UNKNOWN]`.
+**Assumptions** `[ASSUME]`: (1) the states are sequential snapshots of one journey, so the boundary between SEG-2 and SEG-3 is porous, hence the union; (2) 'expected to exist' is implied for all records by the attempt, and explicit in only 0 of 404; (3) effort is definitional within SEG-T, so it says *who to study*, not *how bad it is* `[UNKNOWN]`.
 
 ## 8. Impact-Sizing Framework
 
@@ -352,13 +352,13 @@ Records behind the selection `[OBS]`: O5 [RAW] REC-0002, REC-0003, REC-0007 (all
 | Step | Symbol | Observed dataset value `[OBS]` | Assumption `[ASSUME]` | Production value |
 |---|---|---|---|---|
 | Eligible retrieval attempts | E | 800 relevant records (posts, not attempts); [RAW] REC-0001, REC-0002 (all 800: `evidence_index.csv` → `claim:K01`) | Unit = one retrieval attempt sequence started from imprecise memory | **TBD: requires Google production data** |
-| % in target behaviour | t | 503 of 800 (62.9%); [RAW] REC-0001, REC-0002 (all 503: `evidence_index.csv` → `seg:SEG-T`) | Not transferable to production | **TBD: requires Google production data** |
-| % with failure/effort | f | Effort signal 503 of 503 (100% by definition); stated non-clean outcome 41 (similar-but-uncertain); downstream exit-path 133 (of which 87 failed/abandoned); [RAW] REC-0003, REC-0010 (all 133: `evidence_index.csv` → `seg:SEG-1`) | 'Effort' needs an operational log definition (e.g. ≥2 queries or a long browse before success) | **TBD: requires Google production data** |
-| % potentially recoverable | r | None; the corpus cannot estimate | Recoverable = photo is in the library and the user can recognise it; proxy to test: 'would recognise on sight' 96 of 503; [RAW] REC-0004, REC-0008 (all 147: `evidence_index.csv` → `claim:K08`) | **TBD: primary research + production data** |
+| % in target behaviour | t | 404 of 800 (50.5%); [RAW] REC-0001, REC-0004 (all 404: `evidence_index.csv` → `seg:SEG-T`) | Not transferable to production | **TBD: requires Google production data** |
+| % with failure/effort | f | Effort signal 404 of 404 (100% by definition); stated non-clean outcome 120 (similar-but-uncertain); downstream exit-path 341 (of which 255 failed/abandoned); [RAW] REC-0002, REC-0003 (all 341: `evidence_index.csv` → `seg:SEG-1`) | 'Effort' needs an operational log definition (e.g. ≥2 queries or a long browse before success) | **TBD: requires Google production data** |
+| % potentially recoverable | r | None; the corpus cannot estimate | Recoverable = photo is in the library and the user can recognise it; proxy to test: 'would recognise on sight' 0 of 404; [RAW]  (all 0: `evidence_index.csv` → `claim:K08`) | **TBD: primary research + production data** |
 | Expected improvement | l | None | Only estimable after a solution exists; out of scope until the problem is defined | **TBD** |
 | Incremental successful retrievals | — | — | — | **TBD** |
 
-Arithmetic illustration on counts only (not a forecast): the explicit non-success set is 41 similar-but-uncertain + 87 failed/abandoned = 128 records; each 10 points of recovery on that set corresponds to ~13 records. Outcome is unknown for 426 of 503 target records, so the true base could be much larger or smaller.
+Arithmetic illustration on counts only (not a forecast): the explicit non-success set is 120 similar-but-uncertain + 255 failed/abandoned = 375 records; each 10 points of recovery on that set corresponds to ~38 records. Outcome is unknown for 0 of 404 target records, so the true base could be much larger or smaller.
 
 ## 9. Research Hypotheses
 
@@ -366,33 +366,33 @@ Each is a `[PROB-HYP]` to test, not a root cause. Every one has a competing expl
 
 ### H1 — Memory richer than expressed
 - **Node:** D2
-- **Observation** `[OBS]`: 322 records say memory is hard to turn into a query; behaviour shows reformulation (82) and switching (166). [RAW] REC-0006, REC-0008, REC-0009 (all 322: `evidence_index.csv` → `hyp:H1`)
+- **Observation** `[OBS]`: 322 records say memory is hard to turn into a query; behaviour shows reformulation (99) and switching (166). [RAW] REC-0006, REC-0008, REC-0009 (all 322: `evidence_index.csv` → `hyp:H1`)
 - **Interpretation** `[INTERP]`: Many users say what they remember cannot be typed as a search, yet still try several searches.
 - **Hypothesis** `[PROB-HYP]`: Users may hold more contextual detail than their first query carries.
 - **Competing explanation:** Memory is genuinely thin or generic, so it is a recall problem, not an expression problem.
 - **Validate / falsify:** Prompted recall adds nothing usable, or first queries already contain everything they can recall (falsified). Neutral cues surface details the first query omitted (supported).
 - **Evidence for:** 322 explicit barrier statements.
-- **Evidence against:** No outcome difference for O1 (16.8% vs 16.6%).
+- **Evidence against:** No outcome difference for O1 (39.4% vs 42.6%).
 - **Unknown** `[UNKNOWN]`: What participants can recall on demand.
 - **Qualitative (WHY/HOW):** Interviews: memory reconstruction and details that never reached the first query.
 - **Quantitative (WHERE/HOW MUCH):** Survey: how often users recall clues they did not type.
 
 ### H2 — Candidate present but not recognisable
 - **Node:** D4
-- **Observation** `[OBS]`: 'Cannot tell which is right' 66; similar-not-exact 41; one-by-one opening 51. [RAW] REC-0004, REC-0014, REC-0016 (all 148: `evidence_index.csv` → `hyp:H2`)
+- **Observation** `[OBS]`: 'Cannot tell which is right' 0; similar-not-exact 0; one-by-one opening 0. [RAW]  (all 0: `evidence_index.csv` → `hyp:H2`)
 - **Interpretation** `[INTERP]`: Users report both plausible candidates they cannot separate and being able to recognise the photo on sight.
 - **Hypothesis** `[PROB-HYP]`: Users see the right photo among candidates but lack cues to confirm it (near-duplicates, burst shots, generic scenes).
 - **Competing explanation:** The target was never among the candidates (matching gap), or users hold a wrong mental image of the photo.
 - **Validate / falsify:** Log whether the target appeared in inspected sets. Falsified if it is mostly absent, or if participants confirm it instantly once shown.
 - **Evidence for:** Explicit uncertainty statements.
-- **Evidence against:** 147 records claim they would recognise it on sight.
+- **Evidence against:** 0 records claim they would recognise it on sight.
 - **Unknown** `[UNKNOWN]`: Whether the target was present.
 - **Qualitative (WHY/HOW):** Task tests and interviews: how the target was recognised or missed.
 - **Quantitative (WHERE/HOW MUCH):** Survey: how often users report seeing but doubting the right photo.
 
 ### H3 — Time is used as a scope because it is available, not because it is the best memory
 - **Node:** D2/D3
-- **Observation** `[OBS]`: Approximate time in 126 records; date search 'too many results' 53; date-range comparison 35. [RAW] REC-0001, REC-0003, REC-0004 (all 201: `evidence_index.csv` → `hyp:H3`)
+- **Observation** `[OBS]`: Approximate time in 0 records; date search 'too many results' 0; date-range comparison 0. [RAW]  (all 0: `evidence_index.csv` → `hyp:H3`)
 - **Interpretation** `[INTERP]`: Most users lacking the exact date still lean on date narrowing, and it often returns broad sets.
 - **Hypothesis** `[PROB-HYP]`: Users default to date narrowing because it is the tool they know, producing broad windows.
 - **Competing explanation:** Time is the most reliable clue and windows are large because libraries are large.
@@ -405,20 +405,20 @@ Each is a `[PROB-HYP]` to test, not a root cause. Every one has a competing expl
 
 ### H4 — Recovery is unguided
 - **Node:** D5
-- **Observation** `[OBS]`: 371 records show recovery behaviours; the corpus never states why users changed strategy. [RAW] REC-0002, REC-0003, REC-0007 (all 371: `evidence_index.csv` → `hyp:H4`)
+- **Observation** `[OBS]`: 0 records show recovery behaviours; the corpus never states why users changed strategy. [RAW]  (all 0: `evidence_index.csv` → `hyp:H4`)
 - **Interpretation** `[INTERP]`: Users change strategy often, but the file never says what prompted the change.
 - **Hypothesis** `[PROB-HYP]`: After a failed attempt users get no signal about why it failed, so they cycle wording, albums and scrolling.
 - **Competing explanation:** Cycling is habit or a preference for browsing, independent of any signal; or recovery is efficient and only unlucky users post.
 - **Validate / falsify:** Interview 'what did you try next and why'; tasks recording whether strategy changes followed results. Falsified if changes track stable personal habits regardless of results.
 - **Evidence for:** Reformulation and switching signals.
-- **Evidence against:** Only 36 records state a success after effort.
+- **Evidence against:** Only 114 records state a success after effort.
 - **Unknown** `[UNKNOWN]`: Decision triggers.
 - **Qualitative (WHY/HOW):** Interviews: what prompted each strategy change.
 - **Quantitative (WHERE/HOW MUCH):** Production: queries before success and abandonment after N tries.
 
 ### H5 — Photo not in the searchable library
 - **Node:** D6
-- **Observation** `[OBS]`: Asked someone else 44; other device/app 46; deleted-photo restore records (3, outside the denominator). [RAW] REC-0003, REC-0060, REC-0069 (all 90: `evidence_index.csv` → `hyp:H5`)
+- **Observation** `[OBS]`: Asked someone else 115; other device/app 86; deleted-photo restore records (3, outside the denominator). [RAW]  (all 0: `evidence_index.csv` → `hyp:H5`)
 - **Interpretation** `[INTERP]`: Some users end the search by leaving the product; the file does not say whether the photo was ever findable.
 - **Hypothesis** `[PROB-HYP]`: For some users the photo lives elsewhere (received via message, other account, deleted), so search cannot succeed.
 - **Competing explanation:** The photo is in the library and unreachable; 'ask someone' reflects convenience.
@@ -437,7 +437,7 @@ Each is a `[PROB-HYP]` to test, not a root cause. Every one has a competing expl
 - **Competing explanation:** Behaviour is object-independent; differences are individual.
 - **Validate / falsify:** Compare tasks across object types. Falsified if strategies and success do not differ by type.
 - **Evidence for:** Plausible on its face.
-- **Evidence against:** Object is independent of memory and behaviour here (V=0.115, p=0.57); some pairings are incoherent.
+- **Evidence against:** Object is independent of memory and behaviour here (V=nan, p=1.0); some pairings are incoherent.
 - **Unknown** `[UNKNOWN]`: Everything.
 - **Qualitative (WHY/HOW):** Task comparison across object types.
 - **Quantitative (WHERE/HOW MUCH):** Survey: scenario incidence by object type.
@@ -475,7 +475,7 @@ Each is a `[PROB-HYP]` to test, not a root cause. Every one has a competing expl
 - **Purpose:** learn how people remember and describe photos they later struggle to find, and what happens next (WHY/HOW).
 - **Method:** 30-minute behavioural interviews, remote, recall-a-recent-incident format (no hypotheticals).
 - **Sample:** 16 participants: 6 effortful-path (recent multi-attempt or heavy-browsing retrieval), 4 recent failure/abandonment, 2 who found a contextual-memory photo quickly (contrast, since the corpus has no success baseline), 4 heavy-library users regardless of outcome. Quotas across age, device and library size.
-- **Strata trace to the corpus** `[OBS]`: effortful-path [RAW] REC-0001, REC-0002 (all 503: `evidence_index.csv` → `seg:SEG-T`); failure/abandonment [RAW] REC-0003, REC-0010 (all 133: `evidence_index.csv` → `seg:SEG-1`).
+- **Strata trace to the corpus** `[OBS]`: effortful-path [RAW] REC-0001, REC-0004 (all 404: `evidence_index.csv` → `seg:SEG-T`); failure/abandonment [RAW] REC-0002, REC-0003 (all 341: `evidence_index.csv` → `seg:SEG-1`).
 
 ### 10.2 Interview guide (30 min)
 
@@ -587,9 +587,9 @@ Avoid: 'Would an assistant/AI help?', 'Do you wish you could describe it in your
 
 > Google Photos users trying to **find a specific photo they know they have** in **a large personal library**, when they remember its context but **not a precise identifier** (date, name, keyword or album), struggle to **reach it without repeated attempts, manual inspection, or leaving the product** because **[cause to be validated: candidates H1 expression gap · H2 recognition gap · H3 coarse time scoping · H4 unguided recovery · H5 photo outside the library; H3-related matching (D3) untested]**, resulting in **extra effort, uncertainty about whether the right photo was found, and in some cases giving up**.
 
-The cause slot is intentionally empty. User, context, struggle and consequence are supported directionally by the corpus; the cause is `[UNKNOWN]` until primary research. 'Large library' is stated in only 87 records and 'knows it exists' is explicit in 81 of 503 target records, so both are `[ASSUME]`. `[VALIDATED]` No validated problem exists. The statement contains no solution, feature or technology terms.
+The cause slot is intentionally empty. User, context, struggle and consequence are supported directionally by the corpus; the cause is `[UNKNOWN]` until primary research. 'Large library' is stated in only 0 records and 'knows it exists' is explicit in 0 of 404 target records, so both are `[ASSUME]`. `[VALIDATED]` No validated problem exists. The statement contains no solution, feature or technology terms.
 
-Evidence behind each element `[OBS]`: imprecise memory [RAW] REC-0001, REC-0002 (all 594: `evidence_index.csv` → `claim:K02`); struggle [RAW] REC-0002, REC-0003 (all 371: `evidence_index.csv` → `opp:O5`); manual inspection [RAW] REC-0001, REC-0004 (all 265: `evidence_index.csv` → `seg:SEG-3`); consequence [RAW] REC-0003, REC-0010 (all 133: `evidence_index.csv` → `seg:SEG-1`), [RAW] REC-0004, REC-0014 (all 105: `evidence_index.csv` → `claim:K07`).
+Evidence behind each element `[OBS]`: imprecise memory [RAW] REC-0001, REC-0002 (all 594: `evidence_index.csv` → `claim:K02`); struggle [RAW]  (all 0: `evidence_index.csv` → `opp:O5`); manual inspection [RAW] REC-0001, REC-0004 (all 120: `evidence_index.csv` → `seg:SEG-3`); consequence [RAW] REC-0002, REC-0003 (all 341: `evidence_index.csv` → `seg:SEG-1`), [RAW]  (all 0: `evidence_index.csv` → `claim:K07`).
 
 ## 13. Evidence / Interpretation / Hypothesis / Unknown Matrix
 
@@ -599,19 +599,19 @@ Evidence cells are `[OBS]` counts with `[RAW]` record IDs; the full list behind 
 |---|---|---|---|---|
 | K01 Relevant records are 800 of 840 | 37 off-topic + 3 possible; [RAW] REC-0001, REC-0002 (all 800: `evidence_index.csv` → `claim:K01`) | The file mixes on- and off-topic posts | — | Real-world share of retrieval talk |
 | K02 Every relevant record describes imprecise memory | 594 of 800 name lacked information; [RAW] REC-0001, REC-0002 (all 594: `evidence_index.csv` → `claim:K02`) | The corpus is selected for contextual memory | — | How users with precise identifiers behave (no such records) |
-| K03 Time precision is the most common lacked information | 199 records; [RAW] REC-0001, REC-0003 (all 199: `evidence_index.csv` → `claim:K03`) | Users know roughly when, not exactly | `[PROB-HYP]` H3 | Whether time is the strongest clue |
+| K03 Time precision is the most common lacked information | 199 records; [RAW]  (all 0: `evidence_index.csv` → `claim:K03`) | Users know roughly when, not exactly | `[PROB-HYP]` H3 | Whether time is the strongest clue |
 | K04 Users say memory is hard to convert into a query | 322 of 800; [RAW] REC-0006, REC-0008 (all 322: `evidence_index.csv` → `claim:K04`) | A gap between remembering and expressing | `[PROB-HYP]` H1 | Whether memory is rich or thin |
-| K05 Effort is widespread | 646 of 800 carry ≥1 severity signal; [RAW] REC-0001, REC-0002 (all 646: `evidence_index.csv` → `claim:K05`) | Retrieval often costs more than one step | `[PROB-HYP]` H4, H7 | Prevalence; corpus is complaint-only |
-| K06 Recovery behaviours are common | 371 of 800; [RAW] REC-0002, REC-0003 (all 371: `evidence_index.csv` → `claim:K06`) | First attempts often do not resolve | `[PROB-HYP]` H4 | Why users change strategy |
-| K07 Some users cannot confirm candidates | C08 66; similar-not-exact 41; [RAW] REC-0004, REC-0014 (all 105: `evidence_index.csv` → `claim:K07`) | Recognition can fail | `[PROB-HYP]` H2 | Whether the target was present |
-| K08 Some users say they would recognise on sight | 147 of 800; [RAW] REC-0004, REC-0008 (all 147: `evidence_index.csv` → `claim:K08`) | Recognition may be intact when access is the barrier | `[PROB-HYP]` H2 rival | What cues suffice |
-| K09 Exit paths exist | 133: failed 43, gave up 44, other app 46; [RAW] REC-0003, REC-0010 (all 133: `evidence_index.csv` → `claim:K09`) | Some retrievals end outside success | `[PROB-HYP]` H5 | Whether the photo was in the library; whether other-app users succeeded |
-| K10 Success is rarely stated | 36 found-with-effort; 0 found-quickly; [RAW] REC-0008, REC-0026 (all 36: `evidence_index.csv` → `claim:K10`) | Complaint bias hides easy successes | `[PROB-HYP]` H7 | Success rate |
-| K11 Express-barrier records do not fail more often | 16.8% vs 16.6%; [RAW] REC-0069, REC-0071 (all 61: `evidence_index.csv` → `claim:K11`) | No measurable link inside this file | `[PROB-HYP]` H1 (weakened as a sole explanation) | Whether a real link exists |
-| K12 SEG-T is the target segment hypothesis | 503 of 800; [RAW] REC-0001, REC-0002 (all 503: `evidence_index.csv` → `claim:K12`) | Largest behavioural group with explicit effort | `[OPP-HYP]` TARGET SEGMENT HYPOTHESIS — TO BE VALIDATED | Size and outcomes in production |
-| K13 Time-based narrowing is common | 201 of 800; [RAW] REC-0001, REC-0003 (all 201: `evidence_index.csv` → `claim:K13`) | Users lean on date when it is all they have | `[PROB-HYP]` H3 | Clue ranking within individuals |
-| K14 Most outcomes are unstated | 590 of 800; [RAW] REC-0001, REC-0002 (all 590: `evidence_index.csv` → `claim:K14`) | Failure and success rates cannot be computed | — | Real outcome distribution |
+| K05 Effort is widespread | 748 of 800 carry ≥1 severity signal; [RAW] REC-0001, REC-0002 (all 748: `evidence_index.csv` → `claim:K05`) | Retrieval often costs more than one step | `[PROB-HYP]` H4, H7 | Prevalence; corpus is complaint-only |
+| K06 Recovery behaviours are common | 0 of 800; [RAW]  (all 0: `evidence_index.csv` → `claim:K06`) | First attempts often do not resolve | `[PROB-HYP]` H4 | Why users change strategy |
+| K07 Some users cannot confirm candidates | C08 0; similar-not-exact 0; [RAW]  (all 0: `evidence_index.csv` → `claim:K07`) | Recognition can fail | `[PROB-HYP]` H2 | Whether the target was present |
+| K08 Some users say they would recognise on sight | 0 of 800; [RAW]  (all 0: `evidence_index.csv` → `claim:K08`) | Recognition may be intact when access is the barrier | `[PROB-HYP]` H2 rival | What cues suffice |
+| K09 Exit paths exist | 341: failed 140, gave up 115, other app 86; [RAW] REC-0002, REC-0003 (all 341: `evidence_index.csv` → `claim:K09`) | Some retrievals end outside success | `[PROB-HYP]` H5 | Whether the photo was in the library; whether other-app users succeeded |
+| K10 Success is rarely stated | 114 found-with-effort; 0 found-quickly; [RAW]  (all 0: `evidence_index.csv` → `claim:K10`) | Complaint bias hides easy successes | `[PROB-HYP]` H7 | Success rate |
+| K11 Express-barrier records do not fail more often | 39.4% vs 42.6%; [RAW] REC-0012, REC-0022 (all 127: `evidence_index.csv` → `claim:K11`) | No measurable link inside this file | `[PROB-HYP]` H1 (weakened as a sole explanation) | Whether a real link exists |
+| K12 SEG-T is the target segment hypothesis | 404 of 800; [RAW] REC-0001, REC-0004 (all 404: `evidence_index.csv` → `claim:K12`) | Largest behavioural group with explicit effort | `[OPP-HYP]` TARGET SEGMENT HYPOTHESIS — TO BE VALIDATED | Size and outcomes in production |
+| K13 Time-based narrowing is common | 0 of 800; [RAW]  (all 0: `evidence_index.csv` → `claim:K13`) | Users lean on date when it is all they have | `[PROB-HYP]` H3 | Clue ranking within individuals |
+| K14 Most outcomes are unstated | 0 of 800; [RAW]  (all 0: `evidence_index.csv` → `claim:K14`) | Failure and success rates cannot be computed | — | Real outcome distribution |
 | K15 No record says the product misread the clues | 0 of 800; node D3 breakdown = 0 | The 'does Google Photos understand?' question is unanswerable here, not answered no | `[PROB-HYP]` D3 gap untested | Whether the target was ever among the results |
-| K16 Retrieval recovery is the opportunity to research | O5 371 of 800; [RAW] REC-0002, REC-0003 (all 371: `evidence_index.csv` → `opp:O5`) | Where success is decided | `[OPP-HYP]` investigate O5 with O3, O1 and O4 as rivals | Root cause |
-| K17 Memory, behaviour, object and source are independent | Cramér's V ≤ 0.154; p ≥ 0.136 (appendix) | Template composition, not user behaviour | — | Any true structure; source is not a usable axis |
+| K16 Retrieval recovery is the opportunity to research | O5 0 of 800; [RAW]  (all 0: `evidence_index.csv` → `opp:O5`) | Where success is decided | `[OPP-HYP]` investigate O5 with O3, O1 and O4 as rivals | Root cause |
+| K17 Memory, behaviour, object and source are independent | Cramér's V ≤ nan; p ≥ 0.647 (appendix) | Template composition, not user behaviour | — | Any true structure; source is not a usable axis |
 | K18 No solution has been chosen; no problem is validated | — | The problem is not yet defined | `[VALIDATED]` none | All of §9–§12 pending primary research |

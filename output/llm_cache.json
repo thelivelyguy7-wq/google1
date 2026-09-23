@@ -1,0 +1,42 @@
+{
+  "the picture I sent to my doctor. I remember what the object looked like, but not what it was called. I switched to another device or photo app. I can recognize the image if I see it, but getting to it is the hard part.": {
+    "relevance": "retrieval_related",
+    "object_class": "medical",
+    "remembered": [
+      "visual_appearance",
+      "recognition_ability"
+    ],
+    "forgotten": [
+      "object_name"
+    ],
+    "express_barrier": true,
+    "retrieval_state": "exit_path",
+    "outcome": "unknown",
+    "severity_signals": [
+      "strategy_switch",
+      "external_workaround"
+    ],
+    "quotes": [
+      {
+        "field": "object",
+        "text": "the picture I sent to my doctor."
+      },
+      {
+        "field": "remembered",
+        "text": "I remember what the object looked like"
+      },
+      {
+        "field": "remembered",
+        "text": "I can recognize the image if I see it"
+      },
+      {
+        "field": "forgotten",
+        "text": "not what it was called"
+      },
+      {
+        "field": "behavior",
+        "text": "I switched to another device or photo app."
+      }
+    ]
+  }
+}

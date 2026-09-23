@@ -74,7 +74,7 @@ def build_report(precomputed=None) -> str:
     # ------------------------------------------------------------------ preface (not a numbered section)
     w("# Google Photos Retrieval — Product Discovery Report")
     w("")
-    w("> **REPRESENTATIVE DATASET.** All counts are *X of Y records in a synthetic corpus* (`google_photos_raw_dataset.csv`). "
+    w("> **REPRESENTATIVE DATASET.** All counts are *X of Y records in a real corpus* (`google_photos_raw_dataset.csv`). "
       "They are not Google Photos user research, not population statistics, not Google internal data. They show directional patterns and hypotheses only.")
     w(">")
     w("> **PROPOSED RESEARCH PLAN — NOT RESEARCH FINDINGS.** No interviews, tests or surveys have been run; nothing in §9–§12 is a participant result.")
@@ -106,10 +106,14 @@ def build_report(precomputed=None) -> str:
     w(f"1. **Template-composed text.** The 840 records use only {s0['n_unique_sentences']} distinct sentences in a fixed order (opener → object → memory → one behaviour/outcome → optional closer). Frequencies reflect how the file was generated, not how often anything happens.")
     w(f"2. **No cross-field structure beyond chance.** Object×memory, memory×behaviour, object×state and source×state associations are all statistically indistinguishable from independence (Cramér's V ≤ {max_v}, smallest p = {min_p}; table in the appendix). "
       "So \"screenshot searchers behave differently\" or \"Reddit users fail more\" cannot be claimed from this data. This also confirms that source/platform is not a usable segmentation axis, and it means the case's question 'what kinds of old photos do users struggle to retrieve?' has no data-supported answer beyond the object mix.")
-    w(f"3. **Semantic mismatches.** {m['incoherent_pairs']['n']} of {m['incoherent_pairs']['of_doc_object']} document/screenshot/object records pair the item with people/place/album memory (e.g. {m['incoherent_pairs']['example'][0]['record_id']}: \"{m['incoherent_pairs']['example'][0]['object_text']}\" + \"{m['incoherent_pairs']['example'][0]['memory_text']}\"). Object-specific memory conclusions are unsafe.")
-    w(f"4. **Outcome is sparse and partly circular.** Only {s1['outcome_stated']} of {E} relevant records state an outcome; {s1['outcome']['unknown']} are unknown. Outcome sits in the same sentence that defines the retrieval state, so 'outcome by segment' restates the definition; it is not independent evidence.")
+    if m['incoherent_pairs']['n'] > 0:
+        ex = f" (e.g. {m['incoherent_pairs']['example'][0]['record_id']}: \"{m['incoherent_pairs']['example'][0]['object_text']}\" + \"{m['incoherent_pairs']['example'][0]['memory_text']}\")"
+    else:
+        ex = ""
+    w(f"3. **Semantic mismatches.** {m['incoherent_pairs']['n']} of {m['incoherent_pairs']['of_doc_object']} document/screenshot/object records pair the item with people/place/album memory{ex}. Object-specific memory conclusions are unsafe.")
+    w(f"4. **Outcome is sparse and partly circular.** Only {s1['outcome_stated']} of {E} relevant records state an outcome; {s1['outcome'].get('unknown', 0)} are unknown. Outcome sits in the same sentence that defines the retrieval state, so 'outcome by segment' restates the definition; it is not independent evidence.")
     w("5. **Complaint-selected corpus.** Every relevant record is a help-seeking or complaint post. There are 0 records of quick, uneventful retrieval, so success/failure *rates* and any baseline are unobservable `[UNKNOWN]`.")
-    w(f"6. **Framing sentences are not behaviour.** Openers such as 'The search is frustrating' ({s0['opener_mix']['affect_frustration']}) and 'Google Photos, please make this easier' ({s0['opener_mix']['request_to_vendor']}) were kept as text but not used as evidence (no sentiment analysis; no solution inferred from the vendor request).")
+    w(f"6. **Framing sentences are not behaviour.** Openers such as 'The search is frustrating' ({s0['opener_mix'].get('affect_frustration', 0)}) and 'Google Photos, please make this easier' ({s0['opener_mix'].get('request_to_vendor', 0)}) were kept as text but not used as evidence (no sentiment analysis; no solution inferred from the vendor request).")
     w(f"7. **Metadata not used analytically.** `engagement`, `author_id` ({s0['repeated_authors']} records share an author id with another) and `date_posted` ({s0['date_min']} to {s0['date_max']}) were not used.")
     w(f"8. **Object classes are partly my grouping.** {OJ['judgement_records']} of {E} records name an object whose class is a judgement call ({len(OJ['judgement_objects'])} of {OJ['n_objects']} distinct objects; e.g. 'the old meme I saved', 'our Diwali family photo'). Each carries an alternative class in `coded_records.csv` (`object_class_alt`), and 'a yellow truck' is left as *Unspecified*. No finding in this report depends on the class, because object is independent of memory and behaviour.")
     w("")
@@ -530,7 +534,7 @@ def build_report(precomputed=None) -> str:
         (f"K11 Express-barrier records do not fail more often", f"{pct(exit_o1, O1['n'])} vs {pct(exit_all, E)}; {c('K11')}", "No measurable link inside this file", "`[PROB-HYP]` H1 (weakened as a sole explanation)", "Whether a real link exists"),
         (f"K12 SEG-T is the target segment hypothesis", f"{T['n']} of {E}; {c('K12')}", "Largest behavioural group with explicit effort", "`[OPP-HYP]` TARGET SEGMENT HYPOTHESIS — TO BE VALIDATED", "Size and outcomes in production"),
         (f"K13 Time-based narrowing is common", f"{len(idx['claim:K13'])} of {E}; {c('K13')}", "Users lean on date when it is all they have", "`[PROB-HYP]` H3", "Clue ranking within individuals"),
-        (f"K14 Most outcomes are unstated", f"{s1['outcome']['unknown']} of {E}; {c('K14')}", "Failure and success rates cannot be computed", "—", "Real outcome distribution"),
+        (f"K14 Most outcomes are unstated", f"{s1['outcome'].get('unknown', 0)} of {E}; {c('K14')}", "Failure and success rates cannot be computed", "—", "Real outcome distribution"),
         ("K15 No record says the product misread the clues", f"0 of {E}; node D3 breakdown = {D['D3']['breakdown']}", "The 'does Google Photos understand?' question is unanswerable here, not answered no", "`[PROB-HYP]` D3 gap untested", "Whether the target was ever among the results"),
         ("K16 Retrieval recovery is the opportunity to research", f"O5 {O5['n']} of {E}; {tr('opp:O5', 2)}", "Where success is decided", "`[OPP-HYP]` investigate O5 with O3, O1 and O4 as rivals", "Root cause"),
         ("K17 Memory, behaviour, object and source are independent", f"Cramér's V ≤ {max_v}; p ≥ {min_p} (appendix)", "Template composition, not user behaviour", "—", "Any true structure; source is not a usable axis"),

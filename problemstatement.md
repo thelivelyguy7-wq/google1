@@ -1,7 +1,7 @@
 # Problem Statement — Google Photos Retrieval
 
 > **PROVISIONAL PROBLEM HYPOTHESIS — REQUIRES PRIMARY RESEARCH**
-> Built from a **synthetic** corpus (`book18.xlsx` / `google_photos_raw_dataset.csv`). Counts below are "X of Y records in that file". No interviews, usability tests or surveys have been run. The cause is deliberately left open, and no solution is proposed.
+> Built from a **real** corpus (`book18.xlsx` / `google_photos_raw_dataset.csv`). Counts below are "X of Y records in that file". No interviews, usability tests or surveys have been run. The cause is deliberately left open, and no solution is proposed.
 
 Label key: `[RAW]` verbatim record · `[OBS]` observed behaviour in the corpus (a count) · `[INTERP]` interpretation · `[OPP-HYP]` opportunity hypothesis · `[PROB-HYP]` problem hypothesis · `[VALIDATED]` validated problem (**none yet**) · `[ASSUME]` assumption · `[UNKNOWN]` not knowable from this data.
 

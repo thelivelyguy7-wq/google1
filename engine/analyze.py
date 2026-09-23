@@ -100,7 +100,7 @@ def profile(mask, r):
         knows_exists=int((_in(sub["closer_code"], "C06") | _in(sub["memory_code"], "M09")).sum()),
         with_severity_signal=int((sub["n_severity_signals"] >= 1).sum()),
         with_2plus_signals=int((sub["n_severity_signals"] >= 2).sum()),
-        top_behaviors=[(k.split("_",1)[1].replace("_"," "), int(v)) for k, v in sub["behavior_code"].value_counts().head(3).items()],
+        top_behaviors=[(k.split("_", 1)[1].replace("_", " ") if "_" in k else k, int(v)) for k, v in sub["behavior_code"].value_counts().head(3).items() if k],
         signal_counts=sub["severity_signals"].str.split("|").explode().replace("", np.nan).dropna().value_counts().to_dict(),
         stage_counts={st: int(sub["journey_stages"].str.contains(st).sum()) for st in STAGES},
         remembered_mix=sub["remembered"].replace("", "don't explicitly state").str.split("|").explode().value_counts().to_dict(),

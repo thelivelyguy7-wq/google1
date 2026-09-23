@@ -10,12 +10,12 @@ Raw evidence → retrieval needs → behavioural patterns → retrieval journey 
 
 | Pair | χ² | dof | p | Cramér's V |
 |---|---|---|---|---|
-| object_class x memory_code | 63.3 | 66 | 0.57 | 0.115 |
-| object_class x retrieval_state | 15.5 | 18 | 0.631 | 0.08 |
-| memory_code x retrieval_state | 33.6 | 33 | 0.437 | 0.118 |
-| memory_code x behavior_code | 208.3 | 187 | 0.136 | 0.154 |
-| source x retrieval_state | 19.7 | 18 | 0.35 | 0.091 |
-| source x memory_code | 65.3 | 66 | 0.502 | 0.117 |
+| object_class x memory_code | 0.0 | 0 | 1.0 | nan |
+| object_class x retrieval_state | 8.8 | 18 | 0.964 | 0.061 |
+| memory_code x retrieval_state | 0.0 | 0 | 1.0 | nan |
+| memory_code x behavior_code | 0.0 | 0 | 1.0 | nan |
+| source x retrieval_state | 14.0 | 18 | 0.73 | 0.076 |
+| source x memory_code | 0.0 | 0 | 1.0 | nan |
 | source x object_class | 32.3 | 36 | 0.647 | 0.082 |
 
 All p > 0.05: no evidence of association beyond chance (some cells are sparse, so treat as indicative).
