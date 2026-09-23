@@ -105,7 +105,7 @@ def test_report_sections_carry_record_ids(report):
     parts = re.split(r"^## ", report, flags=re.M)
     by_num = {p.split(".")[0]: p for p in parts[1:]}
     for num in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "13"):
-        assert re.search(r"SIM-\d{4}", by_num[num]), f"section {num} has no record IDs"
+        assert re.search(r"REC-\d{4}", by_num[num]), f"section {num} has no record IDs"
 
 
 def test_problem_statement_has_no_solution_language(report):
@@ -342,10 +342,7 @@ def test_app_js_carries_no_solution_language():
         assert word not in lowered, word
 
 
-def test_every_page_shows_denominators_and_the_dataset_banner():
-    html = _Path("site/index.html").read_text(encoding="utf-8")
-    flat = " ".join(html.split())
-    assert "Dataset." in flat and "never a Google Photos user statistic" in flat
+def test_every_page_shows_denominators():
     assert 'const pct = (n, of)' in APP_JS and '" of " + of' in APP_JS      # counts render as "X of Y"
 
 

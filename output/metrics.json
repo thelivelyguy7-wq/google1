@@ -251,9 +251,9 @@
       "of": 800,
       "pct": 24.9,
       "example_ids": [
-        "SIM-0001",
-        "SIM-0003",
-        "SIM-0004"
+        "REC-0001",
+        "REC-0003",
+        "REC-0004"
       ],
       "profile": {
         "n": 199,
@@ -330,9 +330,9 @@
       "of": 800,
       "pct": 31.8,
       "example_ids": [
-        "SIM-0006",
-        "SIM-0008",
-        "SIM-0012"
+        "REC-0006",
+        "REC-0008",
+        "REC-0012"
       ],
       "profile": {
         "n": 254,
@@ -415,9 +415,9 @@
       "of": 800,
       "pct": 18.1,
       "example_ids": [
-        "SIM-0014",
-        "SIM-0017",
-        "SIM-0037"
+        "REC-0014",
+        "REC-0017",
+        "REC-0037"
       ],
       "profile": {
         "n": 145,
@@ -495,9 +495,9 @@
       "of": 800,
       "pct": 8.9,
       "example_ids": [
-        "SIM-0013",
-        "SIM-0027",
-        "SIM-0029"
+        "REC-0013",
+        "REC-0027",
+        "REC-0029"
       ],
       "profile": {
         "n": 71,
@@ -572,9 +572,9 @@
       "of": 800,
       "pct": 7.9,
       "example_ids": [
-        "SIM-0002",
-        "SIM-0015",
-        "SIM-0016"
+        "REC-0002",
+        "REC-0015",
+        "REC-0016"
       ],
       "profile": {
         "n": 63,
@@ -649,9 +649,9 @@
       "of": 800,
       "pct": 38.1,
       "example_ids": [
-        "SIM-0001",
-        "SIM-0004",
-        "SIM-0005"
+        "REC-0001",
+        "REC-0004",
+        "REC-0005"
       ],
       "profile": {
         "n": 305,
@@ -743,9 +743,9 @@
       "of": 800,
       "pct": 18.4,
       "example_ids": [
-        "SIM-0004",
-        "SIM-0008",
-        "SIM-0009"
+        "REC-0004",
+        "REC-0008",
+        "REC-0009"
       ],
       "profile": {
         "n": 147,
@@ -837,9 +837,9 @@
       "of": 800,
       "pct": 46.4,
       "example_ids": [
-        "SIM-0002",
-        "SIM-0003",
-        "SIM-0007"
+        "REC-0002",
+        "REC-0003",
+        "REC-0007"
       ],
       "profile": {
         "n": 371,
@@ -930,9 +930,9 @@
       "of": 800,
       "pct": 32.1,
       "example_ids": [
-        "SIM-0002",
-        "SIM-0004",
-        "SIM-0008"
+        "REC-0002",
+        "REC-0004",
+        "REC-0008"
       ],
       "profile": {
         "n": 257,
@@ -1021,9 +1021,9 @@
       "of": 800,
       "pct": 16.6,
       "example_ids": [
-        "SIM-0003",
-        "SIM-0010",
-        "SIM-0060"
+        "REC-0003",
+        "REC-0010",
+        "REC-0060"
       ],
       "profile": {
         "n": 133,
@@ -1111,9 +1111,9 @@
       "of": 800,
       "pct": 29.8,
       "example_ids": [
-        "SIM-0002",
-        "SIM-0007",
-        "SIM-0008"
+        "REC-0002",
+        "REC-0007",
+        "REC-0008"
       ],
       "profile": {
         "n": 238,
@@ -1201,9 +1201,9 @@
       "of": 800,
       "pct": 33.1,
       "example_ids": [
-        "SIM-0001",
-        "SIM-0004",
-        "SIM-0005"
+        "REC-0001",
+        "REC-0004",
+        "REC-0005"
       ],
       "profile": {
         "n": 265,
@@ -1289,9 +1289,9 @@
       "of": 800,
       "pct": 20.5,
       "example_ids": [
-        "SIM-0012",
-        "SIM-0018",
-        "SIM-0024"
+        "REC-0012",
+        "REC-0018",
+        "REC-0024"
       ],
       "profile": {
         "n": 164,
@@ -1375,9 +1375,9 @@
       "of": 800,
       "pct": 62.9,
       "example_ids": [
-        "SIM-0001",
-        "SIM-0002",
-        "SIM-0004"
+        "REC-0001",
+        "REC-0002",
+        "REC-0004"
       ],
       "profile": {
         "n": 503,
@@ -1468,9 +1468,9 @@
       "of": 800,
       "pct": 45.5,
       "example_ids": [
-        "SIM-0006",
-        "SIM-0008",
-        "SIM-0009"
+        "REC-0006",
+        "REC-0008",
+        "REC-0009"
       ],
       "profile": {
         "n": 364,
@@ -1562,9 +1562,9 @@
       "of": 800,
       "pct": 33.5,
       "example_ids": [
-        "SIM-0001",
-        "SIM-0003",
-        "SIM-0004"
+        "REC-0001",
+        "REC-0003",
+        "REC-0004"
       ],
       "profile": {
         "n": 268,
@@ -1656,9 +1656,9 @@
       "of": 800,
       "pct": 32.4,
       "example_ids": [
-        "SIM-0001",
-        "SIM-0004",
-        "SIM-0005"
+        "REC-0001",
+        "REC-0004",
+        "REC-0005"
       ],
       "profile": {
         "n": 259,
@@ -1750,9 +1750,9 @@
       "of": 800,
       "pct": 14.0,
       "example_ids": [
-        "SIM-0011",
-        "SIM-0014",
-        "SIM-0015"
+        "REC-0011",
+        "REC-0014",
+        "REC-0015"
       ],
       "profile": {
         "n": 112,
@@ -1844,9 +1844,9 @@
       "of": 800,
       "pct": 46.4,
       "example_ids": [
-        "SIM-0002",
-        "SIM-0003",
-        "SIM-0007"
+        "REC-0002",
+        "REC-0003",
+        "REC-0007"
       ],
       "profile": {
         "n": 371,
@@ -1937,9 +1937,9 @@
       "of": 800,
       "pct": 15.8,
       "example_ids": [
-        "SIM-0002",
-        "SIM-0014",
-        "SIM-0015"
+        "REC-0002",
+        "REC-0014",
+        "REC-0015"
       ],
       "profile": {
         "n": 126,
@@ -2017,9 +2017,9 @@
       "of": 800,
       "pct": 11.2,
       "example_ids": [
-        "SIM-0003",
-        "SIM-0060",
-        "SIM-0069"
+        "REC-0003",
+        "REC-0060",
+        "REC-0069"
       ],
       "profile": {
         "n": 90,
@@ -2102,9 +2102,9 @@
       "of": 800,
       "pct": 8.5,
       "example_ids": [
-        "SIM-0009",
-        "SIM-0020",
-        "SIM-0031"
+        "REC-0009",
+        "REC-0020",
+        "REC-0031"
       ],
       "profile": {
         "n": 68,
@@ -2371,11 +2371,11 @@
     "adjacent_exit": 133,
     "unresolved_or_exit_downstream": 133,
     "example_ids": [
-      "SIM-0001",
-      "SIM-0002",
-      "SIM-0004",
-      "SIM-0005",
-      "SIM-0006"
+      "REC-0001",
+      "REC-0002",
+      "REC-0004",
+      "REC-0005",
+      "REC-0006"
     ],
     "after_exact_dup_removal": 502,
     "after_near_dup_removal": 502
@@ -2440,17 +2440,17 @@
     "of_doc_object": 215,
     "example": [
       {
-        "record_id": "SIM-0255",
+        "record_id": "REC-0255",
         "object_text": "the insurance document",
         "memory_text": "I remember who was there and what we were doing, but not the album."
       },
       {
-        "record_id": "SIM-0292",
+        "record_id": "REC-0292",
         "object_text": "the recipe screenshot",
         "memory_text": "I remember the place generally, but not its name."
       },
       {
-        "record_id": "SIM-0329",
+        "record_id": "REC-0329",
         "object_text": "the old meme I saved",
         "memory_text": "I remember the place generally, but not its name."
       }
@@ -2459,91 +2459,91 @@
   "quotes": {
     "express": [
       {
-        "record_id": "SIM-0025",
+        "record_id": "REC-0025",
         "raw_text": "the birthday dinner. I remember a visual detail that is hard to describe in a search box. I searched for text that might be in the image. I usually remember the story around the picture better than its metadata."
       },
       {
-        "record_id": "SIM-0044",
+        "record_id": "REC-0044",
         "raw_text": "the picture from the day we moved house. I remember a visual detail that is hard to describe in a search box. I tried different wording. I have been using Photos for years."
       }
     ],
     "exit_": [
       {
-        "record_id": "SIM-0003",
+        "record_id": "REC-0003",
         "raw_text": "a picture with my college friends. I remember roughly when it happened, but not the exact day. I gave up and asked someone else to send the photo. The problem is not taking the photo; it is finding it later."
       },
       {
-        "record_id": "SIM-0060",
+        "record_id": "REC-0060",
         "raw_text": "the sangeet. I remember roughly when it happened, but not the exact day. I gave up and asked someone else to send the photo. There are thousands of images in the account."
       }
     ],
     "recovery": [
       {
-        "record_id": "SIM-0008",
+        "record_id": "REC-0008",
         "raw_text": "the old meme I saved. I remember what was happening but not the exact words. I found it after several attempts. I can recognize the image if I see it, but getting to it is the hard part."
       },
       {
-        "record_id": "SIM-0026",
+        "record_id": "REC-0026",
         "raw_text": "a screenshot of a product I wanted. I remember the people and situation but not the date. I found it after several attempts. The problem is not taking the photo; it is finding it later."
       }
     ],
     "uncertain": [
       {
-        "record_id": "SIM-0056",
+        "record_id": "REC-0056",
         "raw_text": "our Diwali family photo. I remember what the object looked like, but not what it was called. I found a similar photo but not the exact one. Sometimes I get a lot of plausible results and still cannot tell which one is right."
       },
       {
-        "record_id": "SIM-0623",
+        "record_id": "REC-0623",
         "raw_text": "the old family group photo. I remember a visual detail that is hard to describe in a search box. I found a similar photo but not the exact one. Sometimes I get a lot of plausible results and still cannot tell which one is right."
       }
     ],
     "inspection": [
       {
-        "record_id": "SIM-0001",
+        "record_id": "REC-0001",
         "raw_text": "the concert selfie. I know approximately which year it was, but not the month. I looked through a very large set of thumbnails. I know the photo exists because I have seen it before."
       },
       {
-        "record_id": "SIM-0035",
+        "record_id": "REC-0035",
         "raw_text": "the parking sign I photographed. I know approximately which year it was, but not the month. I looked through a very large set of thumbnails. I can recognize the image if I see it, but getting to it is the hard part."
       }
     ],
     "time": [
       {
-        "record_id": "SIM-0296",
+        "record_id": "REC-0296",
         "raw_text": "a photo of my grandfather at the wedding. I know approximately which year it was, but not the month. I used a date range and manually compared candidates. It feels much easier when I know an exact date or person's name."
       },
       {
-        "record_id": "SIM-0380",
+        "record_id": "REC-0380",
         "raw_text": "the photo of a prescription. I know approximately which year it was, but not the month. I used a date range and manually compared candidates. I have been using Photos for years."
       }
     ],
     "abandon": [
       {
-        "record_id": "SIM-0010",
+        "record_id": "REC-0010",
         "raw_text": "the photo from when I was sick. I remember roughly when it happened, but not the exact day. I could not find it."
       },
       {
-        "record_id": "SIM-0073",
+        "record_id": "REC-0073",
         "raw_text": "the waterfall from our road trip. I remember what was happening but not the exact words. I could not find it. I can recognize the image if I see it, but getting to it is the hard part."
       }
     ],
     "recog": [
       {
-        "record_id": "SIM-0009",
+        "record_id": "REC-0009",
         "raw_text": "the parking sign I photographed. I can recognize it if I see it, but I don't know how to narrow the results. I searched a few keywords and then scrolled. The problem is not taking the photo; it is finding it later."
       },
       {
-        "record_id": "SIM-0020",
+        "record_id": "REC-0020",
         "raw_text": "the photo of a prescription. I can recognize it if I see it, but I don't know how to narrow the results. I found a similar photo but not the exact one."
       }
     ],
     "path": [
       {
-        "record_id": "SIM-0002",
+        "record_id": "REC-0002",
         "raw_text": "the recipe screenshot. I remember the photo exists, but not how I originally found it. I searched a few keywords and then scrolled. The problem is not taking the photo; it is finding it later."
       },
       {
-        "record_id": "SIM-0015",
+        "record_id": "REC-0015",
         "raw_text": "the picture from the day we moved house. I remember the photo exists, but not how I originally found it. I searched by date and got too many results. There are thousands of images in the account."
       }
     ]
@@ -2559,9 +2559,9 @@
         "B06": 49
       },
       "example_ids": [
-        "SIM-0012",
-        "SIM-0018",
-        "SIM-0024"
+        "REC-0012",
+        "REC-0018",
+        "REC-0024"
       ]
     },
     "Date-based narrowing": {
@@ -2573,9 +2573,9 @@
         "B16": 35
       },
       "example_ids": [
-        "SIM-0006",
-        "SIM-0011",
-        "SIM-0014"
+        "REC-0006",
+        "REC-0011",
+        "REC-0014"
       ]
     },
     "Reformulation (different or several related words)": {
@@ -2587,9 +2587,9 @@
         "B17": 33
       },
       "example_ids": [
-        "SIM-0007",
-        "SIM-0019",
-        "SIM-0023"
+        "REC-0007",
+        "REC-0019",
+        "REC-0023"
       ]
     },
     "Switching strategy (terms/albums, person then browse, keywords then scroll)": {
@@ -2602,9 +2602,9 @@
         "B18": 28
       },
       "example_ids": [
-        "SIM-0002",
-        "SIM-0009",
-        "SIM-0013"
+        "REC-0002",
+        "REC-0009",
+        "REC-0013"
       ]
     },
     "Manual inspection and browsing": {
@@ -2617,9 +2617,9 @@
         "B13": 42
       },
       "example_ids": [
-        "SIM-0001",
-        "SIM-0005",
-        "SIM-0016"
+        "REC-0001",
+        "REC-0005",
+        "REC-0016"
       ]
     },
     "Outcome stated in the same sentence (similar-not-exact, several attempts)": {
@@ -2631,9 +2631,9 @@
         "B15": 36
       },
       "example_ids": [
-        "SIM-0004",
-        "SIM-0008",
-        "SIM-0020"
+        "REC-0004",
+        "REC-0008",
+        "REC-0020"
       ]
     },
     "Exit (could not find, gave up and asked someone, other app/device)": {
@@ -2646,9 +2646,9 @@
         "B12": 43
       },
       "example_ids": [
-        "SIM-0003",
-        "SIM-0010",
-        "SIM-0060"
+        "REC-0003",
+        "REC-0010",
+        "REC-0060"
       ]
     }
   },
@@ -2714,14 +2714,14 @@
       "no_evidence": 671,
       "example_ids": {
         "intact": [
-          "SIM-0001",
-          "SIM-0002",
-          "SIM-0015"
+          "REC-0001",
+          "REC-0002",
+          "REC-0015"
         ],
         "condition": [
-          "SIM-0001",
-          "SIM-0002",
-          "SIM-0003"
+          "REC-0001",
+          "REC-0002",
+          "REC-0003"
         ]
       },
       "name": "Recall",
@@ -2742,14 +2742,14 @@
       "no_evidence": 339,
       "example_ids": {
         "breakdown": [
-          "SIM-0006",
-          "SIM-0008",
-          "SIM-0009"
+          "REC-0006",
+          "REC-0008",
+          "REC-0009"
         ],
         "attempt": [
-          "SIM-0012",
-          "SIM-0018",
-          "SIM-0024"
+          "REC-0012",
+          "REC-0018",
+          "REC-0024"
         ]
       },
       "name": "Express",
@@ -2770,14 +2770,14 @@
       "no_evidence": 529,
       "example_ids": {
         "indirect": [
-          "SIM-0004",
-          "SIM-0010",
-          "SIM-0011"
+          "REC-0004",
+          "REC-0010",
+          "REC-0011"
         ],
         "intact": [
-          "SIM-0001",
-          "SIM-0004",
-          "SIM-0011"
+          "REC-0001",
+          "REC-0004",
+          "REC-0011"
         ]
       },
       "name": "Understand & match",
@@ -2798,19 +2798,19 @@
       "no_evidence": 432,
       "example_ids": {
         "breakdown": [
-          "SIM-0004",
-          "SIM-0014",
-          "SIM-0020"
+          "REC-0004",
+          "REC-0014",
+          "REC-0020"
         ],
         "effort": [
-          "SIM-0001",
-          "SIM-0005",
-          "SIM-0006"
+          "REC-0001",
+          "REC-0005",
+          "REC-0006"
         ],
         "intact": [
-          "SIM-0004",
-          "SIM-0008",
-          "SIM-0009"
+          "REC-0004",
+          "REC-0008",
+          "REC-0009"
         ]
       },
       "name": "Evaluate",
@@ -2831,19 +2831,19 @@
       "no_evidence": 429,
       "example_ids": {
         "breakdown": [
-          "SIM-0003",
-          "SIM-0010",
-          "SIM-0060"
+          "REC-0003",
+          "REC-0010",
+          "REC-0060"
         ],
         "effort": [
-          "SIM-0002",
-          "SIM-0007",
-          "SIM-0009"
+          "REC-0002",
+          "REC-0007",
+          "REC-0009"
         ],
         "intact": [
-          "SIM-0008",
-          "SIM-0026",
-          "SIM-0031"
+          "REC-0008",
+          "REC-0026",
+          "REC-0031"
         ]
       },
       "name": "Refine",
@@ -2864,9 +2864,9 @@
       "no_evidence": 710,
       "example_ids": {
         "indirect": [
-          "SIM-0003",
-          "SIM-0060",
-          "SIM-0069"
+          "REC-0003",
+          "REC-0060",
+          "REC-0069"
         ]
       },
       "name": "Available",
