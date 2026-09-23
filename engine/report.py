@@ -74,7 +74,7 @@ def build_report(precomputed=None) -> str:
     # ------------------------------------------------------------------ preface (not a numbered section)
     w("# Google Photos Retrieval — Product Discovery Report")
     w("")
-    w("> **REPRESENTATIVE DATASET.** All counts are *X of Y records in a real corpus* (`google_photos_raw_dataset.csv`). "
+    w("> **REPRESENTATIVE DATASET.** All counts are *X of Y records in a synthetic corpus* (`google_photos_raw_dataset.csv`). "
       "They are not Google Photos user research, not population statistics, not Google internal data. They show directional patterns and hypotheses only.")
     w(">")
     w("> **PROPOSED RESEARCH PLAN — NOT RESEARCH FINDINGS.** No interviews, tests or surveys have been run; nothing in §9–§12 is a participant result.")
