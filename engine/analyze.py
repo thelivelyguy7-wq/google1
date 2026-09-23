@@ -1,6 +1,6 @@
 """Stages 2-8: journey mapping, needs, segments, opportunities, target, impact sizing.
 
-All counts are over synthetic dataset records ("X of Y relevant records"), never population rates.
+All counts are over dataset records ("X of Y relevant records"), never population rates.
 Needs / segments / opportunities are non-exclusive predicates over coded fields, except `retrieval_state`, which is
 mutually exclusive by construction (one behavior sentence per record).
 """

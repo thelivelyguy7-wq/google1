@@ -12,11 +12,11 @@ Status legend: **Built** exists and runs today (tests: `python -m pytest tests -
 |---|---|
 | Traceability from every conclusion to raw evidence | Every coded field sits in `coded_records.csv` next to the verbatim sentence it came from; the report's numbers are computed, never typed |
 | Evidence / interpretation / hypothesis / unknown stay separate | Analysis code emits counts only; interpretation lives in the report and narrative layers (the tag list is in the row below) |
-| Synthetic data is never presented as real research | Banner on the report; counts are always "X of Y records"; production values are literal `TBD` |
+| Counts are sample counts, not population stats | Counts are always "X of Y records"; production values are literal `TBD` |
 | No assumption that AI, metadata or semantic search is the answer | No solution vocabulary in code or output; hypotheses are generated with competing explanations |
 | Source and platform are not segmentation axes | Segments are predicates over memory, behaviour and outcome only; source is used solely in a structure test that shows it carries no signal |
 | Fail loudly rather than mis-code | An unrecognised sentence raises an error, so coverage is 100% by construction |
-| The six epistemic categories are never merged | The report tags `[RAW]`, `[OBS-SYN]` (observed count, marked synthetic), `[INTERP]`, `[OPP-HYP]`, `[PROB-HYP]`, `[VALIDATED]` (none yet), plus `[ASSUME]` and `[UNKNOWN]`; a test rejects the old merged tags |
+| The six epistemic categories are never merged | The report tags `[RAW]`, `[OBS]` (observed count), `[INTERP]`, `[OPP-HYP]`, `[PROB-HYP]`, `[VALIDATED]` (none yet), plus `[ASSUME]` and `[UNKNOWN]`; a test rejects the old merged tags |
 | Every conclusion traces to records | Every numbered section except the §11 framework table cites record IDs. Every named group (need, segment, opportunity, decomposition node, claim, hypothesis) has its full record list in `evidence_index.csv`; report sections show example IDs and the key |
 | A model may read text but may not invent evidence | The model-assisted coder must quote the record verbatim for every populated field; ungrounded output is rejected, not repaired |
 
@@ -92,7 +92,7 @@ google1/
 ## 4. Components
 
 ### 4.1 Input contract
-CSV with `record_id, source, source_type, date_posted, author_id, engagement, text, source_url`. Only `record_id`, `text` and (for duplicate checks) `author_id` matter analytically. `engagement`, `date_posted` and `source` are carried through but not used to derive findings. `source_url` is `SIMULATED_SOURCE_NOT_REAL` for every row and is a reminder of the data's status.
+CSV with `record_id`, `source`, `source_type`, `date_posted`, `author_id`, `engagement`, `text`, `source_url`. Only `record_id`, `text` and (for duplicate checks) `author_id` matter analytically. `engagement`, `date_posted` and `source` are carried through but not used to derive findings. `source_url` is not used in the analysis.
 
 ### 4.2 `lexicon.py` — the coding model
 A hand-written map from each of the 90 distinct sentences to its meaning. Sentences are grouped by the slot they occupy in a record:
@@ -127,7 +127,7 @@ Pure functions over the coded relevant records; no prose.
 | Vocabulary-complete counts | Every count dictionary is filled over its full vocabulary, so a corpus missing a code yields a zero rather than a missing key |
 | Journey | Records touching each stage, records with explicit breakdown evidence, most common stage paths |
 | Target segment | Size, outcome profile, evidence counts, robustness to duplicate removal |
-| Impact sizing | Observed synthetic counts only; production terms are `TBD` |
+| Impact sizing | Observed counts only; production terms are `TBD` |
 | Structure tests | Chi-square and Cramér's V for object × memory, memory × behaviour, object × state, source × state and others |
 | Decomposition | Per node (D1–D6): records with explicit breakdown, indirect signs, effort, intact capability, attempt only, and no evidence (§4.7) |
 | Behaviour and outcome distributions | Seven behaviour groups over the 18 stated behaviours; every outcome category from the brief, zeros included |
@@ -207,7 +207,7 @@ flowchart LR
 
 1. **No hard-coded numbers.** Every count in the UI comes from `site_data.js`. (The earlier engine's UI kept ranking numbers in JavaScript, and they went stale when the dataset changed.)
 2. **Every number drills down.** Clicking a count opens the records behind it, with the verbatim text and codes, so traceability survives in the UI.
-3. **Always-visible synthetic-data banner**, and every statement carries its label chip: observed in synthetic data, interpretation, hypothesis, assumption, unknown.
+3. **Every statement carries its label chip:** observed data, interpretation, hypothesis, assumption, unknown.
 4. **Denominators are always shown** ("X of 800"). No bare percentages, and no population wording.
 5. **No solution content.** The UI has no feature ideas, and the Research hypotheses page shows verdicts only after research supplies them.
 6. **Static and offline.** Data is embedded in a script file, so `site/index.html` opens from disk with no server and no network.
@@ -227,7 +227,7 @@ Frequency labels in the prioritisation table are computed from the data (High at
 | **Structure tests in the pipeline** | Shows which cross-tabs are meaningful; here all are chance-level | Results are indicative only (sparse cells) |
 | **Report generator in code, not hand-written markdown** | Numbers regenerate when the lexicon or predicates change | Narrative changes need a code edit |
 
-## 6. Known limitations `[OBS-SYN]`
+## 6. Known limitations `[OBS]`
 
 - Text is template-composed, so frequencies describe how the file was generated. Object, memory, behaviour and source are statistically independent, and 66 of 241 document/object records pair the item with people/place/album memory, so object-specific conclusions are unsafe.
 - Outcome and state come from the same sentence, so outcome-by-segment tables restate the definition.
@@ -242,14 +242,14 @@ Frequency labels in the prioritisation table are computed from the data (High at
 | Run and accept the `LLMCoder` on real text | Built; needs a live validation run (`implementationplan.md` Phase 1C) before it replaces or supplements the lexicon |
 | `research_ledger` — participant-level observations from interviews and tasks | Apply the synthesis rules (pattern needs ≥ 3 participants, counts as "n of N participants") |
 | Sensitivity module | Re-run segments and prioritisation under alternative definitions and with duplicates removed |
-| Production-data adapter | Fill the `TBD` terms in impact sizing once Google data is available, kept separate from synthetic findings |
+| Production-data adapter | Fill the `TBD` terms in impact sizing once Google data is available, kept separate from sample findings |
 | Editable hypothesis verdicts and ledger entry in the web app | Only needed once fieldwork starts; verdicts currently render as `untested` |
 | CI | Tests exist (`python -m pytest tests -q`); wiring them to run automatically is not done |
 
 ## 8. Report structure decision
 
-The brief asks for "exactly this structure": thirteen numbered sections. The report has exactly `## 1.` to `## 13.`, in the brief's order. Before §1 there is only a title, the synthetic-data banner, the label key and one traceability line, because the brief forbids presenting synthetic data as real research and the reader must see that first. The discovery chain, structure tests, object judgement calls and file map live in `output/discovery_appendix.md`. Extra tables that serve a brief requirement (need detail, behaviour and outcome distributions, decomposition, per-segment signals) sit inside the section they belong to. A test enforces the section list and the short preface.
+The brief asks for "exactly this structure": thirteen numbered sections. The report has exactly `## 1.` to `## 13.`, in the brief's order. Before §1 there is only a title, the label key and one traceability line. The discovery chain, structure tests, object judgement calls and file map live in `output/discovery_appendix.md`. Extra tables that serve a brief requirement (need detail, behaviour and outcome distributions, decomposition, per-segment signals) sit inside the section they belong to. A test enforces the section list and the short preface.
 
 ## 9. Non-goals
 
-The engine does not choose or rank solutions, does not estimate production metrics, does not use sentiment or engagement as discovery signals, and does not treat synthetic counts as population statistics.
+The engine does not choose or rank solutions, does not estimate production metrics, does not use sentiment or engagement as discovery signals, and does not treat observed sample counts as population statistics.

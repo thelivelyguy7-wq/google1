@@ -1,6 +1,6 @@
 # Decision log
 
-Coding choices that move a headline number, with the size of the move, so a reader can price the judgement rather than take it on trust. Synthetic corpus only.
+Coding choices that move a headline number, with the size of the move, so a reader can price the judgement rather than take it on trust. Dataset only.
 
 | Decision | Records affected | Why | What a different choice would do |
 |---|---|---|---|

@@ -1,6 +1,6 @@
 # Coder validation — `lexicon`
 
-Reference: hand-coded lexicon on the synthetic corpus. Perturbed text: **False**. This measures agreement with the reference only; it says nothing about real users.
+Reference: hand-coded lexicon on the corpus. Perturbed text: **False**. This measures agreement with the reference only; it says nothing about real users.
 
 Records: 100 · coded: 100 · uncoded (unreadable, refused or errored): 0
 

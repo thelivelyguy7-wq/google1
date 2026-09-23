@@ -79,7 +79,7 @@ def compare(texts: list[str], truth: list[Coding], preds: list[Coding | None]) -
 
 def render(name: str, res: dict, perturbed: bool) -> str:
     o = [f"# Coder validation — `{name}`", "",
-         f"Reference: hand-coded lexicon on the synthetic corpus. Perturbed text: **{perturbed}**. "
+         f"Reference: hand-coded lexicon on the corpus. Perturbed text: **{perturbed}**. "
          "This measures agreement with the reference only; it says nothing about real users.", "",
          f"Records: {res['n']} · coded: {res['coded']} · uncoded (unreadable, refused or errored): {res['uncoded']}", ""]
     if res["coded"]:

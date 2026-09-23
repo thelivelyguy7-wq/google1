@@ -25,6 +25,6 @@ def configure(input_path=None, output_dir=None):
 
 def add_arguments(parser):
     """Shared --input / --output flags."""
-    parser.add_argument("--input", default=None, help="corpus CSV (default: the bundled 840-record synthetic file)")
+    parser.add_argument("--input", default=None, help="corpus CSV (default: the bundled 840-record file)")
     parser.add_argument("--output", default=None, help="output directory (default: ./output)")
     return parser

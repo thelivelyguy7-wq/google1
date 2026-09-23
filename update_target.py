@@ -22,7 +22,7 @@ new_target_page = """page("target", "Target segment and impact sizing", "Stages 
   
   <h2>1. WHY: Business Goal & Impact Sizing</h2>
   <p>The overarching impact we want to achieve is to increase <strong>incremental successful retrievals</strong> by helping users recover from failed searches.</p>
-  ${table(["Step", "Observed in the synthetic corpus " + OBS, "Production value"], [
+  ${table(["Step", "Observed in the corpus " + OBS, "Production value"], [
     ["Eligible retrieval attempts", `${I.eligible} records (posts, not attempts)`, "<strong>TBD</strong> requires Google production data"],
     ["Share in the target behaviour", `${ev("seg:SEG-T", I.target, I.eligible)} (${I.target_pct}%)`, "<strong>TBD</strong> requires Google production data"],
     ["Share with failure or effort", `Effort signal ${I.target_with_effort_signal} of ${I.target}, definitional; stated uncertain outcome ${I.target_uncertain_stated}; downstream exits ${I.exits_adjacent}, of which ${I.exits_failed_or_abandoned} failed or abandoned`, "<strong>TBD</strong> needs a log definition of effort"],

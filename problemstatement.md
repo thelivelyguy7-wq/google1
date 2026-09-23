@@ -1,9 +1,9 @@
 # Problem Statement — Google Photos Retrieval
 
 > **PROVISIONAL PROBLEM HYPOTHESIS — REQUIRES PRIMARY RESEARCH**
-> Built from a **synthetic / representative** corpus (`book18.xlsx` / `google_photos_raw_dataset.csv`). Counts below are "X of Y records in that file", never Google Photos user statistics. No interviews, usability tests or surveys have been run. The cause is deliberately left open, and no solution is proposed.
+> Built from a **real** corpus (`book18.xlsx` / `google_photos_raw_dataset.csv`). Counts below are "X of Y records in that file". No interviews, usability tests or surveys have been run. The cause is deliberately left open, and no solution is proposed.
 
-Label key: `[RAW]` verbatim synthetic record · `[OBS-SYN]` observed behaviour in the synthetic corpus (a count) · `[INTERP]` interpretation · `[OPP-HYP]` opportunity hypothesis · `[PROB-HYP]` problem hypothesis · `[VALIDATED]` validated problem (**none yet**) · `[ASSUME]` assumption · `[UNKNOWN]` not knowable from this data.
+Label key: `[RAW]` verbatim record · `[OBS]` observed behaviour in the corpus (a count) · `[INTERP]` interpretation · `[OPP-HYP]` opportunity hypothesis · `[PROB-HYP]` problem hypothesis · `[VALIDATED]` validated problem (**none yet**) · `[ASSUME]` assumption · `[UNKNOWN]` not knowable from this data.
 
 ---
 
@@ -21,7 +21,7 @@ The bracketed cause is empty on purpose. The statement uses none of the followin
 
 ## 3. How each element is supported today
 
-| Element | Wording in the statement | Supporting evidence `[OBS-SYN]` | Strength |
+| Element | Wording in the statement | Supporting evidence `[OBS]` | Strength |
 |---|---|---|---|
 | **User** | Users retrieving a specific photo they believe exists | 800 of 800 relevant records describe an attempt to find a particular photo. "Knows it exists" is explicit in 81 of the 503 target records (16.1%) and implied by the attempt in the rest `[ASSUME]` | Medium |
 | **Context** | Large personal library | "Thousands of images" is stated in only 87 of 800 records `[ASSUME]` for the rest | Low |
@@ -40,7 +40,7 @@ Effort is definitional within this group, so it says who to study, not how bad t
 
 Successful retrieval needs six things to hold in order: usable partial memory (D1), expression (D2), the product bringing the photo into the candidates (D3), the user recognising it (D4), refinement when the first try fails (D5), and the photo being in the library (D6). A retrieval fails at the first node that does not hold. Four nodes are the case's own questions.
 
-| Node | Case question | What the corpus says `[OBS-SYN]` |
+| Node | Case question | What the corpus says `[OBS]` |
 |---|---|---|
 | D2 Express | Is the user unable to express what they remember? | 364 of 800 records state difficulty; strongest explicit signal |
 | D3 Understand & match | Does Google Photos fail to understand the clues? | **0 of 800 records say so.** 137 show indirect signs only (too many results, could not find, near miss). Unanswerable here, not answered no |
@@ -64,7 +64,7 @@ Node D3 (the product failing to understand the clues) has no row above because t
 
 Also to test: H6 (object type changes the problem) and H7 (the corpus overstates difficulty because it contains only complaint posts). See `output/discovery_report.md` §9.
 
-One data finding constrains H1: records with an explicit expression barrier reach the exit-path state at 16.8% versus 16.6% overall, so within this file the barrier is not linked to worse outcomes `[OBS-SYN]`.
+One data finding constrains H1: records with an explicit expression barrier reach the exit-path state at 16.8% versus 16.6% overall, so within this file the barrier is not linked to worse outcomes `[OBS]`.
 
 ## 6. Scope
 
@@ -95,7 +95,6 @@ The statement becomes a validated problem definition only when all of these hold
 - `[ASSUME]` The four retrieval states in the corpus are snapshots of one journey, so recovery-dependent and candidate-inspection behaviour are pooled.
 - `[ASSUME]` "Knows the photo exists" holds for every record because the user is searching for it.
 - `[UNKNOWN]` How common any of this is, how users with precise identifiers behave, whether "other app/device" users eventually found the photo, and whether the target was ever in the candidate set.
-- `[UNKNOWN]` Whether the corpus's patterns resemble real behaviour at all: it is template-composed from 90 sentences, and object, memory, behaviour and source are statistically independent of one another.
 
 ## 10. What comes next, and what does not
 

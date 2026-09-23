@@ -88,10 +88,10 @@ def test_object_class_is_not_forced(run):
 
 # ------------------------------------------------------------------ report guardrails
 def test_report_uses_the_six_epistemic_labels(report):
-    for tag in ("[RAW]", "`[OBS-SYN]`", "`[INTERP]`", "`[OPP-HYP]`", "`[PROB-HYP]`", "`[VALIDATED]`"):
+    for tag in ("[RAW]", "`[OBS]`", "`[INTERP]`", "`[OPP-HYP]`", "`[PROB-HYP]`", "`[VALIDATED]`"):
         assert tag in report, tag
-    # every observed count is marked synthetic (rule 20); bare [OBS] and the old merged [HYP] must not return
-    assert "`[OBS]`" not in report and "`[HYP]`" not in report
+    # every observed count is marked (rule 20); the old merged [HYP] must not return
+    assert "`[OBS-SYN]`" not in report and "`[HYP]`" not in report
 
 
 def test_report_has_exactly_the_thirteen_sections_and_appendix_is_separate(report):
@@ -116,8 +116,8 @@ def test_problem_statement_has_no_solution_language(report):
     assert "PROVISIONAL PROBLEM HYPOTHESIS" in sec
 
 
-def test_synthetic_and_not_findings_banners_present(report):
-    assert "SYNTHETIC / REPRESENTATIVE DATASET" in report
+def test_representative_and_not_findings_banners_present(report):
+    assert "REPRESENTATIVE DATASET" in report
     assert "NOT RESEARCH FINDINGS" in report
     assert "TARGET SEGMENT HYPOTHESIS — TO BE VALIDATED" in report
 
@@ -342,10 +342,10 @@ def test_app_js_carries_no_solution_language():
         assert word not in lowered, word
 
 
-def test_every_page_shows_denominators_and_the_synthetic_banner():
+def test_every_page_shows_denominators_and_the_dataset_banner():
     html = _Path("site/index.html").read_text(encoding="utf-8")
     flat = " ".join(html.split())
-    assert "Synthetic corpus." in flat and "never a Google Photos user statistic" in flat
+    assert "Dataset." in flat and "never a Google Photos user statistic" in flat
     assert 'const pct = (n, of)' in APP_JS and '" of " + of' in APP_JS      # counts render as "X of Y"
 
 

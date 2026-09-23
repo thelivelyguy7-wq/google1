@@ -1,6 +1,6 @@
 # Sensitivity analysis
 
-Does the target segment, and the opportunity ranking, survive a different reasonable analyst? Synthetic corpus only: a variant that agrees still agrees about this file, not about users.
+Does the target segment, and the opportunity ranking, survive a different reasonable analyst? Dataset only: a variant that agrees still agrees about this file, not about users.
 
 ## 1. Target segment under alternative definitions
 

@@ -16,7 +16,7 @@ Evidence polarities per record and node:
     effort     the user did extra work at this node
     intact     the record states the capability is retained / the step worked
     attempt    the user did something at this node; no outcome stated
-Everything here is a count over synthetic records. Nothing in this module claims a real-world rate.
+Everything here is a count over records. Nothing in this module claims a real-world rate.
 """
 from __future__ import annotations
 

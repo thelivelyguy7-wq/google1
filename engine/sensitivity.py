@@ -4,7 +4,7 @@ Two outputs:
   sensitivity.md  the target segment and the opportunity ranking recomputed under alternative definitions
   decision_log.md every coding choice that moves a headline number, with its reason and its size
 
-Both are counts over the synthetic corpus. A conclusion that survives every variant is still only a conclusion
+Both are counts over the corpus. A conclusion that survives every variant is still only a conclusion
 about this file.
 """
 from __future__ import annotations
@@ -61,7 +61,7 @@ def write_sensitivity(precomputed=None) -> str:
     unstable = [k for k in rv["order"] if len({rv["labels"][s][k] for s in rv["labels"]}) > 1]
     o = ["# Sensitivity analysis", "",
          "Does the target segment, and the opportunity ranking, survive a different reasonable analyst? "
-         "Synthetic corpus only: a variant that agrees still agrees about this file, not about users.", "",
+         "Dataset only: a variant that agrees still agrees about this file, not about users.", "",
          "## 1. Target segment under alternative definitions", "",
          "| Variant | Records | Of | Share | Still the largest group? |", "|---|---|---|---|---|"]
     for v in tv:
@@ -137,7 +137,7 @@ def write_decision_log(precomputed=None) -> str:
     m, df, r = precomputed or compute()
     o = ["# Decision log", "",
          "Coding choices that move a headline number, with the size of the move, so a reader can price the judgement "
-         "rather than take it on trust. Synthetic corpus only.", "",
+         "rather than take it on trust. Dataset only.", "",
          "| Decision | Records affected | Why | What a different choice would do |", "|---|---|---|---|"]
     for row in _entries(m, r):
         o.append("| " + " | ".join(row) + " |")

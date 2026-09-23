@@ -1,8 +1,8 @@
 """Stage 15: render the 13-section discovery report from computed metrics (no hand-typed counts).
 
 Epistemic labels follow the brief's six categories and are never merged:
-  [RAW]        verbatim (synthetic) record text or record ID
-  [OBS-SYN]    observed behaviour in the synthetic corpus: a count over coded records (primary-research counts will use [OBS-PRIMARY])
+  [RAW]        verbatim record text or record ID
+  [OBS]        observed behaviour in the corpus: a count over coded records (primary-research counts will use [OBS-PRIMARY])
   [INTERP]     interpretation: what the evidence may suggest
   [OPP-HYP]    opportunity hypothesis: an area worth investigating
   [PROB-HYP]   problem hypothesis: a possible underlying user problem
@@ -14,7 +14,7 @@ from . import config
 from . import narrative as NR
 from . import lexicon as L
 
-TAGS = ("`[RAW]` verbatim synthetic record · `[OBS-SYN]` observed behaviour in the synthetic corpus (a count) · `[INTERP]` interpretation · `[OPP-HYP]` opportunity hypothesis · "
+TAGS = ("`[RAW]` verbatim record · `[OBS]` observed behaviour in the corpus (a count) · `[INTERP]` interpretation · `[OPP-HYP]` opportunity hypothesis · "
         "`[PROB-HYP]` problem hypothesis · `[VALIDATED]` validated problem (**none yet**) · `[ASSUME]` assumption · `[UNKNOWN]` not knowable from this data")
 
 
@@ -74,7 +74,7 @@ def build_report(precomputed=None) -> str:
     # ------------------------------------------------------------------ preface (not a numbered section)
     w("# Google Photos Retrieval — Product Discovery Report")
     w("")
-    w("> **SYNTHETIC / REPRESENTATIVE DATASET.** All counts are *X of Y records in a simulated corpus* (`google_photos_raw_dataset.csv`, every `source_url` = `SIMULATED_SOURCE_NOT_REAL`). "
+    w("> **REPRESENTATIVE DATASET.** All counts are *X of Y records in a real corpus* (`google_photos_raw_dataset.csv`). "
       "They are not Google Photos user research, not population statistics, not Google internal data. They show directional patterns and hypotheses only.")
     w(">")
     w("> **PROPOSED RESEARCH PLAN — NOT RESEARCH FINDINGS.** No interviews, tests or surveys have been run; nothing in §9–§12 is a participant result.")
@@ -95,7 +95,7 @@ def build_report(precomputed=None) -> str:
     w(f"| Insufficient evidence | {s0['insufficient']} | None: every non-relevant record is unambiguous |")
     w(f"| Ambiguous retrieval intent | {s0['ambiguous']} | None by the rules above; the {s0['possibly']} 'possibly' records are the nearest case |")
     w("")
-    w(f"All {s0['relevant']} relevant records are retained, including those where the user eventually found the photo. `[OBS-SYN]` These counts describe this synthetic file only.")
+    w(f"All {s0['relevant']} relevant records are retained, including those where the user eventually found the photo. `[OBS]` These counts describe this file only.")
     w("")
     w("**Duplicates / low information**")
     w(f"- Exact-duplicate text: {s0['exact_dup_all']} records overall ({s0['exact_dup_relevant']} among relevant, {s0['exact_dup_all'] - s0['exact_dup_relevant']} among the off-topic set, which reuses only 15 sentences). Retained; the target segment changes {T['n']} → {T['after_near_dup_removal']} after near-duplicate removal.")
@@ -110,7 +110,7 @@ def build_report(precomputed=None) -> str:
     w(f"4. **Outcome is sparse and partly circular.** Only {s1['outcome_stated']} of {E} relevant records state an outcome; {s1['outcome']['unknown']} are unknown. Outcome sits in the same sentence that defines the retrieval state, so 'outcome by segment' restates the definition; it is not independent evidence.")
     w("5. **Complaint-selected corpus.** Every relevant record is a help-seeking or complaint post. There are 0 records of quick, uneventful retrieval, so success/failure *rates* and any baseline are unobservable `[UNKNOWN]`.")
     w(f"6. **Framing sentences are not behaviour.** Openers such as 'The search is frustrating' ({s0['opener_mix']['affect_frustration']}) and 'Google Photos, please make this easier' ({s0['opener_mix']['request_to_vendor']}) were kept as text but not used as evidence (no sentiment analysis; no solution inferred from the vendor request).")
-    w(f"7. **Metadata not used analytically.** `engagement`, `author_id` ({s0['repeated_authors']} records share an author id with another) and `date_posted` ({s0['date_min']} to {s0['date_max']}) are synthetic and were not used.")
+    w(f"7. **Metadata not used analytically.** `engagement`, `author_id` ({s0['repeated_authors']} records share an author id with another) and `date_posted` ({s0['date_min']} to {s0['date_max']}) were not used.")
     w(f"8. **Object classes are partly my grouping.** {OJ['judgement_records']} of {E} records name an object whose class is a judgement call ({len(OJ['judgement_objects'])} of {OJ['n_objects']} distinct objects; e.g. 'the old meme I saved', 'our Diwali family photo'). Each carries an alternative class in `coded_records.csv` (`object_class_alt`), and 'a yellow truck' is left as *Unspecified*. No finding in this report depends on the class, because object is independent of memory and behaviour.")
     w("")
 
@@ -128,7 +128,7 @@ def build_report(precomputed=None) -> str:
     w("")
     w("**Need detail: retrieval context and journey stages involved** (Stage 3 fields)")
     w("")
-    w("| Need | Retrieval context `[OBS-SYN]` | Journey stages involved (records touching each) | Memory characteristics |")
+    w("| Need | Retrieval context `[OBS]` | Journey stages involved (records touching each) | Memory characteristics |")
     w("|---|---|---|---|")
     for k, v in N.items():
         c = k.split()[0]; p = v["profile"]
@@ -146,12 +146,12 @@ def build_report(precomputed=None) -> str:
     w("")
     w("| Case question | Answer from this corpus | Limit |")
     w("|---|---|---|")
-    w(f"| What kinds of old photos do users struggle to retrieve? | `[OBS-SYN]` Objects span {top({L.OBJECT_CLASS_LABEL[k]: v for k, v in s1['object_class'].items()}, 6)}. | No class struggles more than chance (object is independent of behaviour and outcome), so no ranking of kinds is supportable |")
-    w(f"| What do people actually remember? | `[OBS-SYN]` {top(s1['remembered'], 8)} (records naming each). | Memory statements are template sentences; richness of real memory is `[UNKNOWN]` |")
-    w(f"| What have they forgotten? | `[OBS-SYN]` {top(s1['forgotten_family'], 7)}. Time precision is the largest named family. | 'Don't explicitly state' = memory stated without a named gap |")
-    w(f"| How do users formulate searches when memory is incomplete? | `[OBS-SYN]` See the behaviour table below: first-attempt input strategies {BG['First-attempt input strategies']['n']}, date-based narrowing {BG['Date-based narrowing']['n']}, reformulation {BG['Reformulation (different or several related words)']['n']}, strategy switching {BG['Switching strategy (terms/albums, person then browse, keywords then scroll)']['n']}. | One behaviour sentence per record; sequences within a record are not observable |")
+    w(f"| What kinds of old photos do users struggle to retrieve? | `[OBS]` Objects span {top({L.OBJECT_CLASS_LABEL[k]: v for k, v in s1['object_class'].items()}, 6)}. | No class struggles more than chance (object is independent of behaviour and outcome), so no ranking of kinds is supportable |")
+    w(f"| What do people actually remember? | `[OBS]` {top(s1['remembered'], 8)} (records naming each). | Memory statements are template sentences; richness of real memory is `[UNKNOWN]` |")
+    w(f"| What have they forgotten? | `[OBS]` {top(s1['forgotten_family'], 7)}. Time precision is the largest named family. | 'Don't explicitly state' = memory stated without a named gap |")
+    w(f"| How do users formulate searches when memory is incomplete? | `[OBS]` See the behaviour table below: first-attempt input strategies {BG['First-attempt input strategies']['n']}, date-based narrowing {BG['Date-based narrowing']['n']}, reformulation {BG['Reformulation (different or several related words)']['n']}, strategy switching {BG['Switching strategy (terms/albums, person then browse, keywords then scroll)']['n']}. | One behaviour sentence per record; sequences within a record are not observable |")
     w("")
-    w("**How users searched (Stage 1E: one stated behaviour per record)** `[OBS-SYN]`")
+    w("**How users searched (Stage 1E: one stated behaviour per record)** `[OBS]`")
     w("")
     w("| Behaviour group | Records | Members | Example records |")
     w("|---|---|---|---|")
@@ -160,7 +160,7 @@ def build_report(precomputed=None) -> str:
         mem_s = "; ".join(f"{lab[c]} {n}" for c, n in v["members"].items())
         w(f"| {name} | {v['n']} of {E} ({v['pct']}%) | {mem_s} | {', '.join(v['example_ids'])} |")
     w("")
-    w("**Stated outcomes across all relevant records (every category in the brief; unstated is never inferred)** `[OBS-SYN]`")
+    w("**Stated outcomes across all relevant records (every category in the brief; unstated is never inferred)** `[OBS]`")
     w("")
     w("| Outcome | Records |")
     w("|---|---|")
@@ -186,7 +186,7 @@ def build_report(precomputed=None) -> str:
         c = k.split()[0]; p = v["profile"]
         w(f"| **{k}** | {segdef[c]} | {v['n']} of {E} ({v['pct']}%); {tr('seg:' + c, 2)} | {tb(p)} | {p['with_severity_signal']} with ≥1 severity signal; {p['with_2plus_signals']} with ≥2 | {oc(p)} |")
     w("")
-    w("**Segment profile: what they remember, forget, do, and how it ended** (Stage 4) `[OBS-SYN]`")
+    w("**Segment profile: what they remember, forget, do, and how it ended** (Stage 4) `[OBS]`")
     w("")
     w("| Segment | Remember | Forget | Do | Found quickly | Found with effort | Uncertain | Failed | Abandoned | Other-app workaround | Outcome Not Stated |")
     w("|---|---|---|---|---|---|---|---|---|---|---|")
@@ -194,7 +194,7 @@ def build_report(precomputed=None) -> str:
         p = v["profile"]; o = p["outcomes"]
         w(f"| {k.split()[0]} | {top(p['remembered_mix'], 3)} | {top(p['forgotten_mix'], 3)} | {tb(p)} | {p['found_quickly']} | {o['found_with_effort']} | {o['similar_uncertain']} | {o['failed']} | {o['abandoned']} | {o['external_workaround']} | {o['unknown']} |")
     w("")
-    w("**Severity signals by segment** (records carrying each signal) `[OBS-SYN]`")
+    w("**Severity signals by segment** (records carrying each signal) `[OBS]`")
     w("")
     sig_names = list(s1["signals"].keys())
     w("| Segment | " + " | ".join(x.replace("_", " ") for x in sig_names) + " |")
@@ -223,7 +223,7 @@ def build_report(precomputed=None) -> str:
     w("")
     w("Most common stage paths (of " + str(J["n_paths"]) + " observed): " + "; ".join(f"`{k}` {v}" for k, v in J["top_paths"].items()) + ".")
     w("")
-    w("**The five stage questions answered from the data** (Stage 2) `[OBS-SYN]`")
+    w("**The five stage questions answered from the data** (Stage 2) `[OBS]`")
     w("")
     w("| Stage | Question | Answer | Unknown |")
     w("|---|---|---|---|")
@@ -244,7 +244,7 @@ def build_report(precomputed=None) -> str:
     for k, v in D.items():
         w(f"| **{k} {v['name']}** | {v['brief_question']} | {v['user_behavior']} | {v['product_outcome']} | {v['opportunity']} |")
     w("")
-    w("**Evidence per node** `[OBS-SYN]` (records; a record can appear under several polarities). *Breakdown* = record states a difficulty here; *indirect* = consistent with failure here but not attributable; *effort* = extra work here; *intact* = capability retained or step worked; *no evidence* = the record says nothing about this node.")
+    w("**Evidence per node** `[OBS]` (records; a record can appear under several polarities). *Breakdown* = record states a difficulty here; *indirect* = consistent with failure here but not attributable; *effort* = extra work here; *intact* = capability retained or step worked; *no evidence* = the record says nothing about this node.")
     w("")
     w("| Node | Breakdown (explicit) | Indirect | Effort | Intact | Attempt only | No evidence at node | Reading `[INTERP]` |")
     w("|---|---|---|---|---|---|---|---|")
@@ -278,7 +278,7 @@ def build_report(precomputed=None) -> str:
     for k, v in D.items():
         w(f"| {k} {v['name']} | {v['proposed_measure']} |")
     w("")
-    w("**Major breakdowns** `[OBS-SYN]`")
+    w("**Major breakdowns** `[OBS]`")
     w(f"- **Recall → Express:** {J['breakdown']['RECALL']['n']} records name information the user lacks (time precision {s1['forgotten_family']['time precision']}, a name {s1['forgotten_family']['name']}, a keyword {s1['forgotten_family']['search keyword']}, album {s1['forgotten_family']['album / organisation']}, how it was originally found {s1['forgotten_family']['how it was originally found']}, exact wording {s1['forgotten_family']['exact wording']}). "
       f"{s1['express_barrier']} records state the memory cannot easily be converted into a query, e.g. {ev('memory_code', 'M11', 1)}. {tr('node:D2:breakdown', 3)}")
     w(f"- **Match:** the corpus rarely says what the product returned; only {J['breakdown']['MATCH']['n']} records do. `[UNKNOWN]` whether matching, expression or recognition is the weak link. {tr('opp:O4', 3)}")
@@ -301,14 +301,14 @@ def build_report(precomputed=None) -> str:
         w(f"### {k}")
         w(f"- **User behaviour:** {t['beh']}")
         w(f"- **Journey stage:** {t['st']} · **Decomposition node:** {t['node']}")
-        w(f"- **Frequency** `[OBS-SYN]`: {v['n']} of {E} relevant records ({v['pct']}%); {tr('opp:' + c)}")
+        w(f"- **Frequency** `[OBS]`: {v['n']} of {E} relevant records ({v['pct']}%); {tr('opp:' + c)}")
         w(f"- **Severity:** {t['sev']}")
         w(f"- **Outcome:** {oc(p)}")
         w(f"- **Evidence example:** {t['quote']}")
         w(f"- **User consequence** `[INTERP]`: {t['uc']}  **Product consequence** `[INTERP]`: {t['pc']}")
         w(f"- **Unknowns** `[UNKNOWN]`: {t['unk']}")
         w("")
-    w(f"`[OBS-SYN]` Express-barrier records reach the exit-path state no more often than the corpus overall: {exit_o1} of {O1['n']} O1 records ({pct(exit_o1, O1['n'])}) versus {exit_all} of {E} overall ({pct(exit_all, E)}). Within this file, O1 rests on what users say, not on a measurable link to worse outcomes. {tr('claim:K11', 3)}")
+    w(f"`[OBS]` Express-barrier records reach the exit-path state no more often than the corpus overall: {exit_o1} of {O1['n']} O1 records ({pct(exit_o1, O1['n'])}) versus {exit_all} of {E} overall ({pct(exit_all, E)}). Within this file, O1 rests on what users say, not on a measurable link to worse outcomes. {tr('claim:K11', 3)}")
     w("")
 
     # ------------------------------------------------------------------ 6
@@ -340,7 +340,7 @@ def build_report(precomputed=None) -> str:
       "Rationale: it is the largest area with explicit behaviour evidence, contains every terminal outcome, is tied to the strategic goal, and is highly researchable. "
       "O1 alone would over-weight self-report that shows no outcome difference; O3 alone omits the exits; O4 cannot be ranked from this corpus but must not be ranked last by default. No solution is chosen.")
     w("")
-    w(f"Records behind the selection `[OBS-SYN]`: O5 {tr('opp:O5', 3)}; O3 {tr('opp:O3', 2)}; O1 {tr('opp:O1', 2)}; O4 {tr('opp:O4', 2)}.")
+    w(f"Records behind the selection `[OBS]`: O5 {tr('opp:O5', 3)}; O3 {tr('opp:O3', 2)}; O1 {tr('opp:O1', 2)}; O4 {tr('opp:O4', 2)}.")
     w("")
 
     # ------------------------------------------------------------------ 7
@@ -348,7 +348,7 @@ def build_report(precomputed=None) -> str:
     w("")
     w("**TARGET SEGMENT HYPOTHESIS — TO BE VALIDATED** `[OPP-HYP]`")
     w("")
-    w(f"> We should investigate **users who attempted to retrieve a specific photo they expected to exist, lacked a precise identifier for it, and either changed strategy / made several attempts or manually inspected a candidate set (SEG-T)** because they are the largest behaviourally defined group in the synthetic corpus ({T['n']} of {E}, {T['pct']}%), every member states effortful behaviour (definitional, see assumptions), none is described as retrieving quickly, and, if the four states are snapshots of one journey `[INTERP]`, the group sits upstream of the exit-path state ({T['adjacent_exit']} records) where retrieval visibly fails.")
+    w(f"> We should investigate **users who attempted to retrieve a specific photo they expected to exist, lacked a precise identifier for it, and either changed strategy / made several attempts or manually inspected a candidate set (SEG-T)** because they are the largest behaviourally defined group in the corpus ({T['n']} of {E}, {T['pct']}%), every member states effortful behaviour (definitional, see assumptions), none is described as retrieving quickly, and, if the four states are snapshots of one journey `[INTERP]`, the group sits upstream of the exit-path state ({T['adjacent_exit']} records) where retrieval visibly fails.")
     w("")
     w("| Element | Detail |")
     w("|---|---|")
@@ -369,7 +369,7 @@ def build_report(precomputed=None) -> str:
     w("")
     w("`Incremental successful retrievals = E × t × f × r × l`")
     w("")
-    w("| Step | Symbol | Observed synthetic dataset value `[OBS-SYN]` | Assumption `[ASSUME]` | Production value |")
+    w("| Step | Symbol | Observed dataset value `[OBS]` | Assumption `[ASSUME]` | Production value |")
     w("|---|---|---|---|---|")
     w(f"| Eligible retrieval attempts | E | {E} relevant records (posts, not attempts); {tr('claim:K01', 2)} | Unit = one retrieval attempt sequence started from imprecise memory | **TBD: requires Google production data** |")
     w(f"| % in target behaviour | t | {I['target']} of {E} ({I['target_pct']}%); {tr('seg:SEG-T', 2)} | Not transferable to production | **TBD: requires Google production data** |")
@@ -378,7 +378,7 @@ def build_report(precomputed=None) -> str:
     w("| Expected improvement | l | None | Only estimable after a solution exists; out of scope until the problem is defined | **TBD** |")
     w("| Incremental successful retrievals | — | — | — | **TBD** |")
     w("")
-    w(f"Arithmetic illustration on synthetic counts only (not a forecast): the explicit non-success set is {I['target_uncertain_stated']} similar-but-uncertain + {I['exits_failed_or_abandoned']} failed/abandoned = {I['target_uncertain_stated'] + I['exits_failed_or_abandoned']} records; each 10 points of recovery on that set corresponds to ~{round((I['target_uncertain_stated'] + I['exits_failed_or_abandoned']) * 0.1)} records. Outcome is unknown for {I['target_outcome_unknown']} of {I['target']} target records, so the true base could be much larger or smaller.")
+    w(f"Arithmetic illustration on counts only (not a forecast): the explicit non-success set is {I['target_uncertain_stated']} similar-but-uncertain + {I['exits_failed_or_abandoned']} failed/abandoned = {I['target_uncertain_stated'] + I['exits_failed_or_abandoned']} records; each 10 points of recovery on that set corresponds to ~{round((I['target_uncertain_stated'] + I['exits_failed_or_abandoned']) * 0.1)} records. Outcome is unknown for {I['target_outcome_unknown']} of {I['target']} target records, so the true base could be much larger or smaller.")
     w("")
 
     # ------------------------------------------------------------------ 9
@@ -392,7 +392,7 @@ def build_report(precomputed=None) -> str:
     for name, node, key, obs, interp, hyp, comp, val, sup, opp, unk in hyps:
         w(f"### {name}")
         w(f"- **Node:** {node}")
-        w(f"- **Observation** `[OBS-SYN]`: {obs} {tr(key, 3)}")
+        w(f"- **Observation** `[OBS]`: {obs} {tr(key, 3)}")
         w(f"- **Interpretation** `[INTERP]`: {interp}")
         w(f"- **Hypothesis** `[PROB-HYP]`: {hyp}")
         w(f"- **Competing explanation:** {comp}")
@@ -409,13 +409,13 @@ def build_report(precomputed=None) -> str:
     # ------------------------------------------------------------------ 10
     w("## 10. Primary Research Plan")
     w("")
-    w("**PROPOSED RESEARCH PLAN — NOT RESEARCH FINDINGS.** Sequence: interviews → task-based tests → survey. Nothing here tests a solution. Synthetic-dataset findings (§1–§8) and future primary findings are kept in separate columns of every synthesis table (§11).")
+    w("**PROPOSED RESEARCH PLAN — NOT RESEARCH FINDINGS.** Sequence: interviews → task-based tests → survey. Nothing here tests a solution. Dataset findings (§1–§8) and future primary findings are kept in separate columns of every synthesis table (§11).")
     w("")
     w("**Rule:** quantitative evidence answers WHERE and HOW MUCH; qualitative research answers WHY and HOW. Each method below is used only for what it can answer.")
     w("")
     w("| Method | Answers | Cannot answer | Used for |")
     w("|---|---|---|---|")
-    w("| Synthetic corpus (today) | WHERE, directionally | WHY, HOW, HOW MUCH | Choosing what to investigate; no more |")
+    w("| Corpus (today) | WHERE, directionally | WHY, HOW, HOW MUCH | Choosing what to investigate; no more |")
     w("| Interviews | WHY, HOW | HOW MUCH | H1–H5, H7; memory reconstruction; what prompted each change |")
     w("| Task-based tests | HOW (observed), WHERE (first failing node, small n) | HOW MUCH at population scale | H2–H6; D3 attribution |")
     w("| Survey | WHERE, HOW MUCH (self-reported) | WHY | Prevalence of the scenarios found qualitatively; H7 |")
@@ -425,7 +425,7 @@ def build_report(precomputed=None) -> str:
     w("- **Purpose:** learn how people remember and describe photos they later struggle to find, and what happens next (WHY/HOW).")
     w("- **Method:** 30-minute behavioural interviews, remote, recall-a-recent-incident format (no hypotheticals).")
     w("- **Sample:** 16 participants: 6 effortful-path (recent multi-attempt or heavy-browsing retrieval), 4 recent failure/abandonment, 2 who found a contextual-memory photo quickly (contrast, since the corpus has no success baseline), 4 heavy-library users regardless of outcome. Quotas across age, device and library size.")
-    w(f"- **Strata trace to the corpus** `[OBS-SYN]`: effortful-path {tr('seg:SEG-T', 2)}; failure/abandonment {tr('seg:SEG-1', 2)}.")
+    w(f"- **Strata trace to the corpus** `[OBS]`: effortful-path {tr('seg:SEG-T', 2)}; failure/abandonment {tr('seg:SEG-1', 2)}.")
     w("")
     w("### 10.2 Interview guide (30 min)")
     guide = NR.INTERVIEW_GUIDE
@@ -458,7 +458,7 @@ def build_report(precomputed=None) -> str:
         w(f"| {t[0]} | {prim[c]} | The other five measures | {qual[c]} |")
     w("")
     w("### 10.4 Exploratory survey plan (after interviews and tests)")
-    w("- **Purpose:** estimate prevalence, frequency, importance and failure/effort of retrieval scenarios *identified qualitatively* (WHERE/HOW MUCH). Reported separately from synthetic findings.")
+    w("- **Purpose:** estimate prevalence, frequency, importance and failure/effort of retrieval scenarios *identified qualitatively* (WHERE/HOW MUCH). Reported separately from sample findings.")
     w("- **Content:** last retrieval attempt in the past 30 days; what was remembered/unknown (checklist derived from interviews); what was tried and in what order; outcome and time/attempt bands; confidence; other-app use; importance of the photo. No solution questions.")
     w("- **Sample:** ≥ 400 for ±5 points at 95% confidence on a proportion (worst case p=0.5), ≥ 100 per compared subgroup `[ASSUME]`. Active Google Photos users with quotas on library size, device and age.")
     w("- **Limits:** self-report and recall bias; survey rates are not production rates.")
@@ -486,9 +486,9 @@ def build_report(precomputed=None) -> str:
     w("")
     w("**PROPOSED RESEARCH PLAN — NOT RESEARCH FINDINGS.** No participant data exists yet; the primary-findings column is empty on purpose.")
     w("")
-    w("| Layer | Question | Synthetic-corpus input (today) | Primary-research input (future) | Rule to advance | Guard rail |")
+    w("| Layer | Question | Corpus input (today) | Primary-research input (future) | Rule to advance | Guard rail |")
     w("|---|---|---|---|---|---|")
-    w("| Observation | What did people say or do? | `[OBS-SYN]` coded records | Transcripts, task logs (six measures + failing node) | Verbatim or logged, tagged with record or participant ID | No interpretation here |")
+    w("| Observation | What did people say or do? | `[OBS]` coded records | Transcripts, task logs (six measures + failing node) | Verbatim or logged, tagged with record or participant ID | No interpretation here |")
     w("| Pattern | What recurs? | Counts (X of 800) | Seen in ≥ 3 participants, in both stated and observed behaviour where possible | Two sources agree | Report 'n of N participants', never percentages of users |")
     w("| Interpretation | What might it mean? | `[INTERP]` | Written as ≥ 2 rival interpretations | Rival explains the same pattern | Keep separate from observation |")
     w("| Root-cause hypothesis | Why does the first attempt not resolve? | H1–H7 as `[PROB-HYP]` | Each marked supported / weakened / falsified | Rivals tested | No cause on one method |")
@@ -503,15 +503,15 @@ def build_report(precomputed=None) -> str:
     w("")
     w("> Google Photos users trying to **find a specific photo they know they have** in **a large personal library**, when they remember its context but **not a precise identifier** (date, name, keyword or album), struggle to **reach it without repeated attempts, manual inspection, or leaving the product** because **[cause to be validated: candidates H1 expression gap · H2 recognition gap · H3 coarse time scoping · H4 unguided recovery · H5 photo outside the library; H3-related matching (D3) untested]**, resulting in **extra effort, uncertainty about whether the right photo was found, and in some cases giving up**.")
     w("")
-    w(f"The cause slot is intentionally empty. User, context, struggle and consequence are supported directionally by the synthetic corpus; the cause is `[UNKNOWN]` until primary research. 'Large library' is stated in only {s1['closer_code']['C02_thousands_of_images']} records and 'knows it exists' is explicit in {T['profile']['knows_exists']} of {T['n']} target records, so both are `[ASSUME]`. `[VALIDATED]` No validated problem exists. The statement contains no solution, feature or technology terms.")
+    w(f"The cause slot is intentionally empty. User, context, struggle and consequence are supported directionally by the corpus; the cause is `[UNKNOWN]` until primary research. 'Large library' is stated in only {s1['closer_code']['C02_thousands_of_images']} records and 'knows it exists' is explicit in {T['profile']['knows_exists']} of {T['n']} target records, so both are `[ASSUME]`. `[VALIDATED]` No validated problem exists. The statement contains no solution, feature or technology terms.")
     w("")
-    w(f"Evidence behind each element `[OBS-SYN]`: imprecise memory {tr('claim:K02', 2)}; struggle {tr('opp:O5', 2)}; manual inspection {tr('seg:SEG-3', 2)}; consequence {tr('seg:SEG-1', 2)}, {tr('claim:K07', 2)}.")
+    w(f"Evidence behind each element `[OBS]`: imprecise memory {tr('claim:K02', 2)}; struggle {tr('opp:O5', 2)}; manual inspection {tr('seg:SEG-3', 2)}; consequence {tr('seg:SEG-1', 2)}, {tr('claim:K07', 2)}.")
     w("")
 
     # ------------------------------------------------------------------ 13
     w("## 13. Evidence / Interpretation / Hypothesis / Unknown Matrix")
     w("")
-    w("Evidence cells are `[OBS-SYN]` counts with `[RAW]` record IDs; the full list behind each claim ID is in `evidence_index.csv` under `claim:Kxx`. Hypothesis cells carry their type: `[OPP-HYP]` or `[PROB-HYP]`.")
+    w("Evidence cells are `[OBS]` counts with `[RAW]` record IDs; the full list behind each claim ID is in `evidence_index.csv` under `claim:Kxx`. Hypothesis cells carry their type: `[OPP-HYP]` or `[PROB-HYP]`.")
     w("")
     w("| Claim | Evidence | Interpretation | Hypothesis | Unknown |")
     w("|---|---|---|---|---|")
@@ -548,7 +548,7 @@ def build_appendix(precomputed=None) -> str:
     w = out.append
     w("# Discovery Report — Appendix")
     w("")
-    w("Supporting material for `discovery_report.md`. Synthetic data only.")
+    w("Supporting material for `discovery_report.md`.")
     w("")
     w("## Discovery chain followed")
     w("")

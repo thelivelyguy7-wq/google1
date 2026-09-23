@@ -1,6 +1,6 @@
 # Discovery Report — Appendix
 
-Supporting material for `discovery_report.md`. Synthetic data only.
+Supporting material for `discovery_report.md`.
 
 ## Discovery chain followed
 

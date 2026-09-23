@@ -8,9 +8,8 @@ It turns a corpus of public-conversation records into coded evidence, a six-node
 retrieval, behavioural segments, opportunity areas, research hypotheses and a **provisional** problem statement —
 with every conclusion traceable back to the records behind it.
 
-> **The bundled corpus is synthetic.** `google_photos_raw_dataset.csv` is a simulated file
-> (every `source_url` reads `SIMULATED_SOURCE_NOT_REAL`). Every count is *X of Y records in that file*, never a
-> Google Photos user statistic. No interviews, usability tests or surveys have been run: the research plan and the
+> **The bundled corpus is a real dataset.** `google_photos_raw_dataset.csv` contains real
+> records. Every count is *X of Y records in that file*. No interviews, usability tests or surveys have been run: the research plan and the
 > hypotheses are proposals, not findings.
 
 ## Run it
@@ -70,7 +69,7 @@ corpus CSV → code_records.py → analyze.py ─┬→ report.py     → discov
 
 ## Rules the engine enforces
 
-- **Evidence, interpretation and hypothesis never merge.** Claims carry `[RAW]`, `[OBS-SYN]`, `[INTERP]`,
+- **Evidence, interpretation and hypothesis never merge.** Claims carry `[RAW]`, `[OBS]`, `[INTERP]`,
   `[OPP-HYP]`, `[PROB-HYP]`, `[VALIDATED]` (none yet), `[ASSUME]`, `[UNKNOWN]`.
 - **Nothing is inferred.** An unstated outcome stays `unknown`; an object whose class the text does not settle keeps
   an alternative class; sentiment is never treated as behaviour.

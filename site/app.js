@@ -337,7 +337,7 @@ page("target", "4-Level Impact Map", "Stages 7–8", () => {
   
   <h2>1. WHY: Business Goal & Impact Sizing</h2>
   <p>The overarching impact we want to achieve is to increase <strong>incremental successful retrievals</strong> by helping users recover from failed searches.</p>
-  ${table(["Step", "Observed in the synthetic corpus " + OBS, "Production value"], [
+  ${table(["Step", "Observed in the corpus " + OBS, "Production value"], [
     ["Eligible retrieval attempts", `${I.eligible} records (posts, not attempts)`, "<strong>TBD</strong> requires Google production data"],
     ["Share in the target behaviour", `${ev("seg:SEG-T", I.target, I.eligible)} (${I.target_pct}%)`, "<strong>TBD</strong> requires Google production data"],
     ["Share with failure or effort", `Effort signal ${I.target_with_effort_signal} of ${I.target}, definitional; stated uncertain outcome ${I.target_uncertain_stated}; downstream exits ${I.exits_adjacent}, of which ${I.exits_failed_or_abandoned} failed or abandoned`, "<strong>TBD</strong> needs a log definition of effort"],
@@ -398,7 +398,7 @@ page("plan", "Research plan", "Stages 10–12", () => {
   then a survey. Nothing here tests a solution.</p>
   <h2>What each method can answer</h2>
   ${table(["Method", "Answers", "Cannot answer"], [
-    ["Synthetic corpus (today)", "WHERE, directionally", "WHY, HOW, HOW MUCH"],
+    ["Corpus (today)", "WHERE, directionally", "WHY, HOW, HOW MUCH"],
     ["Interviews (16)", "WHY, HOW", "HOW MUCH"],
     ["Task-based tests (12)", "HOW, observed; WHERE via first failing node", "HOW MUCH at population scale"],
     ["Survey (≥400)", "WHERE, HOW MUCH, self-reported", "WHY"],
