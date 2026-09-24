@@ -141,7 +141,7 @@ def test_rule_coder_reads_original_but_not_reworded_text(run):
 
 def test_validation_harness_scores_perfect_and_degraded_coders():
     import pandas as pd
-    texts = pd.read_csv("google_photos_raw_dataset.csv")["text"].head(60).tolist()
+    texts = pd.read_csv("Book19.csv")["Text"].head(60).tolist()
     truth = truth_from_lexicon(pd.DataFrame({"text": texts}))
     perfect = compare(texts, truth, truth)
     assert perfect["outcome"]["kappa"] == pytest.approx(1.0) and perfect["all_single_fields_correct_of_n"] == 1.0
@@ -284,7 +284,7 @@ def test_engine_runs_against_a_different_corpus(tmp_path):
     import subprocess
     import sys
     import pandas as pd
-    src = pd.read_csv("google_photos_raw_dataset.csv")
+    src = pd.read_csv("Book19.csv")
     small = tmp_path / "small.csv"
     src.head(50).to_csv(small, index=False)
     out = tmp_path / "out"

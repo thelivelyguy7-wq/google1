@@ -8,7 +8,7 @@ It turns a corpus of public-conversation records into coded evidence, a six-node
 retrieval, behavioural segments, opportunity areas, opportunity hypotheses and a **provisional** problem statement —
 with every conclusion traceable back to the records behind it.
 
-> **The bundled corpus is a real dataset.** `google_photos_raw_dataset.csv` contains real
+> **The bundled corpus is a real dataset.** `Book19.csv` contains real
 > records. Every count is *X of Y records in that file*. No interviews, usability tests or surveys have been run: the research plan and the
 > hypotheses are proposals, not findings.
 

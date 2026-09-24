@@ -6,8 +6,8 @@ from concurrent.futures import ThreadPoolExecutor
 from engine.coders import LLMCoder
 
 def main():
-    df = pd.read_csv("google_photos_raw_dataset.csv")
-    unique_texts = df["text"].dropna().unique().tolist()
+    df = pd.read_csv("Book19.csv")
+    unique_texts = df["Text"].dropna().unique().tolist()
     
     cache_path = "output/llm_cache.json"
     cache = {}
