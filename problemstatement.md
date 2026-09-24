@@ -42,11 +42,11 @@ Successful retrieval needs six things to hold in order: usable partial memory (D
 
 | Node | Case question | What the corpus says `[OBS]` |
 |---|---|---|
-| D2 Express | Is the user unable to express what they remember? | 364 of 800 records state difficulty; strongest explicit signal |
+| D2 Express | Is the user context-to-query translation what they remember? | 364 of 800 records state difficulty; strongest explicit signal |
 | D3 Understand & match | Does Google Photos fail to understand the clues? | **0 of 800 records say so.** 137 show indirect signs only (too many results, could not find, near miss). Unanswerable here, not answered no |
 | D4 Evaluate | Are relevant results difficult to evaluate? | 259 with breakdown or effort evidence; 147 also say they would recognise the photo on sight |
 | D5 Refine | Does the user struggle to refine? | 335 with effort or unresolved endings; only 36 state a success |
-| D1 Recall, D6 Available | Boundary conditions | D1 is the precondition (594 name missing information); D6 has 0 explicit statements and 90 indirect signs |
+| D1 Remember, D6 Available | Boundary conditions | D1 is the precondition (594 name missing information); D6 has 0 explicit statements and 90 indirect signs |
 
 `[OPP-HYP]` The evidence supports investigating D2, D4 and D5. It cannot rank them, and it cannot say whether D3 is a problem at all. The research therefore classifies every unsuccessful task by its first failing node, so the ranking comes from observed failures.
 
@@ -54,7 +54,7 @@ Successful retrieval needs six things to hold in order: usable partial memory (D
 
 | # | Candidate cause `[PROB-HYP]` | Competing explanation | What would falsify it |
 |---|---|---|---|
-| H1 | Users remember more than their first query carries (expression gap) | Memory is genuinely thin, so it is a recall problem | Prompted recall adds nothing usable; first queries already contain all they can recall |
+| H1 | Users remember more than their first query carries (expression gap) | Memory is genuinely thin, so it is a remember problem | Prompted remember adds nothing usable; first queries already contain all they can remember |
 | H2 | The right photo is among the candidates but users cannot confirm it (recognition gap) | The target was never surfaced (matching gap) | Target mostly absent from inspected sets; or participants confirm it instantly once shown |
 | H3 | Users narrow by date because it is available, not because it is their best clue (coarse time scoping) | Time really is the most reliable clue and libraries are simply large | Participants prefer date even when stronger clues are supplied and windows stay small |
 | H4 | After a failed attempt, users get no signal about why, so they cycle wording, albums and scrolling (unguided recovery) | Strategy changes follow personal habit, or recovery is efficient and only unlucky users post | Strategy changes track stable habits regardless of results |

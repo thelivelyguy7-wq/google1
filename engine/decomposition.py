@@ -1,10 +1,10 @@
 """Decomposition of "successful retrieval of a vaguely remembered photo" into user behaviours and product outcomes.
 
 Success requires every node below to hold. A retrieval fails at the *first* node that does not. The nodes map onto the
-four questions in the case brief plus two boundary nodes (recall, availability):
+four questions in the case brief plus two boundary nodes (remember, availability):
 
-    D1 Recall     -> what does the user remember / forget?
-    D2 Express    -> "Is the user unable to express what they remember?"
+    D1 Remember     -> what does the user remember / forget?
+    D2 Express    -> "Is the user context-to-query translation what they remember?"
     D3 Understand -> "Does Google Photos fail to understand the clues they provide?"
     D4 Evaluate   -> "Are potentially relevant results difficult to evaluate?"
     D5 Refine     -> "Does the user struggle to refine an unsuccessful search?"
@@ -29,14 +29,14 @@ def _in(series: pd.Series, *codes: str) -> pd.Series:
 
 NODES = {
     "D1": dict(
-        name="Recall", brief_question="What information do people actually remember, and what have they forgotten?",
+        name="Remember", brief_question="What information do people actually remember, and what have they forgotten?",
         user_behavior="Holds partial context (people, place, story, look, roughly when) but lacks a precise identifier",
         product_outcome="n/a: this is the precondition the case starts from (photo exists, memory is incomplete)",
         opportunity="O6 Retrieval-path memory",
         proposed_measure="Share of retrieval attempts that start with contextual clues but no precise identifier (date, name, album, exact keyword)",
     ),
     "D2": dict(
-        name="Express", brief_question="Is the user unable to express what they remember?",
+        name="Express", brief_question="Is the user context-to-query translation what they remember?",
         user_behavior="Turns memory into a query, filter or navigation step",
         product_outcome="The input the product receives carries the clues the user actually holds",
         opportunity="O1 Memory expression (with O2 Approximate-time narrowing and O8 Information discovery)",
@@ -78,7 +78,7 @@ PRODUCTION_NOTE = "TBD, requires Google production data or primary research. The
 ATTRIBUTION_RULES = [
     ("D6", "The target photo is not in the participant's searchable library"),
     ("D1", "The participant cannot form any query and cannot describe any detail even when prompted neutrally"),
-    ("D2", "The participant can later describe details that never reached a query (recall present, expression absent)"),
+    ("D2", "The participant can later describe details that never reached a query (remember present, expression absent)"),
     ("D3", "The target never appears in any result set the participant saw"),
     ("D4", "The target appears in results the participant saw, but was not selected or was rejected"),
     ("D5", "Target found only after reformulation or a change of strategy (effortful success), or the participant stops after several tries with the underlying node recorded from the rules above"),

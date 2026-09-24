@@ -5,7 +5,7 @@ An evidence-linked discovery pipeline for one question:
 > How do people retrieve photos they remember but cannot precisely describe, and where does that break down?
 
 It turns a corpus of public-conversation records into coded evidence, a six-node decomposition of successful
-retrieval, behavioural segments, opportunity areas, research hypotheses and a **provisional** problem statement —
+retrieval, behavioural segments, opportunity areas, opportunity hypotheses and a **provisional** problem statement —
 with every conclusion traceable back to the records behind it.
 
 > **The bundled corpus is a real dataset.** `google_photos_raw_dataset.csv` contains real

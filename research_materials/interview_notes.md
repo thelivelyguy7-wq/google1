@@ -2,7 +2,7 @@
 
 Method rehearsed: 30-minute remote session on the participant's own phone (screen share). Part A covers the critical incident,
 using a recent retrieval the participant chose. Part B is think-aloud: the participant retries that retrieval live. Every
-unsuccessful or effortful task is coded by its **first failing node** (D1 Recall · D2 Express · D3 Understand & match · D4 Evaluate ·
+unsuccessful or effortful task is coded by its **first failing node** (D1 Remember · D2 Express · D3 Understand & match · D4 Evaluate ·
 D5 Refine · D6 Available) and scored against hypotheses H1–H4 from `problemstatement.md`.
 
 ---
@@ -119,7 +119,7 @@ D5 Refine · D6 Available) and scored against hypotheses H1–H4 from `problemst
 
 ## Synthesis (n = 6 participants, 7 tasks)
 
-**Outcome of the recalled task:** 1 quick success (P3 T1). 5 found only with effort or outside Photos (P1, P3 T2, P4, P6, and P5 via a friend). 1 not in library (P2).
+**Outcome of the remembered task:** 1 quick success (P3 T1). 5 found only with effort or outside Photos (P1, P3 T2, P4, P6, and P5 via a friend). 1 not in library (P2).
 
 **First failing node across the 6 effortful or failed tasks**
 | Node | Tasks | Participants |
@@ -129,7 +129,7 @@ D5 Refine · D6 Available) and scored against hypotheses H1–H4 from `problemst
 | D3 Understand & match | 1 | P5 |
 | D6 Available | 1 | P2 |
 | D4 Evaluate | 0 as first node, 1 secondary | P1 |
-| D1 Recall | 0 | none. Every participant held at least one distinctive clue. |
+| D1 Remember | 0 | none. Every participant held at least one distinctive clue. |
 
 **Patterns (a pattern needs 3 or more participants)**
 1. **People hold distinctive clues but query with generic labels** (P1, P4, P6; partly P3). Blue door, car-shaped cake, marigold garland, funnel diagram. What they typed was the category and the place.

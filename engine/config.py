@@ -6,7 +6,7 @@ can point the engine at a different corpus without editing code.
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-INPUT = ROOT / "google_photos_raw_dataset.csv"
+INPUT = ROOT / "Book19.csv"
 OUTPUT = ROOT / "output"
 
 

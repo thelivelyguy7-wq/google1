@@ -4,7 +4,7 @@ The corpus is composed of a small closed set of sentences. Every sentence is cod
 downstream number traces back to verbatim text. `code_records.py` fails loudly on any sentence not listed, so
 nothing is silently mis-coded.
 
-Journey stages: RECALL, EXPRESS, MATCH, RECOGNIZE, RECOVER (working model, not a proven funnel).
+Journey stages: REMEMBER, EXPRESS, MATCH, RECOGNIZE, RECOVER (working model, not a proven funnel).
 """
 
 # ---------------------------------------------------------------- openers (framing only, never behavior evidence)
@@ -162,9 +162,9 @@ CLOSERS = {
     "It feels much easier when I know an exact date or person's name.":
         dict(code="C04_easier_with_precise_identifier", stages=["EXPRESS"], signals=[], flag="precise_identifier_contrast"),
     "I usually remember the story around the picture better than its metadata.":
-        dict(code="C05_story_over_metadata", stages=["RECALL"], signals=[], flag="story_memory"),
+        dict(code="C05_story_over_metadata", stages=["REMEMBER"], signals=[], flag="story_memory"),
     "I know the photo exists because I have seen it before.":
-        dict(code="C06_knows_photo_exists", stages=["RECALL"], signals=[], flag="existence_certain"),
+        dict(code="C06_knows_photo_exists", stages=["REMEMBER"], signals=[], flag="existence_certain"),
     "The problem is not taking the photo; it is finding it later.":
         dict(code="C07_finding_not_taking", stages=[], signals=[], flag="framing"),
     "Sometimes I get a lot of plausible results and still cannot tell which one is right.":

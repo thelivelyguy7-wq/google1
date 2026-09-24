@@ -1,48 +1,55 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="auto">
+<html lang="en" data-theme="dark">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Discovery Engine — Google Photos Retrieval</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Discovery Engine — Google Photos Retrieval</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body class="evaluator-mode">
-<div class="bg-gradient"></div>
-<header class="topbar">
-  <div class="brand">
-    <strong>AI Discovery Engine</strong>
-    <span class="sub">Google Photos retrieval</span>
-  </div>
-  <div class="actions" style="display:flex; gap:8px;">
-    <button id="themeToggle" class="ghost" type="button" aria-label="Switch colour theme">Theme</button>
-  </div>
-</header>
-
-<nav id="nav" class="nav" aria-label="Discovery stages"></nav>
-
-<main id="main" class="main" tabindex="-1">
-  <p class="loading">Loading…</p>
-</main>
-
-<footer class="foot">
-</footer>
-
-<div id="drawer" class="drawer" aria-live="polite">
-  <div class="drawer-head">
-    <div>
-      <h3 id="drawerTitle">Records</h3>
-      <p id="drawerSub" class="muted"></p>
+  <div class="bg-gradient"></div>
+  <header class="topbar">
+    <div class="brand">
+      <strong class="gradient-text">AI Discovery Engine</strong>
+      <span class="sub">Google Photos retrieval</span>
+      <span class="sub" style="color: var(--accent); font-weight: 600;">North Star: Successful Retrieval rate of vaguely
+        remembered photos</span>
     </div>
-    <button id="drawerClose" class="ghost" type="button" aria-label="Close records panel">Close</button>
-  </div>
-  <div id="drawerBody" class="drawer-body"></div>
-</div>
-<div id="scrim" class="scrim"></div>
+    <div class="actions" style="display:flex; gap:8px;">
+      <button id="themeToggle" class="ghost" type="button" aria-label="Switch colour theme">Light Mode</button>
+    </div>
+  </header>
 
-<script src="site_data.js"></script>
-<script src="app.js"></script>
+  <nav id="nav" class="nav" aria-label="Discovery stages"></nav>
+
+  <main id="main" class="main" tabindex="-1">
+    <p class="loading">Loading…</p>
+  </main>
+
+  <footer class="foot">
+  </footer>
+
+  <div id="drawer" class="drawer" aria-live="polite">
+    <div class="drawer-head">
+      <div>
+        <h3 id="drawerTitle">Records</h3>
+        <p id="drawerSub" class="muted"></p>
+      </div>
+      <button id="drawerClose" class="ghost" type="button" aria-label="Close records panel">Close</button>
+    </div>
+    <div id="drawerBody" class="drawer-body"></div>
+  </div>
+  <div id="scrim" class="scrim"></div>
+
+  <script src="site_data.js?v=16"></script>
+  <script src="app.js?v=16"></script>
 </body>
+
 </html>

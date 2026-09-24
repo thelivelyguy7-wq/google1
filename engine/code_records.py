@@ -73,7 +73,7 @@ def code_relevant(sents: list[str]) -> dict:
             
     m, b = L.MEMORY[mem], L.BEHAVIOR[beh]
     c = L.CLOSERS.get(closer) if closer else None
-    stages = {"RECALL"} | set(b["stages"]) | (set(c["stages"]) if c else set())
+    stages = {"REMEMBER"} | set(b["stages"]) | (set(c["stages"]) if c else set())
     if m["express_barrier"]:
         stages.add("EXPRESS")
     if m["code"] == "M05_recognize_cannot_narrow":
@@ -92,7 +92,7 @@ def code_relevant(sents: list[str]) -> dict:
         behavior_text=beh, behavior_code=b["code"], retrieval_state=b["state"],
         outcome=b["outcome"] or "unknown", outcome_stated=b["outcome"] is not None,
         closer_text=closer or "", closer_code=c.get("code", "") if c else "", closer_flag=c["flag"] if c else "",
-        journey_stages="|".join(s for s in ["RECALL", "EXPRESS", "MATCH", "RECOGNIZE", "RECOVER"] if s in stages),
+        journey_stages="|".join(s for s in ["REMEMBER", "EXPRESS", "MATCH", "RECOGNIZE", "RECOVER"] if s in stages),
         severity_signals="|".join(dict.fromkeys(signals)),
         n_severity_signals=len(set(signals)),
     )
@@ -100,6 +100,7 @@ def code_relevant(sents: list[str]) -> dict:
 
 def build() -> pd.DataFrame:
     raw = pd.read_csv(config.INPUT)
+    raw = raw.rename(columns={'rec_id': 'record_id', 'Text': 'text', 'text': 'text', 'record_id': 'record_id'})
     rows = []
     from .rule_coder import RuleCoder
     coder = RuleCoder()
@@ -118,7 +119,7 @@ def build() -> pd.DataFrame:
             topic = L.OFFTOPIC.get(sents[0], "unknown") if sents else "unknown"
             rows.append({**base, "relevance": c.relevance, "offtopic_topic": topic})
         else:
-            stages = {"RECALL"}
+            stages = {"REMEMBER"}
             if c.express_barrier: stages.add("EXPRESS")
             if c.retrieval_state == "candidate_inspection":
                 stages.add("RECOGNIZE")
@@ -144,7 +145,7 @@ def build() -> pd.DataFrame:
                 behavior_text="", behavior_code="", retrieval_state=c.retrieval_state,
                 outcome=c.outcome, outcome_stated=c.outcome != "unknown",
                 closer_text="", closer_code="", closer_flag="",
-                journey_stages="|".join(s for s in ["RECALL", "EXPRESS", "MATCH", "RECOGNIZE", "RECOVER"] if s in stages),
+                journey_stages="|".join(s for s in ["REMEMBER", "EXPRESS", "MATCH", "RECOGNIZE", "RECOVER"] if s in stages),
                 severity_signals="|".join(c.severity_signals),
                 n_severity_signals=len(c.severity_signals),
             )

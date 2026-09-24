@@ -16,7 +16,7 @@ from .code_records import FORGOTTEN_FAMILY, build
 from . import decomposition as DC
 from . import lexicon as L
 
-STAGES = ["RECALL", "EXPRESS", "MATCH", "RECOGNIZE", "RECOVER"]
+STAGES = ["REMEMBER", "EXPRESS", "MATCH", "RECOGNIZE", "RECOVER"]
 
 # Every count dict below is filled out over its full vocabulary, so a corpus that happens not to contain a code still
 # yields a zero rather than a missing key. The report and the web app index these dicts by code.
@@ -158,7 +158,7 @@ def extras(r: pd.DataFrame, P: dict, m: dict) -> dict:
     # ---- Stage 2: the five stage questions answered from the data
     def n(mask): return int(mask.sum())
     out["stage_questions"] = {
-        "RECALL": dict(question="What does the user remember?",
+        "REMEMBER": dict(question="What does the user remember?",
                        top_remembered=list(m["stage1"]["remembered"].items())[:5],
                        top_lacking=list(m["stage1"]["forgotten_family"].items())[:5]),
         "EXPRESS": dict(question="How does the user convert that memory into a search or action?",
@@ -269,7 +269,7 @@ def compute() -> dict:
     touched = {s: int(r["journey_stages"].str.contains(s).sum()) for s in STAGES}
     b = r["behavior_code"]; c = r["closer_code"]; mm = r["memory_code"]
     breakdown = {
-        "RECALL": dict(n=int((r["forgotten"] != "").sum()), basis="memory sentence names information the user lacks (M02-M04, M06-M10, M12)"),
+        "REMEMBER": dict(n=int((r["forgotten"] != "").sum()), basis="memory sentence names information the user lacks (M02-M04, M06-M10, M12)"),
         "EXPRESS": dict(n=int(P["opps"]["O1 Memory expression"].sum()), basis="memory cannot be turned into keyword/name/wording/description/narrowing (M02,M05,M06,M11,M12) or user contrasts with precise identifiers (C04)"),
         "MATCH": dict(n=int(P["opps"]["O4 Contextual matching (candidate-set precision)"].sum()), basis="date search returned too many results (B03) or many plausible results (C08); product output is otherwise rarely described"),
         "RECOGNIZE": dict(n=int(P["opps"]["O3 Candidate recognition / verification"].sum()), basis="one-by-one opening, timeline/thumbnail scan, date-range comparison, similar-not-exact, cannot tell which is right (B04,B11,B13,B14,B16,C08)"),

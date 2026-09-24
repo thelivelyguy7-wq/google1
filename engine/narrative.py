@@ -10,7 +10,7 @@ NEEDS = {
     "N2": ("Find a photo remembered by look or gist", "Object look/colour/setting without a name or keyword; visual detail hard to describe; activity without exact words"),
     "N3": ("Find a photo remembered as a story", "Story more vivid than metadata; who was there and what they were doing, but not the album"),
     "N4": ("Find a place-based memory", "Place remembered generally, not its name"),
-    "N5": ("Re-find a photo known to exist", "Knows it exists, cannot recall how it was originally found"),
+    "N5": ("Re-find a photo known to exist", "Knows it exists, cannot remember how it was originally found"),
     "N6": ("Confirm the intended photo among plausible candidates", "Sees many plausible results / a similar photo and cannot tell which is right"),
     "N7": ("Reach a photo they say they would recognise", "'Can recognise it if I see it' but does not know how to narrow"),
     "N8": ("Recover after the first attempt does not resolve", "Any; defined by behaviour (reformulation, switching, giving up, other app)"),
@@ -26,13 +26,13 @@ SEGMENT_DEFS = {
 }
 
 MODES = {
-    "H1": ("Interviews: memory reconstruction and details that never reached the first query.", "Survey: how often users recall clues they did not type."),
+    "H1": ("Interviews: memory reconstruction and details that never reached the first query.", "Survey: how often users remember clues they did not type."),
     "H2": ("Task tests and interviews: how the target was recognised or missed.", "Survey: how often users report seeing but doubting the right photo."),
     "H3": ("Interviews: why date was chosen; tasks that supply richer clues.", "Survey and production: share of attempts starting from date narrowing, and window size."),
     "H4": ("Interviews: what prompted each strategy change.", "Production: queries before success and abandonment after N tries."),
     "H5": ("Screener and library audit: was the photo present.", "Survey and production: share of failed retrievals where the photo was absent."),
     "H6": ("Task comparison across object types.", "Survey: scenario incidence by object type."),
-    "H7": ("Interviews: what participants recall as ordinary retrievals.", "Survey: share of recent attempts that succeeded on the first try."),
+    "H7": ("Interviews: what participants remember as ordinary retrievals.", "Survey: share of recent attempts that succeeded on the first try."),
 }
 
 INTERVIEW_GUIDE = [
@@ -72,7 +72,7 @@ def opportunities(ctx) -> dict:
     """Opportunity cards. `ctx` supplies the metrics and the evidence-quote helper."""
     s1, ev, S1 = ctx["s1"], ctx["ev"], ctx["S1"]
     opp_txt = {
-        "O1": dict(node="D2", beh="User holds context but says it cannot be turned into a keyword, name, wording, description or narrowing step; contrasts this with ease when an exact date/name is known.", st="Express (from Recall)",
+        "O1": dict(node="D2", beh="User holds context but says it cannot be turned into a keyword, name, wording, description or narrowing step; contrasts this with ease when an exact date/name is known.", st="Express (from Remember)",
                    sev="Signals come from the behaviour sentences of these records (reformulation, browsing, uncertainty), not from the barrier statement itself.", quote=ev("memory_code", "M06", 1),
                    uc="Extra attempts or manual scanning; some stop.", pc="A photo that exists and is recognisable may never be reached from the first query.",
                    unk="Whether users hold richer memory than they express, or the memory is thin; whether failure is at input or at interpretation."),
@@ -91,7 +91,7 @@ def opportunities(ctx) -> dict:
                    sev="Reformulation %d, strategy switch %d, browsing %d, external workaround %d, abandonment %d, failure %d." % tuple(s1["signals"][k] for k in ["reformulation", "strategy_switch", "browsing", "external_workaround", "abandonment", "failure"]), quote=ev("behavior_code", "B15", 1),
                    uc="Repeated effort; for %d records the search ends in failure, giving up or another app." % S1["n"], pc="Successful retrieval is delayed or lost; only %d records state a (effortful) success." % s1["outcome"]["found_with_effort"],
                    unk="What triggers a change of strategy, what makes users continue or stop, and whether other-app users found the photo."),
-        "O6": dict(node="D1", beh="Users know a photo exists but not its album, or how they originally reached it.", st="Recall → Express",
+        "O6": dict(node="D1", beh="Users know a photo exists but not its album, or how they originally reached it.", st="Remember → Express",
                    sev="Mostly memory statements; behaviour is generic.", quote=ev("memory_code", "M09", 1),
                    uc="No remembered route back to the photo.", pc="Navigation-based retrieval is unavailable when the path is forgotten.", unk="How users normally re-find photos; whether organisation habits matter."),
         "O7": dict(node="D6", beh="Users ask someone else to send the photo or switch to another device/app.", st="Recover (boundary of the searchable library)",
@@ -115,9 +115,9 @@ def hypotheses(ctx) -> list:
          f"{s1['express_barrier']} records say memory is hard to turn into a query; behaviour shows reformulation ({s1['signals']['reformulation']}) and switching ({s1['signals']['strategy_switch']}).",
          "Many users say what they remember cannot be typed as a search, yet still try several searches.",
          "Users may hold more contextual detail than their first query carries.",
-         "Memory is genuinely thin or generic, so it is a recall problem, not an expression problem.",
-         "Prompted recall adds nothing usable, or first queries already contain everything they can recall (falsified). Neutral cues surface details the first query omitted (supported).",
-         f"{s1['express_barrier']} explicit barrier statements.", f"No outcome difference for O1 ({pct(exit_o1, O1['n'])} vs {pct(exit_all, E)}).", "What participants can recall on demand."),
+         "Memory is genuinely thin or generic, so it is a remember problem, not an expression problem.",
+         "Prompted remember adds nothing usable, or first queries already contain everything they can remember (falsified). Neutral cues surface details the first query omitted (supported).",
+         f"{s1['express_barrier']} explicit barrier statements.", f"No outcome difference for O1 ({pct(exit_o1, O1['n'])} vs {pct(exit_all, E)}).", "What participants can remember on demand."),
         ("H2 — Candidate present but not recognisable", "D4", "hyp:H2",
          f"'Cannot tell which is right' {s1['closer_code']['C08_plausible_cannot_tell']}; similar-not-exact {s1['behavior_code']['B14_similar_not_exact']}; one-by-one opening {s1['behavior_code']['B04_open_results_one_by_one']}.",
          "Users report both plausible candidates they cannot separate and being able to recognise the photo on sight.",
@@ -158,7 +158,7 @@ def hypotheses(ctx) -> list:
          "The file contains only posts about difficulty, so it cannot show how common difficulty is.",
          "Most real retrievals from imprecise memory succeed quickly; the corpus captures only the tail.",
          "Difficulty is common and under-reported.",
-         "Survey with neutral recall of recent attempts. Supported if most succeed in one attempt; weakened if effortful or unsuccessful retrieval is common.",
+         "Survey with neutral remember of recent attempts. Supported if most succeed in one attempt; weakened if effortful or unsuccessful retrieval is common.",
          "Sampling logic.", "None.", "Prevalence."),
     ]
     return hyps

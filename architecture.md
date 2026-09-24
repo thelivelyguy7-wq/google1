@@ -112,7 +112,7 @@ Off-topic single sentences (15 distinct) map to a topic; only deleted-photo rest
 - Classifies each record: retrieval-related, possibly relevant, not retrieval-related. The report also lists insufficient-evidence and ambiguous counts, but both are fixed at 0 in `analyze.py`: no coding rule emits them, because every non-relevant record in this corpus is unambiguous. A different corpus would need such rules.
 - Extracts spec fields A–F: retrieval object, neutral scenario, remembered, forgotten, behaviour, outcome. Outcome uses the spec vocabulary (found quickly, found with effort, found after reformulation, found after browsing, similar but uncertain, failed, abandoned, external workaround, unknown); an unstated outcome is `unknown` and is never inferred.
 - Flags exact duplicates, near-duplicates (same object, memory, behaviour and closer; different opener) and low-information records.
-- Assigns `journey_stages` (Recall → Express → Match → Recognize → Recover) from the sentences that evidence each stage.
+- Assigns `journey_stages` (Remember → Express → Match → Recognize → Recover) from the sentences that evidence each stage.
 
 `coded_records.csv` columns: identity fields, `relevance`, verbatim `*_text` columns, codes, `remembered`, `forgotten`, `forgotten_family`, `express_barrier`, `scenario`, `retrieval_state`, `outcome`, `outcome_stated`, `journey_stages`, `severity_signals`, `n_severity_signals`, duplicate and signature columns.
 
@@ -148,8 +148,8 @@ Successful retrieval of a vaguely remembered photo is decomposed into six nodes.
 
 | Node | Case question | User behaviour | Product outcome |
 |---|---|---|---|
-| D1 Recall | What do people remember and forget? | Holds partial context | Precondition of the case |
-| D2 Express | Is the user unable to express what they remember? | Turns memory into a query or action | The input carries the clues the user holds |
+| D1 Remember | What do people remember and forget? | Holds partial context | Precondition of the case |
+| D2 Express | Is the user context-to-query translation what they remember? | Turns memory into a query or action | The input carries the clues the user holds |
 | D3 Understand & match | Does Google Photos fail to understand the clues? | Submits clues, inspects results | The intended photo is among the candidates |
 | D4 Evaluate | Are relevant results hard to evaluate? | Scans and decides | The user confirms the right photo |
 | D5 Refine | Does the user struggle to refine? | Reformulates, switches, browses, stops | A failed first attempt still ends in success or an informed stop |
@@ -193,11 +193,11 @@ flowchart LR
 |---|---|---|---|
 | **Overview & data quality** | 0 | Record classification, duplicates, low-information records, data-quality limitations, structure tests | `stage0`, `independence`, `incoherent_pairs` |
 | **Insights** | 1, 3 | Needs landscape, what users remember versus lack, stated outcomes, severity signals, retrieval objects | `needs`, `stage1` |
-| **Journey** | 2 | Recall → Express → Match → Recognize → Recover: records touching each stage, breakdown evidence, common paths | `journey` |
+| **Journey** | 2 | Remember → Express → Match → Recognize → Recover: records touching each stage, breakdown evidence, common paths | `journey` |
 | **Segments** | 4 | SEG-1…4 and the target segment with definitions, counts, outcomes, overlap with expression-barrier statements | `segments` |
 | **Opportunities** | 5–6 | O1–O8 cards and the prioritisation table with rationale and the selected opportunity | `opps`, narrative |
 | **Target & impact** | 7–8 | Target segment hypothesis, assumptions, impact-sizing chain with observed / assumed / TBD columns | `target`, `impact` |
-| **Research hypotheses** | 9 | H1–H7: observation, interpretation, hypothesis, competing explanation, falsification test, verdict field (untested until research is done) | narrative |
+| **Opportunity hypotheses** | 9 | H1–H7: observation, interpretation, hypothesis, competing explanation, falsification test, verdict field (untested until research is done) | narrative |
 | **Research plan** | 10–12 | Interview guide, usability tasks, survey plan, recruitment, sample-size rationale | narrative |
 | **Synthesis** | 13 | Participant-level ledger and pattern tracker, empty until fieldwork | research ledger |
 | **Problem statement** | 14 | Provisional statement, evidence per element, validation-gate checklist | narrative, `metrics.json` |
@@ -209,7 +209,7 @@ flowchart LR
 2. **Every number drills down.** Clicking a count opens the records behind it, with the verbatim text and codes, so traceability survives in the UI.
 3. **Every statement carries its label chip:** observed data, interpretation, hypothesis, assumption, unknown.
 4. **Denominators are always shown** ("X of 800"). No bare percentages, and no population wording.
-5. **No solution content.** The UI has no feature ideas, and the Research hypotheses page shows verdicts only after research supplies them.
+5. **No solution content.** The UI has no feature ideas, and the Opportunity hypotheses page shows verdicts only after research supplies them.
 6. **Static and offline.** Data is embedded in a script file, so `site/index.html` opens from disk with no server and no network.
 
 ### How the no-stale-numbers rule is kept

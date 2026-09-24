@@ -79,7 +79,7 @@ A static, offline page set over the discovery chain, so a PM can explore evidenc
 | 3.9 | Segments | Stage 4 | **Done** |
 | 3.10 | Opportunities | Stages 5–6 | **Done** |
 | 3.11 | Target and impact | Stages 7–8 | **Done** |
-| 3.12 | Research hypotheses | Stage 9 | **Done** |
+| 3.12 | Opportunity hypotheses | Stage 9 | **Done** |
 | 3.13 | Research plan | Stages 10–12 | **Done** |
 | 3.14 | Problem statement | Stage 14 | **Done** |
 | 3.15 | Evidence explorer | Stage 15 and rule 15 | **Done** |

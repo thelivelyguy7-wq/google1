@@ -142,7 +142,7 @@ def build_report(precomputed=None) -> str:
         w(f"| {c} | {ctx} | {stages} | {mem} |")
     w("")
     w("`[INTERP]` The needs fall into three families: **(a) memory-to-query gaps** (N1–N5, N7: the user holds context but lacks a usable identifier), **(b) verification** (N6) and **(c) recovery** (N8). "
-      f"Every relevant record states an imprecise or hard-to-use memory ({J['breakdown']['RECALL']['n']} name specific missing information; the other {E - J['breakdown']['RECALL']['n']} describe memory the user cannot readily use as an identifier, which is an interpretation). "
+      f"Every relevant record states an imprecise or hard-to-use memory ({J['breakdown']['REMEMBER']['n']} name specific missing information; the other {E - J['breakdown']['REMEMBER']['n']} describe memory the user cannot readily use as an identifier, which is an interpretation). "
       "No record describes retrieval by a precise identifier, so a Direct-vs-Contextual split has nothing to split here; the only Direct-side signal is the contrast sentence "
       f"'It feels much easier when I know an exact date or person's name' ({s1['closer_code']['C04_easier_with_precise_identifier']} records).")
     w("")
@@ -217,11 +217,11 @@ def build_report(precomputed=None) -> str:
     # ------------------------------------------------------------------ 4
     w("## 4. Retrieval Journey Mapping")
     w("")
-    w("Working model, not a proven funnel: Recall → Express → Match → Recognize → Recover. Each record maps to the stages its sentences evidence.")
+    w("Working model, not a proven funnel: Remember → Express → Match → Recognize → Recover. Each record maps to the stages its sentences evidence.")
     w("")
     w("| Stage | Records touching stage | Records with explicit breakdown evidence | What counts as breakdown evidence |")
     w("|---|---|---|---|")
-    for st in ["RECALL", "EXPRESS", "MATCH", "RECOGNIZE", "RECOVER"]:
+    for st in ["REMEMBER", "EXPRESS", "MATCH", "RECOGNIZE", "RECOVER"]:
         b = J["breakdown"][st]
         w(f"| **{st.title()}** | {J['touched'][st]} of {E} | {b['n']} of {E} ({pct(b['n'], E)}) | {b['basis']} |")
     w("")
@@ -231,7 +231,7 @@ def build_report(precomputed=None) -> str:
     w("")
     w("| Stage | Question | Answer | Unknown |")
     w("|---|---|---|---|")
-    w(f"| Recall | {SQ['RECALL']['question']} | {top(dict(SQ['RECALL']['top_remembered']), 5)} | Whether real memory is richer than these statements |")
+    w(f"| Remember | {SQ['REMEMBER']['question']} | {top(dict(SQ['REMEMBER']['top_remembered']), 5)} | Whether real memory is richer than these statements |")
     w(f"| Express | {SQ['EXPRESS']['question']} | First-attempt inputs {SQ['EXPRESS']['first_attempt']}; date-based {SQ['EXPRESS']['date']}; reformulation {SQ['EXPRESS']['reformulation']}; person then browse {SQ['EXPRESS']['person_then_browse']}; keywords then scroll {SQ['EXPRESS']['keywords_then_scroll']}; explicit barrier {SQ['EXPRESS']['barrier']} | Order and content of real queries |")
     w(f"| Match | {SQ['MATCH']['question']} | Candidates surfaced in {SQ['MATCH']['candidates_surfaced']} records (incl. 'too many results' {SQ['MATCH']['too_many_results']}); **{SQ['MATCH']['product_misread_stated']} records say the product misread the clues** | Whether the target was among the candidates |")
     w(f"| Recognize | {SQ['RECOGNIZE']['question']} | Would recognise on sight {SQ['RECOGNIZE']['can_on_sight']}; cannot tell / near miss {SQ['RECOGNIZE']['cannot_tell']}; heavy inspection or browsing {SQ['RECOGNIZE']['heavy_inspection']} | When recognition holds and when it fails |")
@@ -283,7 +283,7 @@ def build_report(precomputed=None) -> str:
         w(f"| {k} {v['name']} | {v['proposed_measure']} |")
     w("")
     w("**Major breakdowns** `[OBS]`")
-    w(f"- **Recall → Express:** {J['breakdown']['RECALL']['n']} records name information the user lacks (time precision {s1['forgotten_family']['time precision']}, a name {s1['forgotten_family']['name']}, a keyword {s1['forgotten_family']['search keyword']}, album {s1['forgotten_family']['album / organisation']}, how it was originally found {s1['forgotten_family']['how it was originally found']}, exact wording {s1['forgotten_family']['exact wording']}). "
+    w(f"- **Remember → Express:** {J['breakdown']['REMEMBER']['n']} records name information the user lacks (time precision {s1['forgotten_family']['time precision']}, a name {s1['forgotten_family']['name']}, a keyword {s1['forgotten_family']['search keyword']}, album {s1['forgotten_family']['album / organisation']}, how it was originally found {s1['forgotten_family']['how it was originally found']}, exact wording {s1['forgotten_family']['exact wording']}). "
       f"{s1['express_barrier']} records state the memory cannot easily be converted into a query, e.g. {ev('memory_code', 'M11', 1)}. {tr('node:D2:breakdown', 3)}")
     w(f"- **Match:** the corpus rarely says what the product returned; only {J['breakdown']['MATCH']['n']} records do. `[UNKNOWN]` whether matching, expression or recognition is the weak link. {tr('opp:O4', 3)}")
     w(f"- **Recognize:** {recog} records say the user *would recognise* the photo on sight (e.g. {ev('memory_code', 'M05', 1)}), while {s1['closer_code']['C08_plausible_cannot_tell']} say plausible results left them unable to tell which is right and {s1['behavior_code']['B14_similar_not_exact']} report a similar-but-not-exact find. Recognition holds in some records and fails in others; the file cannot say when. {tr('node:D4:breakdown', 3)}")
@@ -360,7 +360,7 @@ def build_report(precomputed=None) -> str:
     w(f"| Dataset size | {T['n']} of {E} ({T['pct']}%); {T['after_near_dup_removal']} after removing near-duplicates |")
     w(f"| Stated outcomes | {oc(T['profile'])} |")
     w(f"| Evidence | Express-barrier statements {T['profile']['express_barrier']}; 'would recognise on sight' {T['profile']['recognition_retained']}; 'cannot tell which is right' {T['profile']['cannot_confirm']}; explicit 'knows the photo exists' {T['profile']['knows_exists']} ({T['knows_exists_pct']}%). {tr('seg:SEG-T', 5)} |")
-    w(f"| Why investigate | Frequency (largest); effort (strategy switching, browsing, large candidate sets, repeated attempts); outcome uncertainty ({T['profile']['outcomes']['unknown']} unknown, {T['profile']['outcomes']['similar_uncertain']} uncertain); strategic relevance (retrieval is not clean for these users); researchability (recent attempts are recallable and observable) |")
+    w(f"| Why investigate | Frequency (largest); effort (strategy switching, browsing, large candidate sets, repeated attempts); outcome uncertainty ({T['profile']['outcomes']['unknown']} unknown, {T['profile']['outcomes']['similar_uncertain']} uncertain); strategic relevance (retrieval is not clean for these users); researchability (recent attempts are rememberable and observable) |")
     w("| Why not SEG-1 alone | Defined by outcome, so the corpus says nothing about what preceded it. Recruit SEG-1-like participants (failed/abandoned recently) as an adjacent probe. |")
     w(f"| Why not SEG-4 | {S4['n']} records, essentially no severity evidence. |")
     w("")
@@ -427,7 +427,7 @@ def build_report(precomputed=None) -> str:
     w("")
     w("### 10.1 Interview plan")
     w("- **Purpose:** learn how people remember and describe photos they later struggle to find, and what happens next (WHY/HOW).")
-    w("- **Method:** 30-minute behavioural interviews, remote, recall-a-recent-incident format (no hypotheticals).")
+    w("- **Method:** 30-minute behavioural interviews, remote, remember-a-recent-incident format (no hypotheticals).")
     w("- **Sample:** 16 participants: 6 effortful-path (recent multi-attempt or heavy-browsing retrieval), 4 recent failure/abandonment, 2 who found a contextual-memory photo quickly (contrast, since the corpus has no success baseline), 4 heavy-library users regardless of outcome. Quotas across age, device and library size.")
     w(f"- **Strata trace to the corpus** `[OBS]`: effortful-path {tr('seg:SEG-T', 2)}; failure/abandonment {tr('seg:SEG-1', 2)}.")
     w("")
@@ -465,7 +465,7 @@ def build_report(precomputed=None) -> str:
     w("- **Purpose:** estimate prevalence, frequency, importance and failure/effort of retrieval scenarios *identified qualitatively* (WHERE/HOW MUCH). Reported separately from sample findings.")
     w("- **Content:** last retrieval attempt in the past 30 days; what was remembered/unknown (checklist derived from interviews); what was tried and in what order; outcome and time/attempt bands; confidence; other-app use; importance of the photo. No solution questions.")
     w("- **Sample:** ≥ 400 for ±5 points at 95% confidence on a proportion (worst case p=0.5), ≥ 100 per compared subgroup `[ASSUME]`. Active Google Photos users with quotas on library size, device and age.")
-    w("- **Limits:** self-report and recall bias; survey rates are not production rates.")
+    w("- **Limits:** self-report and remember bias; survey rates are not production rates.")
     w("")
     w("### 10.5 Recruitment criteria")
     w("- Uses Google Photos as a primary photo store for ≥ 2 years; library of several thousand items `[ASSUME threshold]`.")
@@ -479,7 +479,7 @@ def build_report(precomputed=None) -> str:
     w("- **Survey (≥ 400; ≥ 100 per subgroup):** ±5 points at 95% confidence for a proportion in the worst case; sized only after qualitative work fixes the categories.")
     w("")
     w("### 10.7 Success measures for the research")
-    w("- ≥ 80% of interviewees give a specific recent incident with recall of what they remembered and tried.")
+    w("- ≥ 80% of interviewees give a specific recent incident with remember of what they remembered and tried.")
     w("- Each of H1–H7 ends with a documented verdict (supported / weakened / falsified) with at least one competing explanation tested.")
     w("- Task tests: complete logging of the six primary measures for every task, plus a failing-node classification for every unsuccessful attempt.")
     w("- Findings triangulated across ≥ 2 methods before any root cause is called validated.")
@@ -522,7 +522,7 @@ def build_report(precomputed=None) -> str:
     def c(k): return tr('claim:' + k, 2)
     mat = [
         (f"K01 Relevant records are {E} of {s0['total']}", f"{s0['irrelevant']} off-topic + {s0['possibly']} possible; {c('K01')}", "The file mixes on- and off-topic posts", "—", "Real-world share of retrieval talk"),
-        (f"K02 Every relevant record describes imprecise memory", f"{J['breakdown']['RECALL']['n']} of {E} name lacked information; {c('K02')}", "The corpus is selected for contextual memory", "—", "How users with precise identifiers behave (no such records)"),
+        (f"K02 Every relevant record describes imprecise memory", f"{J['breakdown']['REMEMBER']['n']} of {E} name lacked information; {c('K02')}", "The corpus is selected for contextual memory", "—", "How users with precise identifiers behave (no such records)"),
         (f"K03 Time precision is the most common lacked information", f"{s1['forgotten_family']['time precision']} records; {c('K03')}", "Users know roughly when, not exactly", "`[PROB-HYP]` H3", "Whether time is the strongest clue"),
         (f"K04 Users say memory is hard to convert into a query", f"{s1['express_barrier']} of {E}; {c('K04')}", "A gap between remembering and expressing", "`[PROB-HYP]` H1", "Whether memory is rich or thin"),
         (f"K05 Effort is widespread", f"{s1['n_with_signal']} of {E} carry ≥1 severity signal; {c('K05')}", "Retrieval often costs more than one step", "`[PROB-HYP]` H4, H7", "Prevalence; corpus is complaint-only"),
@@ -556,7 +556,7 @@ def build_appendix(precomputed=None) -> str:
     w("")
     w("## Discovery chain followed")
     w("")
-    w("Raw evidence → retrieval needs → behavioural patterns → retrieval journey (with the six-node decomposition) → behavioural segments → opportunity areas → prioritisation → target segment hypothesis → research hypotheses → primary research plan → provisional problem hypothesis. Only after primary research: how-might-we, ideation, solution, MVP, testing.")
+    w("Raw evidence → retrieval needs → behavioural patterns → retrieval journey (with the six-node decomposition) → behavioural segments → opportunity areas → prioritisation → target segment hypothesis → opportunity hypotheses → primary research plan → provisional problem hypothesis. Only after primary research: how-might-we, ideation, solution, MVP, testing.")
     w("")
     w("## A. Structure tests (are cross-tabs meaningful?)")
     w("")

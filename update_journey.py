@@ -11,7 +11,7 @@ new_journey_page = """page("journey", "Journey & KPI Tree", "Stage 2", () => {
   const stages = Object.keys(J.touched);
   const maxT = Math.max(...Object.values(J.touched));
   const answer = {
-    RECALL: SQ.RECALL.top_remembered.map(([a, b]) => `${human(a)} ${b}`).join(", "),
+    REMEMBER: SQ.REMEMBER.top_remembered.map(([a, b]) => `${human(a)} ${b}`).join(", "),
     EXPRESS: `First-attempt inputs ${SQ.EXPRESS.first_attempt}; date-based ${SQ.EXPRESS.date}; reformulation ${SQ.EXPRESS.reformulation}; explicit barrier ${SQ.EXPRESS.barrier}`,
     MATCH: `Candidates surfaced in ${SQ.MATCH.candidates_surfaced}; too many results ${SQ.MATCH.too_many_results}; records stating the product misread the clues: ${SQ.MATCH.product_misread_stated}`,
     RECOGNIZE: `Would recognise on sight ${SQ.RECOGNIZE.can_on_sight}; cannot tell which is right ${SQ.RECOGNIZE.cannot_tell}; heavy inspection ${SQ.RECOGNIZE.heavy_inspection}`,

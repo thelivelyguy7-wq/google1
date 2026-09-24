@@ -217,14 +217,14 @@
   },
   "journey": {
     "touched": {
-      "RECALL": 800,
+      "REMEMBER": 800,
       "EXPRESS": 566,
       "MATCH": 120,
       "RECOGNIZE": 120,
       "RECOVER": 661
     },
     "breakdown": {
-      "RECALL": {
+      "REMEMBER": {
         "n": 594,
         "basis": "memory sentence names information the user lacks (M02-M04, M06-M10, M12)"
       },
@@ -246,13 +246,13 @@
       }
     },
     "top_paths": {
-      "RECALL > EXPRESS > RECOVER": 484,
-      "RECALL > RECOVER": 141,
-      "RECALL > MATCH > RECOGNIZE": 54,
-      "RECALL": 39,
-      "RECALL > EXPRESS > MATCH > RECOGNIZE > RECOVER": 36,
-      "RECALL > EXPRESS > MATCH > RECOGNIZE": 30,
-      "RECALL > EXPRESS": 16
+      "REMEMBER > EXPRESS > RECOVER": 484,
+      "REMEMBER > RECOVER": 141,
+      "REMEMBER > MATCH > RECOGNIZE": 54,
+      "REMEMBER": 39,
+      "REMEMBER > EXPRESS > MATCH > RECOGNIZE > RECOVER": 36,
+      "REMEMBER > EXPRESS > MATCH > RECOGNIZE": 30,
+      "REMEMBER > EXPRESS": 16
     },
     "n_paths": 7
   },
@@ -281,7 +281,7 @@
         "top_behaviors": [],
         "signal_counts": {},
         "stage_counts": {
-          "RECALL": 0,
+          "REMEMBER": 0,
           "EXPRESS": 0,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -318,7 +318,7 @@
         "top_behaviors": [],
         "signal_counts": {},
         "stage_counts": {
-          "RECALL": 0,
+          "REMEMBER": 0,
           "EXPRESS": 0,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -355,7 +355,7 @@
         "top_behaviors": [],
         "signal_counts": {},
         "stage_counts": {
-          "RECALL": 0,
+          "REMEMBER": 0,
           "EXPRESS": 0,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -392,7 +392,7 @@
         "top_behaviors": [],
         "signal_counts": {},
         "stage_counts": {
-          "RECALL": 0,
+          "REMEMBER": 0,
           "EXPRESS": 0,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -429,7 +429,7 @@
         "top_behaviors": [],
         "signal_counts": {},
         "stage_counts": {
-          "RECALL": 0,
+          "REMEMBER": 0,
           "EXPRESS": 0,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -478,7 +478,7 @@
           "repeated_attempts": 5
         },
         "stage_counts": {
-          "RECALL": 120,
+          "REMEMBER": 120,
           "EXPRESS": 66,
           "MATCH": 120,
           "RECOGNIZE": 120,
@@ -544,7 +544,7 @@
         "top_behaviors": [],
         "signal_counts": {},
         "stage_counts": {
-          "RECALL": 0,
+          "REMEMBER": 0,
           "EXPRESS": 0,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -596,7 +596,7 @@
           "uncertainty": 54
         },
         "stage_counts": {
-          "RECALL": 625,
+          "REMEMBER": 625,
           "EXPRESS": 484,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -677,7 +677,7 @@
           "candidate_inspection": 23
         },
         "stage_counts": {
-          "RECALL": 257,
+          "REMEMBER": 257,
           "EXPRESS": 186,
           "MATCH": 37,
           "RECOGNIZE": 37,
@@ -755,7 +755,7 @@
           "repeated_attempts": 13
         },
         "stage_counts": {
-          "RECALL": 341,
+          "REMEMBER": 341,
           "EXPRESS": 227,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -833,7 +833,7 @@
           "uncertainty": 27
         },
         "stage_counts": {
-          "RECALL": 284,
+          "REMEMBER": 284,
           "EXPRESS": 257,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -911,7 +911,7 @@
           "repeated_attempts": 5
         },
         "stage_counts": {
-          "RECALL": 120,
+          "REMEMBER": 120,
           "EXPRESS": 66,
           "MATCH": 120,
           "RECOGNIZE": 120,
@@ -984,7 +984,7 @@
           "large_candidate_set": 3
         },
         "stage_counts": {
-          "RECALL": 55,
+          "REMEMBER": 55,
           "EXPRESS": 16,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -1062,7 +1062,7 @@
           "candidate_inspection": 59
         },
         "stage_counts": {
-          "RECALL": 404,
+          "REMEMBER": 404,
           "EXPRESS": 323,
           "MATCH": 120,
           "RECOGNIZE": 120,
@@ -1145,7 +1145,7 @@
           "abandonment": 39
         },
         "stage_counts": {
-          "RECALL": 322,
+          "REMEMBER": 322,
           "EXPRESS": 322,
           "MATCH": 41,
           "RECOGNIZE": 41,
@@ -1203,7 +1203,7 @@
         "top_behaviors": [],
         "signal_counts": {},
         "stage_counts": {
-          "RECALL": 0,
+          "REMEMBER": 0,
           "EXPRESS": 0,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -1240,7 +1240,7 @@
         "top_behaviors": [],
         "signal_counts": {},
         "stage_counts": {
-          "RECALL": 0,
+          "REMEMBER": 0,
           "EXPRESS": 0,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -1277,7 +1277,7 @@
         "top_behaviors": [],
         "signal_counts": {},
         "stage_counts": {
-          "RECALL": 0,
+          "REMEMBER": 0,
           "EXPRESS": 0,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -1314,7 +1314,7 @@
         "top_behaviors": [],
         "signal_counts": {},
         "stage_counts": {
-          "RECALL": 0,
+          "REMEMBER": 0,
           "EXPRESS": 0,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -1351,7 +1351,7 @@
         "top_behaviors": [],
         "signal_counts": {},
         "stage_counts": {
-          "RECALL": 0,
+          "REMEMBER": 0,
           "EXPRESS": 0,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -1388,7 +1388,7 @@
         "top_behaviors": [],
         "signal_counts": {},
         "stage_counts": {
-          "RECALL": 0,
+          "REMEMBER": 0,
           "EXPRESS": 0,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -1425,7 +1425,7 @@
         "top_behaviors": [],
         "signal_counts": {},
         "stage_counts": {
-          "RECALL": 0,
+          "REMEMBER": 0,
           "EXPRESS": 0,
           "MATCH": 0,
           "RECOGNIZE": 0,
@@ -1559,7 +1559,7 @@
         "candidate_inspection": 59
       },
       "stage_counts": {
-        "RECALL": 404,
+        "REMEMBER": 404,
         "EXPRESS": 323,
         "MATCH": 120,
         "RECOGNIZE": 120,
@@ -1834,7 +1834,7 @@
           "REC-0003"
         ]
       },
-      "name": "Recall",
+      "name": "Remember",
       "brief_question": "What information do people actually remember, and what have they forgotten?",
       "user_behavior": "Holds partial context (people, place, story, look, roughly when) but lacks a precise identifier",
       "product_outcome": "n/a: this is the precondition the case starts from (photo exists, memory is incomplete)",
@@ -1858,7 +1858,7 @@
         ]
       },
       "name": "Express",
-      "brief_question": "Is the user unable to express what they remember?",
+      "brief_question": "Is the user context-to-query translation what they remember?",
       "user_behavior": "Turns memory into a query, filter or navigation step",
       "product_outcome": "The input the product receives carries the clues the user actually holds",
       "opportunity": "O1 Memory expression (with O2 Approximate-time narrowing and O8 Information discovery)",
@@ -1934,7 +1934,7 @@
     }
   },
   "stage_questions": {
-    "RECALL": {
+    "REMEMBER": {
       "question": "What does the user remember?",
       "top_remembered": [
         [

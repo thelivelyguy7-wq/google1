@@ -4,7 +4,7 @@ Supporting material for `discovery_report.md`.
 
 ## Discovery chain followed
 
-Raw evidence → retrieval needs → behavioural patterns → retrieval journey (with the six-node decomposition) → behavioural segments → opportunity areas → prioritisation → target segment hypothesis → research hypotheses → primary research plan → provisional problem hypothesis. Only after primary research: how-might-we, ideation, solution, MVP, testing.
+Raw evidence → retrieval needs → behavioural patterns → retrieval journey (with the six-node decomposition) → behavioural segments → opportunity areas → prioritisation → target segment hypothesis → opportunity hypotheses → primary research plan → provisional problem hypothesis. Only after primary research: how-might-we, ideation, solution, MVP, testing.
 
 ## A. Structure tests (are cross-tabs meaningful?)
 
